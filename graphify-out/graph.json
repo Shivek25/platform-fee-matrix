@@ -1,0 +1,968 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "astro.config.mjs",
+      "file_type": "code",
+      "source_file": "astro.config.mjs",
+      "source_location": "L1",
+      "id": "astro_config_mjs",
+      "community": 8,
+      "norm_label": "astro.config.mjs"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "id": "agents_md",
+      "community": 6,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "Development",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "id": "platformfeematrix_com_agents_development",
+      "community": 6,
+      "norm_label": "development"
+    },
+    {
+      "label": "code:block1 (astro dev --background)",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L5",
+      "id": "platformfeematrix_com_agents_codeblock_1",
+      "community": 6,
+      "norm_label": "code:block1 (astro dev --background)"
+    },
+    {
+      "label": "Documentation",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L11",
+      "id": "platformfeematrix_com_agents_documentation",
+      "community": 6,
+      "norm_label": "documentation"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "id": "claude_md",
+      "community": 7,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "Development",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "id": "platformfeematrix_com_claude_development",
+      "community": 7,
+      "norm_label": "development"
+    },
+    {
+      "label": "code:block1 (astro dev --background)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L5",
+      "id": "platformfeematrix_com_claude_codeblock_1",
+      "community": 7,
+      "norm_label": "code:block1 (astro dev --background)"
+    },
+    {
+      "label": "Documentation",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L11",
+      "id": "platformfeematrix_com_claude_documentation",
+      "community": 7,
+      "norm_label": "documentation"
+    },
+    {
+      "label": "DESIGN.md",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L1",
+      "id": "design_md",
+      "community": 0,
+      "norm_label": "design.md"
+    },
+    {
+      "label": "Overview",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L393",
+      "id": "platformfeematrix_com_design_overview",
+      "community": 0,
+      "norm_label": "overview"
+    },
+    {
+      "label": "Colors",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L409",
+      "id": "platformfeematrix_com_design_colors",
+      "community": 4,
+      "norm_label": "colors"
+    },
+    {
+      "label": "Brand & Accent",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L411",
+      "id": "platformfeematrix_com_design_brand_accent",
+      "community": 4,
+      "norm_label": "brand & accent"
+    },
+    {
+      "label": "Surface",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L418",
+      "id": "platformfeematrix_com_design_surface",
+      "community": 4,
+      "norm_label": "surface"
+    },
+    {
+      "label": "Text",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L425",
+      "id": "platformfeematrix_com_design_text",
+      "community": 4,
+      "norm_label": "text"
+    },
+    {
+      "label": "Semantic",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L431",
+      "id": "platformfeematrix_com_design_semantic",
+      "community": 4,
+      "norm_label": "semantic"
+    },
+    {
+      "label": "Brand Gradient",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L441",
+      "id": "platformfeematrix_com_design_brand_gradient",
+      "community": 4,
+      "norm_label": "brand gradient"
+    },
+    {
+      "label": "Typography",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L449",
+      "id": "platformfeematrix_com_design_typography",
+      "community": 5,
+      "norm_label": "typography"
+    },
+    {
+      "label": "Font Family",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L451",
+      "id": "platformfeematrix_com_design_font_family",
+      "community": 5,
+      "norm_label": "font family"
+    },
+    {
+      "label": "Hierarchy",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L459",
+      "id": "platformfeematrix_com_design_hierarchy",
+      "community": 5,
+      "norm_label": "hierarchy"
+    },
+    {
+      "label": "Principles",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L478",
+      "id": "platformfeematrix_com_design_principles",
+      "community": 5,
+      "norm_label": "principles"
+    },
+    {
+      "label": "Note on Font Substitutes",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L484",
+      "id": "platformfeematrix_com_design_note_on_font_substitutes",
+      "community": 5,
+      "norm_label": "note on font substitutes"
+    },
+    {
+      "label": "Layout",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L489",
+      "id": "platformfeematrix_com_design_layout",
+      "community": 1,
+      "norm_label": "layout"
+    },
+    {
+      "label": "Spacing System",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L491",
+      "id": "platformfeematrix_com_design_spacing_system",
+      "community": 1,
+      "norm_label": "spacing system"
+    },
+    {
+      "label": "Grid & Container",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L498",
+      "id": "platformfeematrix_com_design_grid_container",
+      "community": 1,
+      "norm_label": "grid & container"
+    },
+    {
+      "label": "Whitespace Philosophy",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L507",
+      "id": "platformfeematrix_com_design_whitespace_philosophy",
+      "community": 1,
+      "norm_label": "whitespace philosophy"
+    },
+    {
+      "label": "Responsive Strategy",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L510",
+      "id": "platformfeematrix_com_design_responsive_strategy",
+      "community": 1,
+      "norm_label": "responsive strategy"
+    },
+    {
+      "label": "Breakpoints",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L512",
+      "id": "platformfeematrix_com_design_breakpoints",
+      "community": 1,
+      "norm_label": "breakpoints"
+    },
+    {
+      "label": "Touch Targets",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L522",
+      "id": "platformfeematrix_com_design_touch_targets",
+      "community": 1,
+      "norm_label": "touch targets"
+    },
+    {
+      "label": "Collapsing Strategy",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L525",
+      "id": "platformfeematrix_com_design_collapsing_strategy",
+      "community": 1,
+      "norm_label": "collapsing strategy"
+    },
+    {
+      "label": "Image Behavior",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L532",
+      "id": "platformfeematrix_com_design_image_behavior",
+      "community": 1,
+      "norm_label": "image behavior"
+    },
+    {
+      "label": "Elevation & Depth",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L538",
+      "id": "platformfeematrix_com_design_elevation_depth",
+      "community": 0,
+      "norm_label": "elevation & depth"
+    },
+    {
+      "label": "Decorative Depth",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L551",
+      "id": "platformfeematrix_com_design_decorative_depth",
+      "community": 0,
+      "norm_label": "decorative depth"
+    },
+    {
+      "label": "Shapes",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L556",
+      "id": "platformfeematrix_com_design_shapes",
+      "community": 0,
+      "norm_label": "shapes"
+    },
+    {
+      "label": "Border Radius Scale",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L558",
+      "id": "platformfeematrix_com_design_border_radius_scale",
+      "community": 0,
+      "norm_label": "border radius scale"
+    },
+    {
+      "label": "Photography Geometry",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L572",
+      "id": "platformfeematrix_com_design_photography_geometry",
+      "community": 0,
+      "norm_label": "photography geometry"
+    },
+    {
+      "label": "Components",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L579",
+      "id": "platformfeematrix_com_design_components",
+      "community": 2,
+      "norm_label": "components"
+    },
+    {
+      "label": "Buttons",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L581",
+      "id": "platformfeematrix_com_design_buttons",
+      "community": 2,
+      "norm_label": "buttons"
+    },
+    {
+      "label": "Cards & Containers",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L612",
+      "id": "platformfeematrix_com_design_cards_containers",
+      "community": 2,
+      "norm_label": "cards & containers"
+    },
+    {
+      "label": "Inputs & Forms",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L635",
+      "id": "platformfeematrix_com_design_inputs_forms",
+      "community": 2,
+      "norm_label": "inputs & forms"
+    },
+    {
+      "label": "Navigation",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L646",
+      "id": "platformfeematrix_com_design_navigation",
+      "community": 2,
+      "norm_label": "navigation"
+    },
+    {
+      "label": "Signature Components",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L657",
+      "id": "platformfeematrix_com_design_signature_components",
+      "community": 2,
+      "norm_label": "signature components"
+    },
+    {
+      "label": "Examples (illustrative)",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L683",
+      "id": "platformfeematrix_com_design_examples_illustrative",
+      "community": 2,
+      "norm_label": "examples (illustrative)"
+    },
+    {
+      "label": "Do's and Don'ts",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L718",
+      "id": "platformfeematrix_com_design_do_s_and_don_ts",
+      "community": 0,
+      "norm_label": "do's and don'ts"
+    },
+    {
+      "label": "Do",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L720",
+      "id": "platformfeematrix_com_design_do",
+      "community": 0,
+      "norm_label": "do"
+    },
+    {
+      "label": "Don't",
+      "file_type": "document",
+      "source_file": "DESIGN.md",
+      "source_location": "L729",
+      "id": "platformfeematrix_com_design_don_t",
+      "community": 0,
+      "norm_label": "don't"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "id": "readme_md",
+      "community": 3,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "Astro Starter Kit: Basics",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "id": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "community": 3,
+      "norm_label": "astro starter kit: basics"
+    },
+    {
+      "label": "code:sh (npm create astro@latest -- --template basics)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L3",
+      "id": "platformfeematrix_com_readme_codeblock_1",
+      "community": 3,
+      "norm_label": "code:sh (npm create astro@latest -- --template basics)"
+    },
+    {
+      "label": "\ud83d\ude80 Project Structure",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L9",
+      "id": "platformfeematrix_com_readme_project_structure",
+      "community": 3,
+      "norm_label": "\ud83d\ude80 project structure"
+    },
+    {
+      "label": "code:text (/)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L13",
+      "id": "platformfeematrix_com_readme_codeblock_2",
+      "community": 3,
+      "norm_label": "code:text (/)"
+    },
+    {
+      "label": "\ud83e\uddde Commands",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L31",
+      "id": "platformfeematrix_com_readme_commands",
+      "community": 3,
+      "norm_label": "\ud83e\uddde commands"
+    },
+    {
+      "label": "\ud83d\udc40 Want to learn more?",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L44",
+      "id": "platformfeematrix_com_readme_want_to_learn_more",
+      "community": 3,
+      "norm_label": "\ud83d\udc40 want to learn more?"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "agents_md",
+      "target": "platformfeematrix_com_agents_development",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "agents_md",
+      "target": "platformfeematrix_com_agents_documentation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_agents_development",
+      "target": "platformfeematrix_com_agents_codeblock_1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "platformfeematrix_com_claude_development",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "platformfeematrix_com_claude_documentation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_claude_development",
+      "target": "platformfeematrix_com_claude_codeblock_1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L393",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_overview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L409",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L449",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_typography",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L489",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L538",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_elevation_depth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L556",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_shapes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L579",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_components",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L718",
+      "weight": 1.0,
+      "source": "design_md",
+      "target": "platformfeematrix_com_design_do_s_and_don_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L411",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_colors",
+      "target": "platformfeematrix_com_design_brand_accent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L418",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_colors",
+      "target": "platformfeematrix_com_design_surface",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L425",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_colors",
+      "target": "platformfeematrix_com_design_text",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L431",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_colors",
+      "target": "platformfeematrix_com_design_semantic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L441",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_colors",
+      "target": "platformfeematrix_com_design_brand_gradient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L451",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_typography",
+      "target": "platformfeematrix_com_design_font_family",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L459",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_typography",
+      "target": "platformfeematrix_com_design_hierarchy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L478",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_typography",
+      "target": "platformfeematrix_com_design_principles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L484",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_typography",
+      "target": "platformfeematrix_com_design_note_on_font_substitutes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L491",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_layout",
+      "target": "platformfeematrix_com_design_spacing_system",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L498",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_layout",
+      "target": "platformfeematrix_com_design_grid_container",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L507",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_layout",
+      "target": "platformfeematrix_com_design_whitespace_philosophy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L510",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_layout",
+      "target": "platformfeematrix_com_design_responsive_strategy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L512",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_responsive_strategy",
+      "target": "platformfeematrix_com_design_breakpoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L522",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_responsive_strategy",
+      "target": "platformfeematrix_com_design_touch_targets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L525",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_responsive_strategy",
+      "target": "platformfeematrix_com_design_collapsing_strategy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L532",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_responsive_strategy",
+      "target": "platformfeematrix_com_design_image_behavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_elevation_depth",
+      "target": "platformfeematrix_com_design_decorative_depth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L558",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_shapes",
+      "target": "platformfeematrix_com_design_border_radius_scale",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L572",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_shapes",
+      "target": "platformfeematrix_com_design_photography_geometry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L581",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_buttons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L612",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_cards_containers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L635",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_inputs_forms",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L646",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_navigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L657",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_signature_components",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L683",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_components",
+      "target": "platformfeematrix_com_design_examples_illustrative",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L720",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_do_s_and_don_ts",
+      "target": "platformfeematrix_com_design_do",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "DESIGN.md",
+      "source_location": "L729",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_design_do_s_and_don_ts",
+      "target": "platformfeematrix_com_design_don_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "target": "platformfeematrix_com_readme_codeblock_1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "target": "platformfeematrix_com_readme_project_structure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "target": "platformfeematrix_com_readme_commands",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_readme_astro_starter_kit_basics",
+      "target": "platformfeematrix_com_readme_want_to_learn_more",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "platformfeematrix_com_readme_project_structure",
+      "target": "platformfeematrix_com_readme_codeblock_2",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "cb958abc3433d24071f82a25cbdf395f3bdcfb6d"
+}

@@ -1,0 +1,151 @@
+---
+// Footer.astro — Vercel-inspired minimal footer
+---
+
+<footer style="
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-hairline);
+  padding: 64px 24px 40px;
+  margin-top: 0;
+">
+  <div style="
+    max-width: 1200px;
+    margin: 0 auto;
+  ">
+    <!-- Top row: brand + columns -->
+    <div style="
+      display: grid;
+      grid-template-columns: 1fr repeat(3, auto);
+      gap: 48px;
+      margin-bottom: 48px;
+    " class="footer-grid">
+
+      <!-- Brand -->
+      <div>
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="2" y="14" width="4" height="8" rx="1" fill="currentColor" opacity="0.4"/>
+            <rect x="8" y="9" width="4" height="13" rx="1" fill="currentColor" opacity="0.7"/>
+            <rect x="14" y="4" width="4" height="18" rx="1" fill="currentColor" opacity="0.9"/>
+            <rect x="20" y="1" width="2" height="21" rx="1" fill="currentColor"/>
+          </svg>
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-ink); letter-spacing: -0.2px;">Platform Fee Matrix</span>
+        </div>
+        <p style="
+          font-size: 13px;
+          color: var(--text-mute);
+          line-height: 1.6;
+          max-width: 220px;
+          margin: 0 0 16px;
+        ">
+          Compare platform fees for digital products in real time. Built for creators, freelancers, and indie hackers.
+        </p>
+        <p style="font-size: 12px; color: var(--text-mute); margin: 0;">
+          © {new Date().getFullYear()} platformfeematrix.com
+        </p>
+      </div>
+
+      <!-- Column: Platforms -->
+      <div>
+        <p style="
+          font-family: var(--font-mono);
+          font-size: 11px;
+          font-weight: 400;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--text-mute);
+          margin: 0 0 12px;
+        ">Platforms</p>
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+          {[
+            { label: "Gumroad", url: "https://gumroad.com" },
+            { label: "Lemon Squeezy", url: "https://lemonsqueezy.com" },
+            { label: "Payhip", url: "https://payhip.com" },
+            { label: "Stripe", url: "https://stripe.com" },
+            { label: "Whop", url: "https://whop.com" },
+          ].map(({ label, url }) => (
+            <li>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style="font-size: 13px; color: var(--text-body); text-decoration: none; transition: color 0.1s ease;"
+                onmouseover="this.style.color='var(--text-ink)'"
+                onmouseout="this.style.color='var(--text-body)'"
+              >{label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column: Resources -->
+      <div>
+        <p style="
+          font-family: var(--font-mono);
+          font-size: 11px;
+          font-weight: 400;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--text-mute);
+          margin: 0 0 12px;
+        ">Resources</p>
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+          {[
+            { label: "Fee Calculator", url: "/#calculator" },
+            { label: "Platform Guide", url: "/#guide" },
+            { label: "MoR Explained", url: "/#guide" },
+            { label: "Stripe Pricing", url: "https://stripe.com/pricing" },
+          ].map(({ label, url }) => (
+            <li>
+              <a
+                href={url}
+                style="font-size: 13px; color: var(--text-body); text-decoration: none; transition: color 0.1s ease;"
+                onmouseover="this.style.color='var(--text-ink)'"
+                onmouseout="this.style.color='var(--text-body)'"
+              >{label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column: Legal -->
+      <div>
+        <p style="
+          font-family: var(--font-mono);
+          font-size: 11px;
+          font-weight: 400;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--text-mute);
+          margin: 0 0 12px;
+        ">Legal</p>
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+          <li><a href="/privacy" style="font-size: 13px; color: var(--text-body); text-decoration: none;">Privacy Policy</a></li>
+          <li><a href="/terms" style="font-size: 13px; color: var(--text-body); text-decoration: none;">Terms of Use</a></li>
+        </ul>
+        <p style="font-size: 11px; color: var(--text-mute); margin: 24px 0 0; line-height: 1.5; max-width: 160px;">
+          Fee data is for informational purposes only. Always verify with official platform pricing pages.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 32px !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .footer-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>

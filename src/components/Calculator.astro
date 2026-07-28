@@ -1,0 +1,735 @@
+---
+// Calculator.astro — Interactive multi-platform net margin calculator
+// All fee logic runs in vanilla JS — zero dependencies, instant updates
+---
+
+<section id="calculator" style="padding: 80px 24px; background: var(--bg-page);">
+  <div style="max-width: 1200px; margin: 0 auto;">
+
+    <!-- Section header -->
+    <div style="text-align: center; margin-bottom: 48px;">
+      <p style="
+        font-family: var(--font-mono);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-mute);
+        margin: 0 0 16px;
+      ">Real-time Calculator</p>
+      <h2 style="
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 600;
+        letter-spacing: -1.5px;
+        color: var(--text-ink);
+        margin: 0 0 16px;
+        line-height: 1.1;
+      ">Compare platform fees instantly.</h2>
+      <p style="
+        font-size: 17px;
+        color: var(--text-body);
+        max-width: 520px;
+        margin: 0 auto;
+        line-height: 1.6;
+      ">Adjust price, volume, and options to see exactly how much you keep across every major platform.</p>
+    </div>
+
+    <!-- ─── Controls Panel ─────────────────────────── -->
+    <div class="card-base" style="padding: 32px; margin-bottom: 32px;">
+
+      <!-- Sliders row -->
+      <div style="
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 36px;
+      " class="controls-grid">
+
+        <!-- Price slider -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+            <label for="price-slider" style="font-size: 14px; font-weight: 500; color: var(--text-ink);">
+              Product Price
+            </label>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 14px; color: var(--text-body);">$</span>
+              <input
+                type="number"
+                id="price-input"
+                min="1" max="500"
+                value="25"
+                style="
+                  width: 72px;
+                  height: 32px;
+                  padding: 0 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: var(--text-ink);
+                  background: var(--bg-input);
+                  border: 1px solid var(--border-hairline);
+                  border-radius: 6px;
+                  text-align: right;
+                  font-family: var(--font-mono);
+                "
+              />
+            </div>
+          </div>
+          <input type="range" id="price-slider" min="1" max="500" value="25" step="1" aria-label="Product price slider" />
+          <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+            <span style="font-size: 12px; color: var(--text-mute);">$1</span>
+            <span style="font-size: 12px; color: var(--text-mute);">$500</span>
+          </div>
+        </div>
+
+        <!-- Volume slider -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+            <label for="volume-slider" style="font-size: 14px; font-weight: 500; color: var(--text-ink);">
+              Monthly Sales Volume
+            </label>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input
+                type="number"
+                id="volume-input"
+                min="1" max="1000"
+                value="50"
+                style="
+                  width: 72px;
+                  height: 32px;
+                  padding: 0 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: var(--text-ink);
+                  background: var(--bg-input);
+                  border: 1px solid var(--border-hairline);
+                  border-radius: 6px;
+                  text-align: right;
+                  font-family: var(--font-mono);
+                "
+              />
+              <span style="font-size: 14px; color: var(--text-body);">units</span>
+            </div>
+          </div>
+          <input type="range" id="volume-slider" min="1" max="1000" value="50" step="1" aria-label="Monthly sales volume slider" />
+          <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+            <span style="font-size: 12px; color: var(--text-mute);">1</span>
+            <span style="font-size: 12px; color: var(--text-mute);">1,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toggles row -->
+      <div style="
+        border-top: 1px solid var(--border-hairline);
+        padding-top: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+      " class="toggles-row">
+
+        <!-- International cards -->
+        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+          <span class="toggle-switch">
+            <input type="checkbox" id="toggle-intl" role="switch" aria-label="International card surcharge toggle" />
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 13px; font-weight: 500; color: var(--text-ink);">International Cards</span>
+            <span style="font-size: 12px; color: var(--text-mute);">+1.5% surcharge on card fees</span>
+          </span>
+        </label>
+
+        <!-- PayPal processing -->
+        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+          <span class="toggle-switch">
+            <input type="checkbox" id="toggle-paypal" role="switch" aria-label="PayPal processing toggle" />
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 13px; font-weight: 500; color: var(--text-ink);">PayPal Processing</span>
+            <span style="font-size: 12px; color: var(--text-mute);">3.49% + $0.49 per transaction</span>
+          </span>
+        </label>
+
+        <!-- Gumroad mode -->
+        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+          <span class="toggle-switch">
+            <input type="checkbox" id="toggle-gumroad-mode" role="switch" aria-label="Gumroad Discover marketplace toggle" />
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 13px; font-weight: 500; color: var(--text-ink);">Gumroad Discover</span>
+            <span style="font-size: 12px; color: var(--text-mute);">Switch to marketplace (30% cut) vs. Direct (10% + $0.50)</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ─── Platform Cards Grid ─────────────────────── -->
+    <div id="platforms" style="
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    " class="platforms-grid" aria-live="polite" aria-label="Platform fee comparison">
+
+      <!-- ─── GUMROAD ─── -->
+      <div class="card-base platform-card" id="card-gumroad" style="padding: 24px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">🛒</span>
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">Gumroad</h3>
+            </div>
+            <p id="gumroad-mode-label" style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);">Direct — 10% + $0.50</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Gross Revenue</span>
+            <span id="gumroad-gross" style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);">$1,250.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Platform & Fees</span>
+            <span id="gumroad-fees" style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);">−$235.00</span>
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);">
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);">Net Profit</span>
+            <span id="gumroad-net" style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;">$1,015.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: var(--text-mute);">Effective fee rate</span>
+            <span id="gumroad-rate" style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);">18.8%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── LEMON SQUEEZY ─── -->
+      <div class="card-base platform-card" id="card-lemonsqueezy" style="padding: 24px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">🍋</span>
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">Lemon Squeezy</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);">5% + $0.50 per transaction</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
+            <span class="badge badge-mor">MoR — Auto-Tax</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Gross Revenue</span>
+            <span id="ls-gross" style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);">$1,250.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Platform & Fees</span>
+            <span id="ls-fees" style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);">−$87.50</span>
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);">
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);">Net Profit</span>
+            <span id="ls-net" style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;">$1,162.50</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: var(--text-mute);">Effective fee rate</span>
+            <span id="ls-rate" style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);">7.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PAYHIP ─── -->
+      <div class="card-base platform-card" id="card-payhip" style="padding: 24px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">💳</span>
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">Payhip</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);">Free 5% · Plus $29/mo · Pro $99/mo</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <!-- 3 Payhip tiers -->
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+          <!-- Free tier -->
+          <div id="payhip-free-row" style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-hairline);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size: 12px; font-weight: 500; color: var(--text-ink);">Free Plan (5%)</span>
+              <span id="payhip-free-net" style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);">$1,187.50</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 11px; color: var(--text-mute);">Fees: <span id="payhip-free-fees">$62.50</span></span>
+              <span id="payhip-free-rate" style="font-size: 11px; color: var(--text-mute); font-family: var(--font-mono);">5.0%</span>
+            </div>
+          </div>
+          <!-- Plus tier -->
+          <div id="payhip-plus-row" style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-hairline);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size: 12px; font-weight: 500; color: var(--text-ink);">Plus Plan ($29/mo + 2%)</span>
+              <span id="payhip-plus-net" style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);">$1,196.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 11px; color: var(--text-mute);">Fees: <span id="payhip-plus-fees">$54.00</span></span>
+              <span id="payhip-plus-rate" style="font-size: 11px; color: var(--text-mute); font-family: var(--font-mono);">4.3%</span>
+            </div>
+          </div>
+          <!-- Pro tier -->
+          <div id="payhip-pro-row" style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-hairline);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size: 12px; font-weight: 500; color: var(--text-ink);">Pro Plan ($99/mo + 0%)</span>
+              <span id="payhip-pro-net" style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);">$1,151.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 11px; color: var(--text-mute);">Fees: <span id="payhip-pro-fees">$99.00</span></span>
+              <span id="payhip-pro-rate" style="font-size: 11px; color: var(--text-mute); font-family: var(--font-mono);">7.9%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best tier indicator -->
+        <p id="payhip-best-label" style="font-size: 11px; color: var(--text-mute); margin: 0; text-align: center;">
+          ↑ <strong style="color: var(--text-body);">Free Plan</strong> is best at this volume
+        </p>
+      </div>
+
+      <!-- ─── STRIPE ─── -->
+      <div class="card-base platform-card" id="card-stripe" style="padding: 24px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">⚡</span>
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">Stripe Direct</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);">2.9% + $0.30 · No platform fee</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Gross Revenue</span>
+            <span id="stripe-gross" style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);">$1,250.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Processing Fees</span>
+            <span id="stripe-fees" style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);">−$51.25</span>
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);">
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);">Net Profit</span>
+            <span id="stripe-net" style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;">$1,198.75</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: var(--text-mute);">Effective fee rate</span>
+            <span id="stripe-rate" style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);">4.1%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── WHOP ─── -->
+      <div class="card-base platform-card" id="card-whop" style="padding: 24px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">🚀</span>
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">Whop</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);">3% flat + 2.9% + $0.30 card fee</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Gross Revenue</span>
+            <span id="whop-gross" style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);">$1,250.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 13px; color: var(--text-mute);">Platform & Fees</span>
+            <span id="whop-fees" style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);">−$88.75</span>
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);">
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);">Net Profit</span>
+            <span id="whop-net" style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;">$1,161.25</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: var(--text-mute);">Effective fee rate</span>
+            <span id="whop-rate" style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);">7.1%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── BEST VALUE SUMMARY CARD ─── -->
+      <div id="card-winner" class="card-base" style="padding: 24px; background: var(--bg-card-soft);">
+        <p style="
+          font-family: var(--font-mono);
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: var(--text-mute);
+          margin: 0 0 16px;
+        ">Summary</p>
+
+        <div style="margin-bottom: 20px;">
+          <p style="font-size: 13px; color: var(--text-mute); margin: 0 0 6px;">Best net profit</p>
+          <p id="winner-name" style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 0; letter-spacing: -0.5px;">Stripe Direct</p>
+          <p id="winner-net" style="font-size: 14px; color: var(--color-profit); font-family: var(--font-mono); font-weight: 600; margin: 4px 0 0;">$1,198.75 net</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Gumroad</span>
+            <span id="delta-gumroad" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$183.75</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Lemon Squeezy</span>
+            <span id="delta-ls" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$36.25</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Payhip</span>
+            <span id="delta-payhip" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$11.25</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Whop</span>
+            <span id="delta-whop" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$37.50</span>
+          </div>
+        </div>
+
+        <div style="
+          margin-top: 20px;
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: var(--badge-mor-bg);
+          color: var(--badge-mor-text);
+          font-size: 12px;
+          line-height: 1.5;
+        ">
+          <strong>💡 Pro tip:</strong> <span id="pro-tip-text">Stripe gives max profit but requires tax self-filing. Lemon Squeezy handles all VAT/GST globally.</span>
+        </div>
+      </div>
+
+    </div><!-- /platforms-grid -->
+
+    <!-- Disclaimer -->
+    <p style="text-align: center; font-size: 12px; color: var(--text-mute); margin-top: 24px;">
+      Calculations are estimates. Stripe card fee applied on all platforms where payment processing is separate. Payhip uses Stripe/PayPal for payments.
+      <a href="/#guide" style="color: var(--color-link);">Learn more ↓</a>
+    </p>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────
+     Calculator JavaScript — all fee logic runs client-side
+     ───────────────────────────────────────────────────────── -->
+<script>
+  // ── Helpers ──────────────────────────────────────────────────
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
+  const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
+
+  function el(id: string): HTMLElement | null {
+    return document.getElementById(id);
+  }
+
+  function setText(id: string, val: string) {
+    const e = el(id);
+    if (e) e.textContent = val;
+  }
+
+  // ── State ──────────────────────────────────────────────────────
+  let price = 25;
+  let volume = 50;
+  let intl = false;
+  let paypal = false;
+  let gumroadDiscover = false;
+
+  // ── Fee Formulas ───────────────────────────────────────────────
+  // Card processing fee (Stripe-standard)
+  function cardFee(p: number, international: boolean): number {
+    const rate = 0.029 + (international ? 0.015 : 0);
+    return p * rate + 0.30;
+  }
+
+  // PayPal fee
+  function paypalFee(p: number): number {
+    return p * 0.0349 + 0.49;
+  }
+
+  // Choose card processing (paypal toggle)
+  function processingFee(p: number, international: boolean, usePaypal: boolean): number {
+    return usePaypal ? paypalFee(p) : cardFee(p, international);
+  }
+
+  // Per-unit net calculations
+  function calcGumroad(p: number, intl: boolean, pp: boolean, discover: boolean) {
+    if (discover) {
+      const platformCut = p * 0.30;
+      return { gross: p, fees: platformCut, net: p - platformCut };
+    }
+    const platformCut = p * 0.10 + 0.50;
+    const proc = processingFee(p, intl, pp);
+    const totalFees = platformCut + proc;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
+
+  function calcLemonSqueezy(p: number, intl: boolean, pp: boolean) {
+    // MoR: 5% + $0.50 includes card processing
+    const platformCut = p * 0.05 + 0.50;
+    // Additional intl surcharge still applies
+    const intlExtra = intl ? p * 0.015 : 0;
+    const totalFees = platformCut + intlExtra;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
+
+  function calcPayhip(p: number, vol: number, intl: boolean, pp: boolean) {
+    const proc = processingFee(p, intl, pp);
+
+    // Free: 5% platform + processing
+    const freeFees = p * 0.05 + proc;
+    const freeNet = p - freeFees;
+
+    // Plus: $29/mo + 2% platform + processing
+    const plusMonthlyCost = 29;
+    const plusTxFees = p * 0.02 + proc;
+    const plusNetPerUnit = p - plusTxFees - plusMonthlyCost / vol;
+    const plusFees = p - plusNetPerUnit;
+
+    // Pro: $99/mo + 0% platform + processing
+    const proMonthlyCost = 99;
+    const proTxFees = proc;
+    const proNetPerUnit = p - proTxFees - proMonthlyCost / vol;
+    const proFees = p - proNetPerUnit;
+
+    return {
+      free: { fees: freeFees, net: freeNet, totalFees: freeFees * vol, totalNet: freeNet * vol },
+      plus: { fees: plusFees, net: plusNetPerUnit, totalFees: plusFees * vol, totalNet: plusNetPerUnit * vol },
+      pro:  { fees: proFees, net: proNetPerUnit, totalFees: proFees * vol, totalNet: proNetPerUnit * vol },
+    };
+  }
+
+  function calcStripe(p: number, intl: boolean, pp: boolean) {
+    const proc = processingFee(p, intl, pp);
+    return { gross: p, fees: proc, net: p - proc };
+  }
+
+  function calcWhop(p: number, intl: boolean, pp: boolean) {
+    const platformCut = p * 0.03;
+    const proc = processingFee(p, intl, pp);
+    const totalFees = platformCut + proc;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
+
+  // ── Render ─────────────────────────────────────────────────────
+  function update() {
+    const gross = price * volume;
+
+    // Gumroad
+    const gu = calcGumroad(price, intl, paypal, gumroadDiscover);
+    const guTotalFees = gu.fees * volume;
+    const guTotalNet = gu.net * volume;
+    const guRate = gu.fees / price;
+    setText("gumroad-mode-label",
+      gumroadDiscover ? "Discover — 30% marketplace cut" : "Direct — 10% + $0.50 per sale");
+    setText("gumroad-gross", fmt(gross));
+    setText("gumroad-fees", `−${fmt(guTotalFees)}`);
+    setText("gumroad-net", fmt(guTotalNet));
+    setText("gumroad-rate", pct(guRate));
+
+    // Lemon Squeezy
+    const ls = calcLemonSqueezy(price, intl, paypal);
+    const lsTotalFees = ls.fees * volume;
+    const lsTotalNet = ls.net * volume;
+    const lsRate = ls.fees / price;
+    setText("ls-gross", fmt(gross));
+    setText("ls-fees", `−${fmt(lsTotalFees)}`);
+    setText("ls-net", fmt(lsTotalNet));
+    setText("ls-rate", pct(lsRate));
+
+    // Payhip
+    const ph = calcPayhip(price, volume, intl, paypal);
+    const highlightPayhip = (id: string, active: boolean) => {
+      const row = el(id);
+      if (!row) return;
+      row.style.background = active ? "var(--color-profit-bg)" : "";
+      row.style.borderColor = active ? "var(--color-profit)" : "var(--border-hairline)";
+    };
+    // Find best payhip tier
+    const phNets = [ph.free.totalNet, ph.plus.totalNet, ph.pro.totalNet];
+    const phBestIdx = phNets.indexOf(Math.max(...phNets));
+    const phBestLabels = ["Free Plan", "Plus Plan", "Pro Plan"];
+    const phBestNet = phNets[phBestIdx];
+
+    highlightPayhip("payhip-free-row", phBestIdx === 0);
+    highlightPayhip("payhip-plus-row", phBestIdx === 1);
+    highlightPayhip("payhip-pro-row", phBestIdx === 2);
+
+    setText("payhip-free-net", fmt(ph.free.totalNet));
+    setText("payhip-free-fees", fmt(ph.free.totalFees));
+    setText("payhip-free-rate", pct(ph.free.fees / price));
+    setText("payhip-plus-net", fmt(ph.plus.totalNet));
+    setText("payhip-plus-fees", fmt(ph.plus.totalFees));
+    setText("payhip-plus-rate", pct(ph.plus.fees / price));
+    setText("payhip-pro-net", fmt(ph.pro.totalNet));
+    setText("payhip-pro-fees", fmt(ph.pro.totalFees));
+    setText("payhip-pro-rate", pct(ph.pro.fees / price));
+    setText("payhip-best-label", `↑ ${phBestLabels[phBestIdx]} is best at this volume`);
+
+    // Stripe
+    const st = calcStripe(price, intl, paypal);
+    const stTotalFees = st.fees * volume;
+    const stTotalNet = st.net * volume;
+    const stRate = st.fees / price;
+    setText("stripe-gross", fmt(gross));
+    setText("stripe-fees", `−${fmt(stTotalFees)}`);
+    setText("stripe-net", fmt(stTotalNet));
+    setText("stripe-rate", pct(stRate));
+
+    // Whop
+    const wh = calcWhop(price, intl, paypal);
+    const whTotalFees = wh.fees * volume;
+    const whTotalNet = wh.net * volume;
+    const whRate = wh.fees / price;
+    setText("whop-gross", fmt(gross));
+    setText("whop-fees", `−${fmt(whTotalFees)}`);
+    setText("whop-net", fmt(whTotalNet));
+    setText("whop-rate", pct(whRate));
+
+    // ── Winner Summary ───────────────────────────────────────────
+    const results: Array<{ name: string; net: number; isMoR: boolean }> = [
+      { name: "Gumroad", net: guTotalNet, isMoR: false },
+      { name: "Lemon Squeezy", net: lsTotalNet, isMoR: true },
+      { name: `Payhip (${phBestLabels[phBestIdx]})`, net: phBestNet, isMoR: false },
+      { name: "Stripe Direct", net: stTotalNet, isMoR: false },
+      { name: "Whop", net: whTotalNet, isMoR: false },
+    ];
+
+    results.sort((a, b) => b.net - a.net);
+    const winner = results[0];
+
+    setText("winner-name", winner.name);
+    setText("winner-net", `${fmt(winner.net)} net`);
+
+    // Deltas vs winner
+    const deltaMap: Record<string, number> = {
+      "delta-gumroad": winner.net - guTotalNet,
+      "delta-ls": winner.net - lsTotalNet,
+      "delta-payhip": winner.net - phBestNet,
+      "delta-whop": winner.net - whTotalNet,
+    };
+
+    for (const [id, delta] of Object.entries(deltaMap)) {
+      const e = el(id);
+      if (!e) continue;
+      if (delta === 0) {
+        e.textContent = "Winner ✓";
+        e.style.color = "var(--color-profit)";
+      } else {
+        e.textContent = `−${fmt(delta)}`;
+        e.style.color = "var(--text-mute)";
+      }
+    }
+
+    // Pro tip
+    const tip = winner.isMoR
+      ? `${winner.name} handles all VAT/GST globally — no tax headaches.`
+      : `${winner.name} gives max profit. Consider Lemon Squeezy for automatic tax compliance.`;
+    setText("pro-tip-text", tip);
+
+    // Highlight best card
+    document.querySelectorAll(".platform-card").forEach(c => {
+      (c as HTMLElement).style.outline = "";
+    });
+    const winnerCardMap: Record<string, string> = {
+      "Gumroad": "card-gumroad",
+      "Lemon Squeezy": "card-lemonsqueezy",
+      "Stripe Direct": "card-stripe",
+      "Whop": "card-whop",
+    };
+    const cardId = winnerCardMap[winner.name.split(" (")[0]];
+    if (cardId) {
+      const wc = el(cardId);
+      if (wc) wc.style.outline = "2px solid var(--color-profit)";
+    } else {
+      const phCard = el("card-payhip");
+      if (phCard) phCard.style.outline = "2px solid var(--color-profit)";
+    }
+  }
+
+  // ── Event wiring ───────────────────────────────────────────────
+  function wireSlider(sliderId: string, inputId: string, setter: (n: number) => void) {
+    const slider = el(sliderId) as HTMLInputElement | null;
+    const input = el(inputId) as HTMLInputElement | null;
+    if (!slider || !input) return;
+
+    slider.addEventListener("input", () => {
+      const v = Number(slider.value);
+      setter(v);
+      input.value = String(v);
+      update();
+    });
+
+    input.addEventListener("input", () => {
+      let v = Number(input.value);
+      const min = Number(slider.min);
+      const max = Number(slider.max);
+      v = Math.max(min, Math.min(max, v));
+      setter(v);
+      slider.value = String(v);
+      update();
+    });
+  }
+
+  wireSlider("price-slider", "price-input", (v) => { price = v; });
+  wireSlider("volume-slider", "volume-input", (v) => { volume = v; });
+
+  function wireToggle(id: string, setter: (b: boolean) => void) {
+    const t = el(id) as HTMLInputElement | null;
+    if (!t) return;
+    t.addEventListener("change", () => { setter(t.checked); update(); });
+  }
+
+  wireToggle("toggle-intl", (b) => { intl = b; });
+  wireToggle("toggle-paypal", (b) => { paypal = b; });
+  wireToggle("toggle-gumroad-mode", (b) => { gumroadDiscover = b; });
+
+  // Initial render
+  update();
+</script>
+
+<style>
+  @media (max-width: 960px) {
+    .platforms-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+  @media (max-width: 600px) {
+    .platforms-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .controls-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .toggles-row {
+      flex-direction: column !important;
+      gap: 16px !important;
+    }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+// GuideSection.astro — 600-word SEO educational guide
+---
+
+<section id="guide" style="
+  padding: 96px 24px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-hairline);
+">
+  <div style="max-width: 720px; margin: 0 auto;">
+
+    <!-- Section eyebrow -->
+    <p style="
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-mute);
+      margin: 0 0 16px;
+    ">Platform Guide</p>
+
+    <h2 style="
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 600;
+      letter-spacing: -1.2px;
+      color: var(--text-ink);
+      margin: 0 0 40px;
+      line-height: 1.15;
+    ">Understanding digital platform fees: a guide for creators.</h2>
+
+    <div style="
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-body);
+    " class="guide-content">
+
+      <h3 style="font-size: 19px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;">How platform fees actually work</h3>
+      <p style="margin: 0 0 24px;">
+        Every platform that sells digital products — whether an ebook, template, course, or SaaS subscription — charges some combination of a <strong style="color: var(--text-ink);">platform percentage</strong>, a <strong style="color: var(--text-ink);">fixed transaction fee</strong>, and a <strong style="color: var(--text-ink);">payment processing fee</strong>. These three layers compound differently depending on your price point, which is why a platform that looks "cheaper" at $10 products can be more expensive at $100 products.
+      </p>
+      <p style="margin: 0 0 24px;">
+        Take Gumroad's Direct pricing: 10% of the sale price plus $0.50 per transaction, plus approximately 2.9% + $0.30 for card processing. On a $5 digital download, Gumroad's effective take is over 25%. On a $100 product, it drops to roughly 14%. This non-linear relationship is exactly why a static comparison table misleads creators — the "best" platform is always price-and-volume dependent.
+      </p>
+
+      <h3 style="font-size: 19px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;">The hidden cost of fixed transaction fees on low-ticket items</h3>
+      <p style="margin: 0 0 24px;">
+        Fixed per-transaction fees like $0.30 (Stripe) or $0.50 (Lemon Squeezy, Gumroad) are disproportionately devastating at low price points. Selling a $1 digital product on Stripe costs $0.33 in fees before the product percentage — a 33% overhead from a single line item. At $5, that same $0.30 is 6%. At $25, it's 1.2%.
+      </p>
+      <p style="margin: 0 0 24px;">
+        This is why pricing your digital products at $10+ is often more critical than which platform you choose. Creators selling low-ticket tripwire offers (under $5) should consider platforms that bundle processing into one flat percentage without fixed fees, or use platforms like Payhip's Pro plan ($99/month flat, 0% per transaction) at sufficient volume.
+      </p>
+
+      <h3 style="font-size: 19px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;">What is a Merchant of Record (MoR)?</h3>
+      <p style="margin: 0 0 24px;">
+        A Merchant of Record is a platform that legally takes on the responsibility of selling your products to customers — including collecting, calculating, filing, and remitting sales tax, VAT, and GST across every jurisdiction. Lemon Squeezy is the clearest example in this comparison.
+      </p>
+      <p style="margin: 0 0 24px;">
+        Without an MoR, you are responsible for EU VAT registration once you exceed thresholds (typically €10,000 in EU-wide digital sales), US state sales tax registration in nexus states, Australian GST, UK VAT, and dozens more. This isn't theoretical risk — platforms like Gumroad, Stripe, Payhip, and Whop leave tax compliance entirely to you as the seller.
+      </p>
+      <p style="margin: 0 0 24px;">
+        Lemon Squeezy's 5% + $0.50 fee includes this MoR coverage globally. When you factor in the cost of an accountant, tax software like TaxJar or Quaderno ($19–$99/month), or the risk of non-compliance penalties, an MoR platform often represents real savings beyond its fee percentage — especially for creators selling to international audiences.
+      </p>
+
+      <h3 style="font-size: 19px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;">Platform comparison: who is each platform best for?</h3>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; margin: 0 0 24px;">
+        {[
+          {
+            name: "Stripe Direct",
+            emoji: "⚡",
+            description: "Best for maximum margin on high-volume, higher-priced products when you already have tax infrastructure. Lowest fees (2.9% + $0.30), but you handle all compliance, customer support integrations, and storefront yourself.",
+          },
+          {
+            name: "Lemon Squeezy",
+            emoji: "🍋",
+            description: "Best for international creators, SaaS founders, and anyone who wants to sell globally without worrying about tax compliance. 5% + $0.50 is the price you pay for complete VAT/GST handling worldwide.",
+          },
+          {
+            name: "Payhip Pro",
+            emoji: "💳",
+            description: "Best for high-volume creators selling above $50 products at 100+ units/month. The $99/month flat Pro plan drops your effective rate below Stripe at scale. Payhip also has strong affiliate tools and course hosting.",
+          },
+          {
+            name: "Gumroad",
+            emoji: "🛒",
+            description: "Best for creators already in the Gumroad ecosystem with an existing audience. The Discover marketplace can drive organic sales that offset the higher 30% cut. For new creators, Direct mode (10% + $0.50) is typically more expensive than alternatives.",
+          },
+          {
+            name: "Whop",
+            emoji: "🚀",
+            description: "Best for community-driven products, Discord access, and subscription-based digital goods. The 3% platform fee plus card processing is competitive, and Whop's marketplace exposure rivals Gumroad's Discover for certain niches.",
+          },
+        ].map(({ name, emoji, description }) => (
+          <div style="
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-hairline);
+            background: var(--bg-card-soft);
+          ">
+            <p style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0 0 6px;">
+              {emoji} {name}
+            </p>
+            <p style="font-size: 14px; color: var(--text-body); margin: 0; line-height: 1.6;">
+              {description}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <h3 style="font-size: 19px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;">International card surcharges and PayPal</h3>
+      <p style="margin: 0 0 24px;">
+        When customers use non-US credit or debit cards, Stripe applies a 1.5% international surcharge on top of the standard 2.9% rate. On platforms that pass card processing costs through (Gumroad Direct, Payhip, Whop), this surcharge flows to you. Use the "International Cards" toggle in the calculator above to model this scenario — particularly important if more than 30% of your audience is outside the United States.
+      </p>
+      <p style="margin: 0 0 0;">
+        PayPal processing is an alternative to card processing on many platforms. PayPal's standard rate (3.49% + $0.49 per transaction) is typically more expensive than Stripe for small-ticket items but can be preferable for buyers who distrust card-on-file payments. Toggle PayPal in the calculator to compare the impact on your net margins.
+      </p>
+    </div>
+  </div>
+</section>
