@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import ScrollProgress from "../components/ScrollProgress.astro";
+import FloatingDock from "../components/FloatingDock.astro";
 
 interface Props {
   title?: string;
@@ -48,18 +50,72 @@ const {
       rel="stylesheet"
     />
 
-    <!-- Dark mode: run before paint to avoid FOUC -->
+    <!-- Dark mode initialization -->
     <script is:inline>
       (function () {
         const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (stored === "dark" || (!stored && prefersDark)) {
+        if (stored === "light") {
+          document.documentElement.classList.add("light");
+        } else {
           document.documentElement.classList.add("dark");
         }
       })();
     </script>
   </head>
-  <body>
-    <slot />
+  <body class="bg-mesh-grid">
+    <!-- Ambient Mouse-Following Spotlight (Strictly in Background) -->
+    <div
+      id="mouse-spotlight"
+      style="
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background: radial-gradient(650px circle at var(--spotlight-x, 50vw) var(--spotlight-y, 30vh), rgba(245, 158, 11, 0.07), rgba(121, 40, 202, 0.04), transparent 75%);
+        transition: opacity 0.3s ease;
+      "
+      aria-hidden="true"
+    >
+    </div>
+
+    <ScrollProgress />
+
+    <div style="position: relative; z-index: 1;">
+      <slot />
+    </div>
+
+    <FloatingDock />
+
+    <!-- 60 FPS Mouse Spotlight Tracking Script -->
+    <script is:inline>
+      (function () {
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 3;
+        let currentX = mouseX;
+        let currentY = mouseY;
+        let ticking = false;
+
+        const spotlight = document.getElementById("mouse-spotlight");
+
+        window.addEventListener("mousemove", function (e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+
+          if (!ticking) {
+            window.requestAnimationFrame(function () {
+              // Smooth lerp interpolation for soft fluid motion
+              currentX += (mouseX - currentX) * 0.15;
+              currentY += (mouseY - currentY) * 0.15;
+              if (spotlight) {
+                spotlight.style.setProperty("--spotlight-x", currentX + "px");
+                spotlight.style.setProperty("--spotlight-y", currentY + "px");
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

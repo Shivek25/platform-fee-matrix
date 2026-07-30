@@ -13,80 +13,109 @@ import Footer from "../components/Footer.astro";
   <Nav />
 
   <!-- ─── Hero Section ─────────────────────────────── -->
-  <section style="
+  <section
+    style="
     position: relative;
     overflow: hidden;
-    padding: 96px 24px 80px;
-    background: var(--bg-page);
+    padding: 110px 24px 90px;
+    background: transparent;
     text-align: center;
-  ">
+  "
+  >
     <!-- Mesh gradient backdrop -->
-    <div class="hero-gradient" style="
+    <div
+      class="hero-gradient"
+      style="
       position: absolute;
       inset: 0;
       z-index: 0;
-    " aria-hidden="true"></div>
+    "
+      aria-hidden="true"
+    >
+    </div>
 
-    <div style="position: relative; z-index: 1; max-width: 760px; margin: 0 auto;">
-
+    <div
+      style="position: relative; z-index: 1; max-width: 780px; margin: 0 auto;"
+    >
       <!-- Eyebrow badge -->
-      <div style="
+      <div
+        class="reveal-on-scroll stagger-1"
+        style="
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: var(--bg-card);
-        border: 1px solid var(--border-hairline);
+        background: rgba(17, 23, 38, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(245, 158, 11, 0.3);
         border-radius: 100px;
-        padding: 5px 14px 5px 8px;
+        padding: 6px 16px 6px 10px;
         font-size: 13px;
-        color: var(--text-body);
+        color: #d1d5db;
         margin-bottom: 32px;
-        box-shadow: var(--shadow-card);
-      ">
-        <span style="
-          background: #171717;
-          color: #fff;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+      "
+      >
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
           font-size: 10px;
-          font-weight: 600;
-          padding: 2px 8px;
+          font-weight: 700;
+          padding: 3px 10px;
           border-radius: 100px;
           letter-spacing: 0.05em;
-        ">NEW</span>
-        <span>5 platforms. Real-time. No spreadsheet needed.</span>
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        "
+          >NEW</span
+        >
+        <span>5 platforms. Real-time take-home math. No spreadsheets.</span>
       </div>
 
       <!-- Headline -->
-      <h1 style="
-        font-size: clamp(36px, 6vw, 56px);
-        font-weight: 600;
-        letter-spacing: -2.2px;
-        color: var(--text-ink);
+      <h1
+        class="reveal-on-scroll stagger-2"
+        style="
+        font-size: clamp(38px, 6.5vw, 62px);
+        font-weight: 700;
+        letter-spacing: -2px;
         line-height: 1.05;
         margin: 0 0 24px;
-      ">
+        background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      "
+      >
         Stop guessing.<br />
         Calculate your real take-home.
       </h1>
 
       <!-- Sub-headline -->
-      <p style="
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
         font-size: 18px;
         color: var(--text-body);
         line-height: 1.65;
-        max-width: 560px;
+        max-width: 580px;
         margin: 0 auto 40px;
-      ">
-        The interactive fee calculator that shows you exactly how much Gumroad, Lemon Squeezy, Payhip, Stripe, and Whop actually cost — at your price, your volume, and your payment mix.
+      "
+      >
+        The interactive fee calculator that shows you exactly how much Gumroad,
+        Lemon Squeezy, Payhip, Stripe, and Whop actually cost — at your exact
+        price and volume.
       </p>
 
       <!-- CTA row -->
-      <div style="
+      <div
+        class="reveal-on-scroll stagger-4"
+        style="
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
+        gap: 16px;
         flex-wrap: wrap;
-      ">
+      "
+      >
         <a
           href="#calculator"
           id="hero-cta-primary"
@@ -94,23 +123,35 @@ import Footer from "../components/Footer.astro";
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            height: 44px;
-            padding: 0 20px;
-            background: var(--color-primary);
-            color: var(--bg-page);
+            height: 48px;
+            padding: 0 24px;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #0B0F17;
             border-radius: 100px;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
-            transition: opacity 0.15s ease;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
             letter-spacing: -0.2px;
           "
-          onmouseover="this.style.opacity='0.85'"
-          onmouseout="this.style.opacity='1'"
+          onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 0 30px rgba(245, 158, 11, 0.65)'"
+          onmouseout="this.style.transform='none';this.style.boxShadow='0 0 20px rgba(245, 158, 11, 0.4)'"
         >
           Open Calculator
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line><polyline
+              points="12 5 19 12 12 19"></polyline>
           </svg>
         </a>
         <a
@@ -119,90 +160,121 @@ import Footer from "../components/Footer.astro";
           style="
             display: inline-flex;
             align-items: center;
-            height: 44px;
-            padding: 0 20px;
-            background: var(--bg-card);
+            height: 48px;
+            padding: 0 24px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
             color: var(--text-ink);
-            border: 1px solid var(--border-hairline);
+            border: 1px solid var(--border-hairline-strong);
             border-radius: 100px;
             font-size: 15px;
             font-weight: 500;
             text-decoration: none;
-            transition: background 0.15s ease;
+            transition: background 0.15s ease, border-color 0.15s ease;
             letter-spacing: -0.2px;
           "
-          onmouseover="this.style.background='var(--bg-card-soft)'"
-          onmouseout="this.style.background='var(--bg-card)'"
+          onmouseover="this.style.background='rgba(255, 255, 255, 0.08)';this.style.borderColor='rgba(245, 158, 11, 0.3)'"
+          onmouseout="this.style.background='rgba(255, 255, 255, 0.04)';this.style.borderColor='var(--border-hairline-strong)'"
         >
           Read the Guide
         </a>
       </div>
 
-      <!-- Platform logos/indicators strip -->
-      <div style="
+      <!-- Platform indicators strip -->
+      <div
+        style="
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 24px;
+        gap: 16px;
         margin-top: 56px;
         flex-wrap: wrap;
-      ">
-        {["Gumroad", "Lemon Squeezy", "Payhip", "Stripe", "Whop"].map((name) => (
-          <div style="
+      "
+      >
+        {
+          ["Gumroad", "Lemon Squeezy", "Payhip", "Stripe", "Whop"].map(
+            (name) => (
+              <div
+                style="
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 13px;
-            color: var(--text-mute);
-            padding: 6px 14px;
+            font-weight: 500;
+            color: var(--text-body);
+            padding: 6px 16px;
             border-radius: 100px;
-            background: var(--bg-card);
+            background: rgba(17, 23, 38, 0.5);
+            backdrop-filter: blur(8px);
             border: 1px solid var(--border-hairline);
-          ">
-            <span style="font-size: 11px; width: 6px; height: 6px; background: var(--border-hairline-strong); border-radius: 50%; display: inline-block;"></span>
-            {name}
-          </div>
-        ))}
+          "
+              >
+                <span style="width: 6px; height: 6px; background: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10B981;" />
+                {name}
+              </div>
+            ),
+          )
+        }
       </div>
-
     </div>
   </section>
 
   <!-- ─── Stats Row ─────────────────────────────────── -->
-  <section style="
-    background: var(--bg-card);
-    border-top: 1px solid var(--border-hairline);
-    border-bottom: 1px solid var(--border-hairline);
-    padding: 0;
-  ">
-    <div style="
+  <section
+    style="
+    background: transparent;
+    padding: 0 24px;
+    margin-bottom: 32px;
+  "
+  >
+    <div
+      style="
       max-width: 1200px;
       margin: 0 auto;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-xl);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-    " class="stats-grid">
-      {[
-        { value: "5", label: "Platforms compared" },
-        { value: "0ms", label: "Calculation latency" },
-        { value: "3", label: "Toggle variables" },
-        { value: "100%", label: "Client-side, no tracking" },
-      ].map(({ value, label }) => (
-        <div style="
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    "
+      class="stats-grid"
+    >
+      {
+        [
+          { value: "5", label: "Platforms compared" },
+          { value: "0ms", label: "Calculation latency" },
+          { value: "3", label: "Toggle variables" },
+          { value: "100%", label: "Client-side, no tracking" },
+        ].map(({ value, label }) => (
+          <div
+            style="
           padding: 28px 24px;
           border-right: 1px solid var(--border-hairline);
           text-align: center;
-        " class="stat-item">
-          <p style="
-            font-size: 28px;
+        "
+            class="stat-item"
+          >
+            <p
+              style="
+            font-size: 30px;
             font-weight: 700;
             color: var(--text-ink);
             margin: 0 0 4px;
             letter-spacing: -1px;
             font-family: var(--font-mono);
-          ">{value}</p>
-          <p style="font-size: 13px; color: var(--text-mute); margin: 0;">{label}</p>
-        </div>
-      ))}
+          "
+            >
+              {value}
+            </p>
+            <p style="font-size: 13px; color: var(--text-mute); margin: 0;">
+              {label}
+            </p>
+          </div>
+        ))
+      }
     </div>
   </section>
 
@@ -212,65 +284,187 @@ import Footer from "../components/Footer.astro";
   <!-- ─── Guide ─────────────────────────────────────── -->
   <GuideSection />
 
-  <!-- ─── Bottom CTA Band ───────────────────────────── -->
+  <!-- ─── Bottom CTA Band (Dark Glassmorphic Hero Card) ─ -->
   <section style="
-    padding: 96px 24px;
-    background: var(--color-primary);
-    text-align: center;
+    padding: 80px 24px;
+    background: transparent;
   ">
-    <div style="max-width: 600px; margin: 0 auto;">
-      <p style="
-        font-family: var(--font-mono);
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: rgba(255,255,255,0.4);
-        margin: 0 0 20px;
-      ">Free forever</p>
-      <h2 style="
-        font-size: clamp(28px, 4vw, 40px);
-        font-weight: 600;
-        letter-spacing: -1.5px;
-        color: #ffffff;
-        margin: 0 0 20px;
-        line-height: 1.1;
-      ">Know your margin before you launch.</h2>
-      <p style="
-        font-size: 17px;
-        color: rgba(255,255,255,0.6);
-        margin: 0 0 40px;
-        line-height: 1.6;
-      ">Bookmark this tool. Share it with your creator friends. No sign-up required.</p>
-      <a
-        href="#calculator"
-        style="
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          height: 48px;
-          padding: 0 24px;
-          background: #ffffff;
-          color: #171717;
-          border-radius: 100px;
-          font-size: 15px;
-          font-weight: 600;
-          text-decoration: none;
-          transition: opacity 0.15s ease;
-          letter-spacing: -0.2px;
-        "
-        onmouseover="this.style.opacity='0.9'"
-        onmouseout="this.style.opacity='1'"
+    <div
+      class="hero-cta-glow"
+      style="
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 64px 32px;
+        background: rgba(17, 23, 38, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        border-radius: var(--radius-xl);
+        text-align: center;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.12);
+        position: relative;
+        overflow: hidden;
+      "
+    >
+      <div
+        style="position: relative; z-index: 1; max-width: 600px; margin: 0 auto;"
       >
-        Calculate Now
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </a>
+        <span
+          style="
+          display: inline-block;
+          font-family: var(--font-mono);
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: #F59E0B;
+          background: rgba(245, 158, 11, 0.12);
+          border: 1px solid rgba(245, 158, 11, 0.3);
+          padding: 4px 12px;
+          border-radius: 100px;
+          margin: 0 0 20px;
+        "
+          >Free Forever</span
+        >
+
+        <h2
+          style="
+          font-size: clamp(30px, 4.5vw, 44px);
+          font-weight: 700;
+          letter-spacing: -1.5px;
+          color: #ffffff;
+          margin: 0 0 20px;
+          line-height: 1.1;
+        "
+        >
+          Know your margin before you launch.
+        </h2>
+
+        <p
+          style="
+          font-size: 17px;
+          color: var(--text-body);
+          margin: 0 0 36px;
+          line-height: 1.6;
+        "
+        >
+          Bookmark this tool. Share it with your creator friends. No sign-up
+          required.
+        </p>
+
+        <a
+          href="#calculator"
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            height: 52px;
+            padding: 0 28px;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #0B0F17;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 0 24px rgba(245, 158, 11, 0.45);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            letter-spacing: -0.2px;
+          "
+          onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 0 35px rgba(245, 158, 11, 0.7)'"
+          onmouseout="this.style.transform='none';this.style.boxShadow='0 0 24px rgba(245, 158, 11, 0.45)'"
+        >
+          Calculate Now
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line><polyline
+              points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 
   <Footer />
 </Layout>
+
+<script>
+  function initScrollReveals() {
+    const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-3d');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    // Animated Stat Counters
+    const statItems = document.querySelectorAll('.stat-item');
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const p = entry.target.querySelector('p:first-child');
+          if (p && !p.hasAttribute('data-animated')) {
+            p.setAttribute('data-animated', 'true');
+            animateStatCounter(p);
+          }
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    statItems.forEach((el) => statObserver.observe(el));
+  }
+
+  function animateStatCounter(el: Element) {
+    const rawText = el.textContent ? el.textContent.trim() : '';
+    const numMatch = rawText.match(/\d+/);
+    if (!numMatch) return;
+
+    const targetNum = parseInt(numMatch[0], 10);
+    const prefix = rawText.substring(0, rawText.indexOf(numMatch[0]));
+    const suffix = rawText.substring(rawText.indexOf(numMatch[0]) + numMatch[0].length);
+
+    const duration = 1200;
+    const startTime = performance.now();
+
+    function step(now: number) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out expo curve
+      const easedProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const currentNum = Math.floor(easedProgress * targetNum);
+      el.textContent = `${prefix}${currentNum}${suffix}`;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = rawText;
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollReveals);
+  } else {
+    initScrollReveals();
+  }
+</script>
 
 <style>
   @media (max-width: 768px) {
