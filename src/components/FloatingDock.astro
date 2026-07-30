@@ -1,0 +1,161 @@
+---
+---
+<div
+  id="floating-winner-dock"
+  role="region"
+  aria-label="Floating Navigation and Winner Summary"
+  style="
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    opacity: 0;
+    z-index: 990;
+    background: rgba(11, 15, 23, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 100px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.2);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    pointer-events: auto;
+    white-space: nowrap;
+  "
+>
+  <!-- Live Winner Badge -->
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 14px;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13px;
+      font-weight: 600;
+      color: #F9FAFB;
+    "
+  >
+    <span
+      id="dock-pulse-dot"
+      style="
+        width: 8px;
+        height: 8px;
+        background: #10B981;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #10B981;
+        display: inline-block;
+      "
+    ></span>
+    <span id="dock-winner-text" style="color: var(--text-ink); font-weight: 600;">
+      ⚡ Best Take-Home: Calculating...
+    </span>
+  </div>
+
+  <!-- Quick Anchors -->
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <a
+      href="#calculator"
+      style="
+        color: #D1D5DB;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 4px 10px;
+        border-radius: 100px;
+        transition: color 0.15s ease, background 0.15s ease;
+      "
+      onmouseover="this.style.color='#F59E0B';this.style.background='rgba(245, 158, 11, 0.1)'"
+      onmouseout="this.style.color='#D1D5DB';this.style.background='transparent'"
+    >
+      Calculator
+    </a>
+    <a
+      href="#guide"
+      style="
+        color: #D1D5DB;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 4px 10px;
+        border-radius: 100px;
+        transition: color 0.15s ease, background 0.15s ease;
+      "
+      onmouseover="this.style.color='#F59E0B';this.style.background='rgba(245, 158, 11, 0.1)'"
+      onmouseout="this.style.color='#D1D5DB';this.style.background='transparent'"
+    >
+      Guide
+    </a>
+    <button
+      id="dock-back-to-top"
+      aria-label="Back to Top"
+      style="
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #F9FAFB;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
+      "
+      onmouseover="this.style.background='rgba(245, 158, 11, 0.2)';this.style.borderColor='rgba(245, 158, 11, 0.4)'"
+      onmouseout="this.style.background='rgba(255, 255, 255, 0.08)';this.style.borderColor='rgba(255, 255, 255, 0.15)'"
+    >
+      Top ↑
+    </button>
+  </div>
+</div>
+
+<script>
+  function initFloatingDock() {
+    const dock = document.getElementById('floating-winner-dock');
+    const winnerText = document.getElementById('dock-winner-text');
+    const topBtn = document.getElementById('dock-back-to-top');
+    if (!dock) return;
+
+    // Toggle Dock visibility based on scroll position (> 350px)
+    let ticking = false;
+    function checkScroll() {
+      if (window.scrollY > 350) {
+        dock.style.transform = 'translateX(-50%) translateY(0)';
+        dock.style.opacity = '1';
+      } else {
+        dock.style.transform = 'translateX(-50%) translateY(120px)';
+        dock.style.opacity = '0';
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(checkScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    if (topBtn) {
+      topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Listen for custom winner-updated event from Calculator component
+    window.addEventListener('matrix-winner-updated', ((e: CustomEvent) => {
+      if (winnerText && e.detail) {
+        const { name, netFormatted } = e.detail;
+        winnerText.innerHTML = `⚡ Best: <span style="color: #10B981; font-weight: 700;">${name}</span> (${netFormatted})`;
+      }
+    }) as EventListener);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingDock);
+  } else {
+    initFloatingDock();
+  }
+</script>

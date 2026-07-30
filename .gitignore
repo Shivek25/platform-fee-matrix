@@ -32,6 +32,7 @@ Desktop.ini
 *.njsproj
 *.sln
 *.sw?
+docs/
 
 # ─── Graphify (knowledge graph — local tooling only) ──────
 graphify-out/
