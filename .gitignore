@@ -37,10 +37,14 @@ docs/
 # ─── Graphify (knowledge graph — local tooling only) ──────
 graphify-out/
 
-# ─── Antigravity / AI agent artefacts ────────────────────
+# ─── Antigravity / AI agent files ────────────────────────
 .claude/
+.agents/
+AGENTS.md
+CLAUDE.md
+DESIGN.md
 skills-lock.json
 
-# ─── Package manager lock (keep package-lock.json only) ──
+# ─── Package manager locks (keep package-lock.json) ──────
 yarn.lock
 pnpm-lock.yaml

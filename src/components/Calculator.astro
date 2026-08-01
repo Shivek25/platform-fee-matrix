@@ -1,6 +1,6 @@
 ---
-// Calculator.astro — Interactive multi-platform net margin calculator
-// Dynamic Live Currency Engine — Fetches real-time exchange rates & converts all figures
+// Calculator.astro: Interactive multi-platform net margin calculator
+// Dynamic Live Currency Engine: Fetches real-time exchange rates & converts all figures
 ---
 
 <section
@@ -51,7 +51,7 @@
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
         <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
           <span style="font-size: 13px; color: var(--text-mute); font-weight: 500;">Currency:</span>
-          <div id="currency-selector" style="display: inline-flex; background: rgba(17, 23, 38, 0.8); border: 1px solid var(--border-hairline); border-radius: 100px; padding: 4px; gap: 4px;">
+          <div id="currency-selector" class="currency-selector-box">
             <button type="button" class="curr-btn active" data-curr="USD">$ USD</button>
             <button type="button" class="curr-btn" data-curr="EUR">€ EUR</button>
             <button type="button" class="curr-btn" data-curr="GBP">£ GBP</button>
@@ -67,7 +67,7 @@
     </div>
 
     <!-- ─── Controls Panel ─────────────────────────── -->
-    <div class="card-base" style="padding: 32px; margin-bottom: 32px;">
+    <div class="card-base sticky-controls-card" style="padding: 28px 32px; margin-bottom: 32px;">
       <!-- Quick Presets Row -->
       <div style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border-hairline);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
@@ -388,7 +388,7 @@
               id="gumroad-mode-label"
               style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
             >
-              Direct — 10% + $0.50
+              Direct: 10% + $0.50
             </p>
           </div>
           <div
@@ -491,7 +491,7 @@
           <div
             style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
           >
-            <span class="badge badge-mor">MoR — Auto-Tax</span>
+            <span class="badge badge-mor">MoR (Auto-Tax)</span>
           </div>
         </div>
 
@@ -588,7 +588,7 @@
           <div
             style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
           >
-            <span class="badge badge-mor">MoR — Auto-Tax</span>
+            <span class="badge badge-mor">MoR (Auto-Tax)</span>
           </div>
         </div>
 
@@ -1946,7 +1946,7 @@
 </section>
 
 <!-- ─────────────────────────────────────────────────────────────
-     Calculator JavaScript — Live exchange rate & currency engine
+     Calculator JavaScript: Live exchange rate & currency engine
      ───────────────────────────────────────────────────────── -->
 <script>
   // ── Currency Definitions & Live Rates ────────────────────────
@@ -2057,10 +2057,11 @@
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
 
-  function calcLemonSqueezy(p: number, intl: boolean, rate: number) {
+  function calcLemonSqueezy(p: number, intl: boolean, pp: boolean, rate: number) {
     const platformCut = p * 0.05 + 0.50 * rate;
     const intlExtra = intl ? p * 0.015 : 0;
-    const totalFees = platformCut + intlExtra;
+    const paypalExtra = pp ? p * 0.015 : 0;
+    const totalFees = platformCut + intlExtra + paypalExtra;
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
 
@@ -2159,10 +2160,10 @@
     return { gross: p, fees, net: p - fees };
   }
 
-  function calcEtsy(p: number, rate: number) {
+  function calcEtsy(p: number, intl: boolean, rate: number) {
     const listingFee = 0.20 * rate;
     const txFee = p * 0.065;
-    const procFee = p * 0.03 + 0.25 * rate;
+    const procFee = p * (0.03 + (intl ? 0.025 : 0)) + 0.25 * rate;
     const totalFees = listingFee + txFee + procFee;
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
@@ -2227,8 +2228,8 @@
     setText(
       "gumroad-mode-label",
       gumroadDiscover
-        ? "Discover — 30% marketplace cut"
-        : `Direct — 10% + ${fmt(0.50 * rate)} per sale`,
+        ? "Discover: 30% marketplace cut"
+        : `Direct: 10% + ${fmt(0.50 * rate)} per sale`,
     );
     setText("gumroad-gross", fmt(gross));
     setText("gumroad-fees", fmt(-guTotalFees));
@@ -2237,7 +2238,7 @@
     setText("gumroad-rate", pct(guRate));
 
     // 2. Lemon Squeezy
-    const ls = calcLemonSqueezy(convPrice, intl, rate);
+    const ls = calcLemonSqueezy(convPrice, intl, paypal, rate);
     const lsTotalNet = ls.net * volume;
     const lsTotalFees = ls.fees * volume;
     const lsRate = ls.fees / convPrice;
@@ -2384,7 +2385,7 @@
     const fvTotalNet = fv.net * volume;
     const fvTotalFees = fv.fees * volume;
     const fvRate = fv.fees / convPrice;
-    setText("fiverr-subtitle", `20% flat seller commission`);
+    setText("fiverr-subtitle", `20% seller commission · Buyer pays processing fee`);
     setText("fiverr-gross", fmt(gross));
     setText("fiverr-fees", fmt(-fvTotalFees));
     setText("fiverr-net", fmt(fvTotalNet));
@@ -2392,7 +2393,7 @@
     setText("fiverr-rate", pct(fvRate));
 
     // 12. Etsy
-    const et = calcEtsy(convPrice, rate);
+    const et = calcEtsy(convPrice, intl, rate);
     const etTotalNet = et.net * volume;
     const etTotalFees = et.fees * volume;
     const etRate = et.fees / convPrice;
@@ -2408,7 +2409,7 @@
     const kdTotalNet = kd.net * volume;
     const kdTotalFees = kd.fees * volume;
     const kdRate = kd.fees / convPrice;
-    setText("kdp-subtitle", `30% platform fee (70% royalty) + ${fmt(0.15 * rate)}/MB delivery`);
+    setText("kdp-subtitle", `30% fee (70% royalty) + ${fmt(0.15 * rate)}/MB · Amazon handles card fees`);
     setText("kdp-gross", fmt(gross));
     setText("kdp-fees", fmt(-kdTotalFees));
     setText("kdp-net", fmt(kdTotalNet));
@@ -2420,7 +2421,7 @@
     const uwTotalNet = uw.net * volume;
     const uwTotalFees = uw.fees * volume;
     const uwRate = uw.fees / convPrice;
-    setText("upwork-subtitle", `10% freelancer contract service fee`);
+    setText("upwork-subtitle", `10% freelancer fee · Buyer pays gateway fees`);
     setText("upwork-gross", fmt(gross));
     setText("upwork-fees", fmt(-uwTotalFees));
     setText("upwork-net", fmt(uwTotalNet));
@@ -2536,7 +2537,7 @@
     if (activeFilter === "mor") {
       tip = "Lemon Squeezy and Paddle both charge 5% + $0.50 as Merchants of Record, auto-filing global VAT/GST taxes.";
     } else if (activeWinner.isMoR) {
-      tip = `${activeWinner.name} handles all VAT/GST globally — no tax headaches.`;
+      tip = `${activeWinner.name} handles all VAT/GST globally: no tax headaches.`;
     } else {
       tip = `${activeWinner.name} gives maximum profit in this view. Consider Lemon Squeezy or Paddle for automatic global tax compliance.`;
     }
@@ -2607,8 +2608,18 @@
     const max = Number(slider.max) || 100;
     const val = Number(slider.value) || min;
     const pct = ((val - min) / (max - min)) * 100;
-    slider.style.background = `linear-gradient(to right, #F59E0B 0%, #F59E0B ${pct}%, rgba(255, 255, 255, 0.1) ${pct}%, rgba(255, 255, 255, 0.1) 100%)`;
+    const isLight = document.documentElement.classList.contains("light");
+    const unfilled = isLight ? "rgba(15, 23, 42, 0.18)" : "rgba(255, 255, 255, 0.1)";
+    const filled = isLight ? "#d97706" : "#F59E0B";
+    slider.style.background = `linear-gradient(to right, ${filled} 0%, ${filled} ${pct}%, ${unfilled} ${pct}%, ${unfilled} 100%)`;
   }
+
+  window.addEventListener("themechanged", () => {
+    const pSlider = el("price-slider") as HTMLInputElement | null;
+    const vSlider = el("volume-slider") as HTMLInputElement | null;
+    if (pSlider) updateTrackFill(pSlider);
+    if (vSlider) updateTrackFill(vSlider);
+  });
 
   function wirePriceControls() {
     const slider = el("price-slider") as HTMLInputElement | null;
@@ -2766,6 +2777,20 @@
 </script>
 
 <style>
+  /* Currency Selector Wrapper */
+  .currency-selector-box {
+    display: inline-flex;
+    background: rgba(17, 23, 38, 0.8);
+    border: 1px solid var(--border-hairline);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 4px;
+  }
+  :global(html.light) .currency-selector-box {
+    background: rgba(241, 245, 249, 0.9);
+    border-color: rgba(15, 23, 42, 0.12);
+  }
+
   /* Currency Buttons */
   .curr-btn {
     background: transparent;
@@ -2810,6 +2835,21 @@
     border-color: var(--color-primary);
     box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
   }
+  :global(html.light) .preset-btn {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.12);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  :global(html.light) .preset-btn:hover {
+    background: #fef3c7;
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+  :global(html.light) .preset-btn.active {
+    background: #fef3c7;
+    border-color: #d97706;
+    box-shadow: 0 0 12px rgba(217, 119, 6, 0.2);
+  }
+
   .preset-title {
     font-size: 13px;
     font-weight: 600;
@@ -2818,6 +2858,10 @@
   .preset-btn.active .preset-title {
     color: var(--color-primary);
   }
+  :global(html.light) .preset-btn.active .preset-title {
+    color: #b45309;
+  }
+
   .preset-meta {
     font-size: 11px;
     color: var(--text-mute);
@@ -2845,6 +2889,71 @@
     color: var(--color-primary);
     border-color: rgba(245, 158, 11, 0.4);
     font-weight: 600;
+  }
+  :global(html.light) .filter-tab:hover {
+    color: #0f172a;
+    background: rgba(15, 23, 42, 0.06);
+  }
+  :global(html.light) .filter-tab.active {
+    background: #fef3c7;
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+
+  /* Summary card deltas scrollbar styling */
+  #deltas-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+  #deltas-container::-webkit-scrollbar {
+    width: 5px;
+  }
+  #deltas-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #deltas-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+  #deltas-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  :global(html.light) #deltas-container {
+    scrollbar-color: rgba(15, 23, 42, 0.2) transparent;
+  }
+  :global(html.light) #deltas-container::-webkit-scrollbar-thumb {
+    background-color: rgba(15, 23, 42, 0.2);
+  }
+  :global(html.light) #deltas-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(15, 23, 42, 0.4);
+  }
+
+  /* Sticky Controls Panel Card */
+  .sticky-controls-card {
+    position: sticky;
+    top: 72px;
+    z-index: 30;
+    background: rgba(13, 19, 32, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.4), 0 0 1px 1px var(--border-hairline);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  :global(html.light) .sticky-controls-card {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 12px 36px -4px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .sticky-controls-card {
+      position: relative;
+      top: 0;
+      z-index: 1;
+    }
   }
 
   @media (max-width: 960px) {

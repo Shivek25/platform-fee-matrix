@@ -16,8 +16,8 @@
       <span id="dock-pulse-dot" class="radar-pulse-dot"></span>
       <div id="dock-winner-text-wrap" class="dock-text-wrap">
         <span id="dock-winner-text" class="dock-winner-text">
-          <span style="color: #9CA3AF; font-weight: 500;">⚡ Best:</span>
-          <span style="color: #F59E0B; font-weight: 700; margin-left: 4px;">Calculating...</span>
+          <span class="dock-label">⚡ Best:</span>
+          <span class="dock-winner-name">Calculating...</span>
         </span>
       </div>
     </div>
@@ -54,14 +54,28 @@
     const textWrap = document.getElementById('dock-winner-text-wrap');
     const topBtn = document.getElementById('dock-back-to-top');
     if (!dock) return;
+    const dockEl = dock;
 
-    // Toggle Dock visibility based on scroll position (> 350px)
+    const guideSection = document.getElementById('guide');
+
+    // Toggle Dock visibility: show in calculator area (>350px), hide before guide section
     let ticking = false;
     function checkScroll() {
-      if (window.scrollY > 350) {
-        dock.classList.add('dock-visible');
+      if (!dockEl) return;
+      const scrollY = window.scrollY;
+      let isBeforeGuide = true;
+
+      if (guideSection) {
+        const guideRect = guideSection.getBoundingClientRect();
+        if (guideRect.top <= window.innerHeight - 80) {
+          isBeforeGuide = false;
+        }
+      }
+
+      if (scrollY > 350 && isBeforeGuide) {
+        dockEl.classList.add('dock-visible');
       } else {
-        dock.classList.remove('dock-visible');
+        dockEl.classList.remove('dock-visible');
       }
       ticking = false;
     }
@@ -89,22 +103,22 @@
 
     // Listen for custom winner-updated event from Calculator component
     window.addEventListener('matrix-winner-updated', ((e: CustomEvent) => {
-      if (winnerText && e.detail) {
+      if (winnerText && e.detail && dockEl) {
         const { name, netFormatted, netCompact, activeFilter } = e.detail;
         const compactClean = netCompact ? netCompact.replace(/[\(\)]/g, '').replace(/^≈\s*/, '') : '';
         const filterBadgeText = FILTER_LABELS[activeFilter || 'all'] || 'Best';
 
         // Trigger Dock Scale Pulse Animation
-        dock.classList.remove('dock-pop-pulse');
-        void dock.offsetWidth; // Force reflow
-        dock.classList.add('dock-pop-pulse');
+        dockEl.classList.remove('dock-pop-pulse');
+        void dockEl.offsetWidth; // Force reflow
+        dockEl.classList.add('dock-pop-pulse');
 
         // Smooth text transition
         if (textWrap) {
           textWrap.style.opacity = '0';
           textWrap.style.transform = 'translateY(-4px)';
           setTimeout(() => {
-            winnerText.innerHTML = `<span style="color: #9CA3AF; font-weight: 500;">⚡ ${filterBadgeText}:</span> <strong style="color: #F59E0B; font-weight: 700; font-size: 14px;">${name}</strong> <span style="color: #10B981; font-weight: 700; font-family: var(--font-mono); font-size: 14px; margin-left: 6px;">${compactClean ? compactClean + ' net' : netFormatted}</span> <span style="color: #9CA3AF; font-size: 12px; font-family: var(--font-mono); margin-left: 4px;">(${netFormatted})</span>`;
+            winnerText.innerHTML = `<span class="dock-label">⚡ ${filterBadgeText}:</span> <strong class="dock-winner-name">${name}</strong> <span class="dock-net-val">${compactClean ? compactClean + ' net' : netFormatted}</span> <span class="dock-sub-val">(${netFormatted})</span>`;
             textWrap.style.opacity = '1';
             textWrap.style.transform = 'translateY(0)';
           }, 150);
@@ -165,7 +179,7 @@
     inset: 0;
     border-radius: 100px;
     padding: 1.5px;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.8), rgba(16, 185, 129, 0.6), rgba(245, 158, 11, 0.2));
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(251, 191, 36, 0.7), rgba(217, 119, 6, 0.4), rgba(245, 158, 11, 0.9));
     background-size: 200% 200%;
     animation: aura-shimmer 4s ease infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -191,7 +205,7 @@
     display: flex;
     align-items: center;
     gap: 18px;
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.25), 0 0 15px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.35), 0 0 15px rgba(245, 158, 11, 0.2);
   }
 
   /* Live Winner Badge */
@@ -209,6 +223,76 @@
 
   .dock-text-wrap {
     transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .dock-label {
+    color: #9CA3AF;
+    font-weight: 500;
+  }
+  .dock-winner-name {
+    color: #F59E0B;
+    font-weight: 700;
+    margin-left: 4px;
+    font-size: 14px;
+  }
+  .dock-net-val {
+    color: #10B981;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    margin-left: 6px;
+  }
+  .dock-sub-val {
+    color: #9CA3AF;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    margin-left: 4px;
+  }
+
+  /* Light mode overrides for Floating Dock */
+  :global(html.light) .dock-aura-border {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.85), rgba(251, 191, 36, 0.65), rgba(217, 119, 6, 0.4), rgba(245, 158, 11, 0.85));
+    background-size: 200% 200%;
+  }
+
+  :global(html.light) .dock-glass-content {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1), 0 0 24px rgba(217, 119, 6, 0.2);
+  }
+  :global(html.light) .dock-badge-wrapper {
+    border-right-color: rgba(15, 23, 42, 0.12);
+    color: #0f172a;
+  }
+  :global(html.light) .dock-label {
+    color: #475569;
+  }
+  :global(html.light) .dock-winner-name {
+    color: #d97706;
+  }
+  :global(html.light) .dock-net-val {
+    color: #059669;
+  }
+  :global(html.light) .dock-sub-val {
+    color: #64748b;
+  }
+  :global(html.light) .dock-chip-btn {
+    color: #0f172a;
+    background: rgba(15, 23, 42, 0.06);
+    border-color: rgba(15, 23, 42, 0.12);
+  }
+  :global(html.light) .dock-chip-btn:hover {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+  :global(html.light) .dock-chip-btn-primary {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+  :global(html.light) .dock-chip-btn-primary:hover {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: rgba(217, 119, 6, 0.6);
   }
 
   /* Radar Pulse Dot */

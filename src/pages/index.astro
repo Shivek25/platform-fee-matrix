@@ -8,7 +8,7 @@ import PlatformModal from "../components/PlatformModal.astro";
 ---
 
 <Layout
-  title="Platform Fee Matrix — Compare Gumroad vs Lemon Squeezy vs Payhip vs Stripe vs Whop Fees"
+  title="Platform Fee Matrix | Compare Gumroad vs Lemon Squeezy vs Payhip vs Stripe vs Whop Fees"
   description="Instantly compare net profit across Gumroad, Lemon Squeezy, Payhip, Stripe, and Whop with our free interactive fee calculator. Adjust price, volume, and payment options for real-time results."
 >
   <Nav />
@@ -40,21 +40,7 @@ import PlatformModal from "../components/PlatformModal.astro";
     >
       <!-- Eyebrow badge -->
       <div
-        class="reveal-on-scroll stagger-1"
-        style="
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(17, 23, 38, 0.75);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-radius: 100px;
-        padding: 6px 16px 6px 10px;
-        font-size: 13px;
-        color: #d1d5db;
-        margin-bottom: 32px;
-        box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
-      "
+        class="reveal-on-scroll stagger-1 hero-eyebrow"
       >
         <span
           style="
@@ -74,20 +60,10 @@ import PlatformModal from "../components/PlatformModal.astro";
 
       <!-- Headline -->
       <h1
-        class="reveal-on-scroll stagger-2"
-        style="
-        font-size: clamp(38px, 6.5vw, 62px);
-        font-weight: 700;
-        letter-spacing: -2px;
-        line-height: 1.05;
-        margin: 0 0 24px;
-        background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      "
+        class="reveal-on-scroll stagger-2 hero-headline"
       >
         Stop guessing.<br />
-        Calculate your real take-home.
+        Calculate your <span style="white-space: nowrap;">real take-home.</span>
       </h1>
 
       <!-- Sub-headline -->
@@ -103,7 +79,7 @@ import PlatformModal from "../components/PlatformModal.astro";
       >
         The interactive fee calculator that shows you exactly how much Gumroad,
         Lemon Squeezy, Payhip, Stripe, Whop, Paddle, Sellfy, Podia, Stan Store, Teachable, Fiverr, Etsy, Amazon KDP, and Upwork
-        actually cost — at your exact price and volume.
+        actually cost, at your exact price and volume.
       </p>
 
       <!-- CTA row -->
@@ -158,68 +134,81 @@ import PlatformModal from "../components/PlatformModal.astro";
         <a
           href="#guide"
           id="hero-cta-secondary"
-          style="
-            display: inline-flex;
-            align-items: center;
-            height: 48px;
-            padding: 0 24px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            color: var(--text-ink);
-            border: 1px solid var(--border-hairline-strong);
-            border-radius: 100px;
-            font-size: 15px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: background 0.15s ease, border-color 0.15s ease;
-            letter-spacing: -0.2px;
-          "
-          onmouseover="this.style.background='rgba(255, 255, 255, 0.08)';this.style.borderColor='rgba(245, 158, 11, 0.3)'"
-          onmouseout="this.style.background='rgba(255, 255, 255, 0.04)';this.style.borderColor='var(--border-hairline-strong)'"
+          class="hero-secondary-btn"
         >
           Read the Guide
         </a>
       </div>
 
-      <!-- Platform indicators strip -->
-      <div
-        style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 56px;
-        flex-wrap: wrap;
-      "
-      >
-        {
-          [
-            { name: "Gumroad", icon: "/icons/gumroad.svg" },
-            { name: "Lemon Squeezy", icon: "/icons/lemonsqueezy.svg" },
-            { name: "Payhip", icon: "/icons/payhip.svg" },
-            { name: "Stripe", icon: "/icons/stripe.svg" },
-            { name: "Whop", icon: "/icons/whop.svg" },
-            { name: "Paddle", icon: "/icons/paddle.svg" },
-            { name: "Sellfy", icon: "/icons/sellfy.svg" },
-            { name: "Podia", icon: "/icons/podia.svg" },
-            { name: "Stan Store", icon: "/icons/stan.svg" },
-            { name: "Teachable", icon: "/icons/teachable.svg" },
-            { name: "Fiverr", icon: "/icons/fiverr.svg" },
-            { name: "Etsy", icon: "/icons/etsy.svg" },
-            { name: "Amazon KDP", icon: "/icons/kdp.svg" },
-            { name: "Upwork", icon: "/icons/upwork.svg" },
-          ].map(({ name, icon }) => (
-            <button
-              type="button"
-              class="hero-platform-pill"
-              data-platform={name}
-              title={`View ${name} fee details and overview`}
-            >
-              <img src={icon} width="16" height="16" alt={name} style="border-radius: 4px; pointer-events: none;" />
-              <span>{name}</span>
-            </button>
-          ))
-        }
+      <!-- Platform indicators strip (5-5-4 layout) -->
+      <div class="hero-pills-container">
+        <!-- Row 1 (5 items) -->
+        <div class="hero-pills-row">
+          {
+            [
+              { name: "Gumroad", icon: "/icons/gumroad.svg" },
+              { name: "Lemon Squeezy", icon: "/icons/lemonsqueezy.svg" },
+              { name: "Payhip", icon: "/icons/payhip.svg" },
+              { name: "Stripe", icon: "/icons/stripe.svg" },
+              { name: "Whop", icon: "/icons/whop.svg" },
+            ].map(({ name, icon }) => (
+              <button
+                type="button"
+                class="hero-platform-pill"
+                data-platform={name}
+                title={`View ${name} fee details and overview`}
+              >
+                <img src={icon} width="20" height="20" alt={name} style="border-radius: 4px; pointer-events: none;" />
+                <span>{name}</span>
+              </button>
+            ))
+          }
+        </div>
+
+        <!-- Row 2 (5 items) -->
+        <div class="hero-pills-row">
+          {
+            [
+              { name: "Paddle", icon: "/icons/paddle.svg" },
+              { name: "Sellfy", icon: "/icons/sellfy.svg" },
+              { name: "Podia", icon: "/icons/podia.svg" },
+              { name: "Stan Store", icon: "/icons/stan.svg" },
+              { name: "Teachable", icon: "/icons/teachable.svg" },
+            ].map(({ name, icon }) => (
+              <button
+                type="button"
+                class="hero-platform-pill"
+                data-platform={name}
+                title={`View ${name} fee details and overview`}
+              >
+                <img src={icon} width="20" height="20" alt={name} style="border-radius: 4px; pointer-events: none;" />
+                <span>{name}</span>
+              </button>
+            ))
+          }
+        </div>
+
+        <!-- Row 3 (4 items) -->
+        <div class="hero-pills-row">
+          {
+            [
+              { name: "Fiverr", icon: "/icons/fiverr.svg" },
+              { name: "Etsy", icon: "/icons/etsy.svg" },
+              { name: "Amazon KDP", icon: "/icons/kdp.svg" },
+              { name: "Upwork", icon: "/icons/upwork.svg" },
+            ].map(({ name, icon }) => (
+              <button
+                type="button"
+                class="hero-platform-pill"
+                data-platform={name}
+                title={`View ${name} fee details and overview`}
+              >
+                <img src={icon} width="20" height="20" alt={name} style="border-radius: 4px; pointer-events: none;" />
+                <span>{name}</span>
+              </button>
+            ))
+          }
+        </div>
       </div>
     </div>
   </section>
@@ -291,25 +280,11 @@ import PlatformModal from "../components/PlatformModal.astro";
 
   <!-- ─── Bottom CTA Band (Dark Glassmorphic Hero Card) ─ -->
   <section style="
-    padding: 80px 24px;
+    padding: 24px 24px 80px;
     background: transparent;
   ">
     <div
-      class="hero-cta-glow"
-      style="
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 64px 32px;
-        background: rgba(17, 23, 38, 0.75);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(245, 158, 11, 0.25);
-        border-radius: var(--radius-xl);
-        text-align: center;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.12);
-        position: relative;
-        overflow: hidden;
-      "
+      class="hero-cta-glow bottom-cta-card"
     >
       <div
         style="position: relative; z-index: 1; max-width: 600px; margin: 0 auto;"
@@ -333,14 +308,7 @@ import PlatformModal from "../components/PlatformModal.astro";
         >
 
         <h2
-          style="
-          font-size: clamp(30px, 4.5vw, 44px);
-          font-weight: 700;
-          letter-spacing: -1.5px;
-          color: #ffffff;
-          margin: 0 0 20px;
-          line-height: 1.1;
-        "
+          class="bottom-cta-heading"
         >
           Know your margin before you launch.
         </h2>
@@ -473,14 +441,101 @@ import PlatformModal from "../components/PlatformModal.astro";
 </script>
 
 <style>
+  /* Hero Eyebrow */
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(17, 23, 38, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 100px;
+    padding: 6px 16px 6px 10px;
+    font-size: 13px;
+    color: #d1d5db;
+    margin-bottom: 32px;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+    transition: all 0.25s ease;
+  }
+  :global(html.light) .hero-eyebrow {
+    background: rgba(255, 255, 255, 0.85);
+    color: #334155;
+    border-color: rgba(217, 119, 6, 0.3);
+    box-shadow: 0 2px 12px rgba(217, 119, 6, 0.1);
+  }
+
+  /* Hero Headline */
+  .hero-headline {
+    font-size: clamp(38px, 6.5vw, 62px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin: 0 0 24px;
+    background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  :global(html.light) .hero-headline {
+    background: linear-gradient(135deg, #0f172a 30%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Secondary CTA Button */
+  .hero-secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 24px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    color: var(--text-ink);
+    border: 1px solid var(--border-hairline-strong);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    letter-spacing: -0.2px;
+  }
+  .hero-secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  :global(html.light) .hero-secondary-btn {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.15);
+  }
+  :global(html.light) .hero-secondary-btn:hover {
+    background: rgba(15, 23, 42, 0.08);
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+
+  /* Hero Platform Pills Container & Rows */
+  .hero-pills-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 56px;
+  }
+  .hero-pills-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* Hero Platform Pills */
   .hero-platform-pill {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 12.5px;
+    gap: 10px;
+    font-size: 14.5px;
     font-weight: 500;
     color: var(--text-body);
-    padding: 6px 16px;
+    padding: 10px 22px;
     border-radius: 100px;
     background: rgba(17, 23, 38, 0.7);
     backdrop-filter: blur(8px);
@@ -499,6 +554,52 @@ import PlatformModal from "../components/PlatformModal.astro";
   }
   .hero-platform-pill:active {
     transform: translateY(0) scale(0.97);
+  }
+  :global(html.light) .hero-platform-pill {
+    background: rgba(255, 255, 255, 0.85);
+    color: #334155;
+    border-color: rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  :global(html.light) .hero-platform-pill:hover {
+    color: #0f172a;
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(217, 119, 6, 0.4);
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.15);
+  }
+
+  /* Bottom CTA Card */
+  .bottom-cta-card {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 32px;
+    background: rgba(17, 23, 38, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.12);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s ease;
+  }
+  :global(html.light) .bottom-cta-card {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border-color: rgba(217, 119, 6, 0.25);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), 0 0 24px rgba(217, 119, 6, 0.08);
+  }
+
+  .bottom-cta-heading {
+    font-size: clamp(30px, 4.5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    color: #ffffff;
+    margin: 0 0 20px;
+    line-height: 1.1;
+  }
+  :global(html.light) .bottom-cta-heading {
+    color: #0f172a;
   }
 
   @media (max-width: 768px) {
