@@ -134,35 +134,89 @@
           [
             {
               name: "Stripe Direct",
-              emoji: "⚡",
+              icon: "/icons/stripe.svg",
               description:
                 "Best for maximum margin on high-volume, higher-priced products when you already have tax infrastructure. Lowest fees (2.9% + $0.30), but you handle all compliance, customer support integrations, and storefront yourself.",
             },
             {
               name: "Lemon Squeezy",
-              emoji: "🍋",
+              icon: "/icons/lemonsqueezy.svg",
               description:
-                "Best for international creators, SaaS founders, and anyone who wants to sell globally without worrying about tax compliance. 5% + $0.50 is the price you pay for complete VAT/GST handling worldwide.",
+                "Best for international creators, SaaS founders, and digital product sellers who want complete global VAT/GST compliance handled automatically. 5% + $0.50 per sale with full MoR tax remittance.",
+            },
+            {
+              name: "Paddle",
+              icon: "/icons/paddle.svg",
+              description:
+                "Best for SaaS and digital software products operating globally as a Merchant of Record. 5% + $0.50 flat per sale auto-handles international tax compliance and localized checkout currencies.",
             },
             {
               name: "Payhip Pro",
-              emoji: "💳",
+              icon: "/icons/payhip.svg",
               description:
-                "Best for high-volume creators selling above $50 products at 100+ units/month. The $99/month flat Pro plan drops your effective rate below Stripe at scale. Payhip also has strong affiliate tools and course hosting.",
+                "Best for high-volume creators selling above $50 products. Features Free (5%), Plus ($29/mo + 2%), and Pro ($99/mo + 0%) plans, dropping your effective rate below Stripe at sufficient volume.",
             },
             {
               name: "Gumroad",
-              emoji: "🛒",
+              icon: "/icons/gumroad.svg",
               description:
-                "Best for creators already in the Gumroad ecosystem with an existing audience. The Discover marketplace can drive organic sales that offset the higher 30% cut. For new creators, Direct mode (10% + $0.50) is typically more expensive than alternatives.",
+                "Best for creators leveraging an existing Gumroad audience. Direct mode charges 10% + $0.50, while Discover marketplace takes 30% cut for driving organic sales.",
             },
             {
               name: "Whop",
-              emoji: "🚀",
+              icon: "/icons/whop.svg",
               description:
-                "Best for community-driven products, Discord access, and subscription-based digital goods. The 3% platform fee plus card processing is competitive, and Whop's marketplace exposure rivals Gumroad's Discover for certain niches.",
+                "Best for community products, Discord memberships, trading groups, and SaaS apps. Features a competitive 3% platform fee plus card processing (2.9% + $0.30).",
             },
-          ].map(({ name, emoji, description }) => (
+            {
+              name: "Sellfy",
+              icon: "/icons/sellfy.svg",
+              description:
+                "Best for digital storefronts and merchandise. Starter plan ($29/mo) eliminates platform fees (0%) with direct payment gateway processing (2.9% + $0.30).",
+            },
+            {
+              name: "Podia",
+              icon: "/icons/podia.svg",
+              description:
+                "Best for creators selling online courses, digital downloads, and coaching. Mover plan ($39/mo) offers 0% transaction fees with standard card processing.",
+            },
+            {
+              name: "Stan Store",
+              icon: "/icons/stan.svg",
+              description:
+                "Best for social media creators and link-in-bio storefronts. Flat $29/mo plan with 0% platform transaction fee and direct card processing.",
+            },
+            {
+              name: "Teachable",
+              icon: "/icons/teachable.svg",
+              description:
+                "Best for structured course creators and academies. Basic ($39/mo + 5% fee) and Pro ($119/mo + 0% fee) allow creators to scale as student volume grows.",
+            },
+            {
+              name: "Fiverr",
+              icon: "/icons/fiverr.svg",
+              description:
+                "Best for freelancers, digital service providers, and gig creators selling packaged services or templates. Charges a flat 20% seller commission on all completed orders.",
+            },
+            {
+              name: "Etsy",
+              icon: "/icons/etsy.svg",
+              description:
+                "Best for digital downloads, creative templates, and printables targeting Etsy marketplace buyers. Charges $0.20 listing fee + 6.5% transaction fee + 3% + $0.25 payment processing.",
+            },
+            {
+              name: "Amazon KDP",
+              icon: "/icons/kdp.svg",
+              description:
+                "Best for self-published authors selling Kindle ebooks and digital books. Offers a 70% royalty tier (30% platform fee) plus an estimated $0.15/MB digital delivery fee.",
+            },
+            {
+              name: "Upwork",
+              icon: "/icons/upwork.svg",
+              description:
+                "Best for freelancers, consultants, and agencies working with global clients. Charges a flat 10% freelancer contract service fee.",
+            },
+          ].map(({ name, icon, description }) => (
             <div
               class="card-base"
               style="
@@ -173,8 +227,9 @@
               border: 1px solid var(--border-hairline);
             "
             >
-              <p style="font-size: 16px; font-weight: 600; color: var(--text-ink); margin: 0 0 6px;">
-                {emoji} {name}
+              <p style="font-size: 16px; font-weight: 600; color: var(--text-ink); margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
+                <img src={icon} width="20" height="20" alt={name} style="border-radius: 4px;" />
+                {name}
               </p>
               <p style="font-size: 14px; color: var(--text-body); margin: 0; line-height: 1.6;">
                 {description}

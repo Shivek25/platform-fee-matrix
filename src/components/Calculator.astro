@@ -1,6 +1,6 @@
 ---
 // Calculator.astro — Interactive multi-platform net margin calculator
-// All fee logic runs in vanilla JS — zero dependencies, instant updates
+// Dynamic Live Currency Engine — Fetches real-time exchange rates & converts all figures
 ---
 
 <section
@@ -9,7 +9,7 @@
 >
   <div style="max-width: 1200px; margin: 0 auto;">
     <!-- Section header -->
-    <div style="text-align: center; margin-bottom: 48px;">
+    <div style="text-align: center; margin-bottom: 40px;">
       <p
         style="
         font-family: var(--font-mono);
@@ -17,7 +17,7 @@
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--text-mute);
-        margin: 0 0 16px;
+        margin: 0 0 12px;
       "
       >
         Real-time Calculator
@@ -38,25 +38,71 @@
         style="
         font-size: 17px;
         color: var(--text-body);
-        max-width: 520px;
-        margin: 0 auto;
+        max-width: 540px;
+        margin: 0 auto 24px;
         line-height: 1.6;
       "
       >
-        Adjust price, volume, and options to see exactly how much you keep
-        across every major platform.
+        Adjust price, volume, and payment options to see exact take-home profit
+        across 10 top creator platforms with live currency conversion.
       </p>
+
+      <!-- Currency Selector Bar & Live Exchange Rate Indicator -->
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 13px; color: var(--text-mute); font-weight: 500;">Currency:</span>
+          <div id="currency-selector" style="display: inline-flex; background: rgba(17, 23, 38, 0.8); border: 1px solid var(--border-hairline); border-radius: 100px; padding: 4px; gap: 4px;">
+            <button type="button" class="curr-btn active" data-curr="USD">$ USD</button>
+            <button type="button" class="curr-btn" data-curr="EUR">€ EUR</button>
+            <button type="button" class="curr-btn" data-curr="GBP">£ GBP</button>
+            <button type="button" class="curr-btn" data-curr="INR">₹ INR</button>
+            <button type="button" class="curr-btn" data-curr="CAD">C$ CAD</button>
+            <button type="button" class="curr-btn" data-curr="AUD">A$ AUD</button>
+          </div>
+        </div>
+        <div id="exchange-rate-badge" style="font-size: 11px; font-family: var(--font-mono); color: var(--color-emerald-profit); background: rgba(16, 185, 129, 0.1); padding: 3px 12px; border-radius: 100px; border: 1px solid rgba(16, 185, 129, 0.25);">
+          🟢 Live rate: 1 USD = 1.00 USD (Base)
+        </div>
+      </div>
     </div>
 
     <!-- ─── Controls Panel ─────────────────────────── -->
     <div class="card-base" style="padding: 32px; margin-bottom: 32px;">
+      <!-- Quick Presets Row -->
+      <div style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border-hairline);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-ink); text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-mono);">
+            ⚡ 1-Click Quick Presets
+          </span>
+          <span style="font-size: 12px; color: var(--text-mute);">Select a creator model to auto-fill</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="preset-buttons">
+          <button type="button" class="preset-btn" data-price="5" data-volume="100">
+            <span class="preset-title">Micro-Template</span>
+            <span class="preset-meta" id="preset-meta-1">$5.00 × 100 sales</span>
+          </button>
+          <button type="button" class="preset-btn" data-price="29" data-volume="50">
+            <span class="preset-title">Ebook</span>
+            <span class="preset-meta" id="preset-meta-2">$29.00 × 50 sales</span>
+          </button>
+          <button type="button" class="preset-btn" data-price="149" data-volume="20">
+            <span class="preset-title">Course</span>
+            <span class="preset-meta" id="preset-meta-3">$149.00 × 20 sales</span>
+          </button>
+          <button type="button" class="preset-btn" data-price="49" data-volume="30">
+            <span class="preset-title">SaaS</span>
+            <span class="preset-meta" id="preset-meta-4">$49.00 × 30 sales</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Sliders row -->
       <div
         style="
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 40px;
-        margin-bottom: 36px;
+        margin-bottom: 32px;
       "
         class="controls-grid"
       >
@@ -72,15 +118,15 @@
               Product Price
             </label>
             <div style="display: flex; align-items: center; gap: 4px;">
-              <span style="font-size: 14px; color: var(--text-body);">$</span>
+              <span id="price-symbol-label" style="font-size: 14px; color: var(--text-body);">$</span>
               <input
                 type="number"
                 id="price-input"
                 min="1"
-                max="500"
                 value="25"
+                step="any"
                 style="
-                  width: 72px;
+                  width: 110px;
                   height: 32px;
                   padding: 0 8px;
                   font-size: 14px;
@@ -99,7 +145,7 @@
             type="range"
             id="price-slider"
             min="1"
-            max="500"
+            max="10000"
             value="25"
             step="1"
             aria-label="Product price slider"
@@ -107,8 +153,8 @@
           <div
             style="display: flex; justify-content: space-between; margin-top: 6px;"
           >
-            <span style="font-size: 12px; color: var(--text-mute);">$1</span>
-            <span style="font-size: 12px; color: var(--text-mute);">$500</span>
+            <span id="price-min-label" style="font-size: 12px; color: var(--text-mute);">$1</span>
+            <span id="price-max-label" style="font-size: 12px; color: var(--text-mute);">$10,000</span>
           </div>
         </div>
 
@@ -128,10 +174,9 @@
                 type="number"
                 id="volume-input"
                 min="1"
-                max="1000"
                 value="50"
                 style="
-                  width: 72px;
+                  width: 100px;
                   height: 32px;
                   padding: 0 8px;
                   font-size: 14px;
@@ -153,7 +198,7 @@
             type="range"
             id="volume-slider"
             min="1"
-            max="1000"
+            max="100000"
             value="50"
             step="1"
             aria-label="Monthly sales volume slider"
@@ -162,7 +207,7 @@
             style="display: flex; justify-content: space-between; margin-top: 6px;"
           >
             <span style="font-size: 12px; color: var(--text-mute);">1</span>
-            <span style="font-size: 12px; color: var(--text-mute);">1,000</span>
+            <span id="volume-max-label" style="font-size: 12px; color: var(--text-mute);">100,000</span>
           </div>
         </div>
       </div>
@@ -171,7 +216,7 @@
       <div
         style="
         border-top: 1px solid var(--border-hairline);
-        padding-top: 28px;
+        padding-top: 24px;
         display: flex;
         flex-wrap: wrap;
         gap: 24px;
@@ -222,7 +267,7 @@
               style="font-size: 13px; font-weight: 500; color: var(--text-ink);"
               >PayPal Processing</span
             >
-            <span style="font-size: 12px; color: var(--text-mute);"
+            <span style="font-size: 12px; color: var(--text-mute);" id="paypal-toggle-desc"
               >3.49% + $0.49 per transaction</span
             >
           </span>
@@ -247,11 +292,61 @@
               style="font-size: 13px; font-weight: 500; color: var(--text-ink);"
               >Gumroad Discover</span
             >
-            <span style="font-size: 12px; color: var(--text-mute);"
+            <span style="font-size: 12px; color: var(--text-mute);" id="gumroad-toggle-desc"
               >Switch to marketplace (30% cut) vs. Direct (10% + $0.50)</span
             >
           </span>
         </label>
+      </div>
+    </div>
+
+    <!-- ─── Matrix Toolbar: Filter Tabs & Sorting ────── -->
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 24px;
+        background: var(--bg-card-soft);
+        padding: 12px 20px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-hairline);
+      "
+      class="matrix-toolbar"
+    >
+      <!-- Filter Tabs -->
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="filter-tabs">
+        <button type="button" class="filter-tab active" data-filter="all">All Platforms (14)</button>
+        <button type="button" class="filter-tab" data-filter="mor">Auto-Tax (MoR)</button>
+        <button type="button" class="filter-tab" data-filter="direct">Direct Gateways</button>
+        <button type="button" class="filter-tab" data-filter="monthly">Fixed Monthly Plans</button>
+        <button type="button" class="filter-tab" data-filter="marketplace">Marketplace & Freelance</button>
+      </div>
+
+      <!-- Sorting Selector -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label for="sort-select" style="font-size: 13px; color: var(--text-mute); font-weight: 500;">Sort By:</label>
+        <select
+          id="sort-select"
+          style="
+            background: var(--bg-input);
+            color: var(--text-ink);
+            border: 1px solid var(--border-hairline);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            font-family: var(--font-sans);
+          "
+        >
+          <option value="net-desc">Highest Take-Home</option>
+          <option value="rate-asc">Lowest Effective Fee %</option>
+          <option value="name-asc">Alphabetical</option>
+        </select>
       </div>
     </div>
 
@@ -271,6 +366,8 @@
       <div
         class="card-base platform-card"
         id="card-gumroad"
+        data-categories="direct"
+        data-name="Gumroad"
         style="padding: 24px;"
       >
         <div
@@ -280,7 +377,7 @@
             <div
               style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
             >
-              <span style="font-size: 16px;">🛒</span>
+              <img src="/icons/gumroad.svg" width="20" height="20" alt="Gumroad" style="border-radius: 4px;" />
               <h3
                 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
               >
@@ -328,17 +425,24 @@
           </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
-            style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
             <span
               style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
               >Net Profit</span
             >
-            <span
-              id="gumroad-net"
-              style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
-              >$1,015.00</span
-            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="gumroad-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,015.00</span
+              >
+              <span
+                id="gumroad-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
           </div>
           <div
             style="display: flex; justify-content: space-between; align-items: center;"
@@ -359,6 +463,8 @@
       <div
         class="card-base platform-card"
         id="card-lemonsqueezy"
+        data-categories="mor"
+        data-name="Lemon Squeezy"
         style="padding: 24px;"
       >
         <div
@@ -368,7 +474,7 @@
             <div
               style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
             >
-              <span style="font-size: 16px;">🍋</span>
+              <img src="/icons/lemonsqueezy.svg" width="20" height="20" alt="Lemon Squeezy" style="border-radius: 4px;" />
               <h3
                 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
               >
@@ -377,8 +483,9 @@
             </div>
             <p
               style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="ls-subtitle"
             >
-              5% + $0.50 per transaction
+              5% + $0.50 per sale
             </p>
           </div>
           <div
@@ -415,17 +522,24 @@
           </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
-            style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
             <span
               style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
               >Net Profit</span
             >
-            <span
-              id="ls-net"
-              style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
-              >$1,162.50</span
-            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="ls-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,162.50</span
+              >
+              <span
+                id="ls-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
           </div>
           <div
             style="display: flex; justify-content: space-between; align-items: center;"
@@ -442,10 +556,12 @@
         </div>
       </div>
 
-      <!-- ─── PAYHIP ─── -->
+      <!-- ─── PADDLE ─── -->
       <div
         class="card-base platform-card"
-        id="card-payhip"
+        id="card-paddle"
+        data-categories="mor"
+        data-name="Paddle"
         style="padding: 24px;"
       >
         <div
@@ -455,7 +571,104 @@
             <div
               style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
             >
-              <span style="font-size: 16px;">💳</span>
+              <img src="/icons/paddle.svg" width="20" height="20" alt="Paddle" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Paddle
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="paddle-subtitle"
+            >
+              5% + $0.50 per sale · Auto VAT
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-mor">MoR — Auto-Tax</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="paddle-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="paddle-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$87.50</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="paddle-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,162.50</span
+              >
+              <span
+                id="paddle-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="paddle-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >7.0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PAYHIP ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-payhip"
+        data-categories="direct monthly"
+        data-name="Payhip"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/payhip.svg" width="20" height="20" alt="Payhip" style="border-radius: 4px;" />
               <h3
                 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
               >
@@ -464,6 +677,7 @@
             </div>
             <p
               style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="payhip-subtitle"
             >
               Free 5% · Plus $29/mo · Pro $99/mo
             </p>
@@ -491,11 +705,18 @@
                 style="font-size: 12px; font-weight: 500; color: var(--text-ink);"
                 >Free Plan (5%)</span
               >
-              <span
-                id="payhip-free-net"
-                style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
-                >$1,187.50</span
-              >
+              <div style="text-align: right; display: flex; align-items: baseline; gap: 6px;">
+                <span
+                  id="payhip-free-net"
+                  style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
+                  >$1,187.50</span
+                >
+                <span
+                  id="payhip-free-net-compact"
+                  style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono);"
+                  >(≈ $1K)</span
+                >
+              </div>
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="font-size: 11px; color: var(--text-mute);"
@@ -518,13 +739,21 @@
             >
               <span
                 style="font-size: 12px; font-weight: 500; color: var(--text-ink);"
+                id="payhip-plus-label"
                 >Plus Plan ($29/mo + 2%)</span
               >
-              <span
-                id="payhip-plus-net"
-                style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
-                >$1,196.00</span
-              >
+              <div style="text-align: right; display: flex; align-items: baseline; gap: 6px;">
+                <span
+                  id="payhip-plus-net"
+                  style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
+                  >$1,196.00</span
+                >
+                <span
+                  id="payhip-plus-net-compact"
+                  style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono);"
+                  >(≈ $1K)</span
+                >
+              </div>
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="font-size: 11px; color: var(--text-mute);"
@@ -547,13 +776,21 @@
             >
               <span
                 style="font-size: 12px; font-weight: 500; color: var(--text-ink);"
+                id="payhip-pro-label"
                 >Pro Plan ($99/mo + 0%)</span
               >
-              <span
-                id="payhip-pro-net"
-                style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
-                >$1,151.00</span
-              >
+              <div style="text-align: right; display: flex; align-items: baseline; gap: 6px;">
+                <span
+                  id="payhip-pro-net"
+                  style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
+                  >$1,151.00</span
+                >
+                <span
+                  id="payhip-pro-net-compact"
+                  style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono);"
+                  >(≈ $1K)</span
+                >
+              </div>
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="font-size: 11px; color: var(--text-mute);"
@@ -573,8 +810,7 @@
           id="payhip-best-label"
           style="font-size: 11px; color: var(--text-mute); margin: 0; text-align: center;"
         >
-          ↑ <strong style="color: var(--text-body);">Free Plan</strong> is best at
-          this volume
+          ↑ <strong style="color: var(--text-body);">Free Plan</strong> is best at this volume
         </p>
       </div>
 
@@ -582,6 +818,8 @@
       <div
         class="card-base platform-card"
         id="card-stripe"
+        data-categories="direct"
+        data-name="Stripe Direct"
         style="padding: 24px;"
       >
         <div
@@ -591,7 +829,7 @@
             <div
               style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
             >
-              <span style="font-size: 16px;">⚡</span>
+              <img src="/icons/stripe.svg" width="20" height="20" alt="Stripe Direct" style="border-radius: 4px;" />
               <h3
                 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
               >
@@ -600,6 +838,7 @@
             </div>
             <p
               style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="stripe-subtitle"
             >
               2.9% + $0.30 · No platform fee
             </p>
@@ -638,17 +877,24 @@
           </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
-            style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
             <span
               style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
               >Net Profit</span
             >
-            <span
-              id="stripe-net"
-              style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
-              >$1,198.75</span
-            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="stripe-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,198.75</span
+              >
+              <span
+                id="stripe-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
           </div>
           <div
             style="display: flex; justify-content: space-between; align-items: center;"
@@ -669,6 +915,8 @@
       <div
         class="card-base platform-card"
         id="card-whop"
+        data-categories="direct"
+        data-name="Whop"
         style="padding: 24px;"
       >
         <div
@@ -678,7 +926,7 @@
             <div
               style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
             >
-              <span style="font-size: 16px;">🚀</span>
+              <img src="/icons/whop.svg" width="20" height="20" alt="Whop" style="border-radius: 4px;" />
               <h3
                 style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
               >
@@ -687,6 +935,7 @@
             </div>
             <p
               style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="whop-subtitle"
             >
               3% flat + 2.9% + $0.30 card fee
             </p>
@@ -725,17 +974,24 @@
           </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
-            style="display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
             <span
               style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
               >Net Profit</span
             >
-            <span
-              id="whop-net"
-              style="font-size: 18px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
-              >$1,161.25</span
-            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="whop-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,161.25</span
+              >
+              <span
+                id="whop-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
           </div>
           <div
             style="display: flex; justify-content: space-between; align-items: center;"
@@ -752,11 +1008,815 @@
         </div>
       </div>
 
+      <!-- ─── SELLFY ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-sellfy"
+        data-categories="direct monthly"
+        data-name="Sellfy"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/sellfy.svg" width="20" height="20" alt="Sellfy" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Sellfy
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="sellfy-subtitle"
+            >
+              $29/mo Starter · 0% fee + 2.9% + $0.30
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="sellfy-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="sellfy-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$80.25</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="sellfy-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,169.75</span
+              >
+              <span
+                id="sellfy-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="sellfy-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >6.4%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PODIA ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-podia"
+        data-categories="direct monthly"
+        data-name="Podia"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/podia.svg" width="20" height="20" alt="Podia" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Podia
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="podia-subtitle"
+            >
+              $39/mo Mover · 0% fee + 2.9% + $0.30
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="podia-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="podia-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$90.25</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="podia-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,159.75</span
+              >
+              <span
+                id="podia-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="podia-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >7.2%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── STAN STORE ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-stan"
+        data-categories="direct monthly"
+        data-name="Stan Store"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/stan.svg" width="20" height="20" alt="Stan Store" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Stan Store
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="stan-subtitle"
+            >
+              $29/mo Plan · 0% fee + 2.9% + $0.30
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="stan-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="stan-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$80.25</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="stan-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,169.75</span
+              >
+              <span
+                id="stan-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="stan-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >6.4%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── TEACHABLE ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-teachable"
+        data-categories="direct monthly"
+        data-name="Teachable"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/teachable.svg" width="20" height="20" alt="Teachable" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Teachable
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="teachable-subtitle"
+            >
+              Basic $39/mo + 5% · Pro $119/mo + 0%
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax">Self-File Taxes</span>
+          </div>
+        </div>
+
+        <!-- Teachable tiers -->
+        <div
+          style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"
+        >
+          <!-- Basic tier -->
+          <div
+            id="teachable-basic-row"
+            style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-hairline);"
+          >
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"
+            >
+              <span
+                style="font-size: 12px; font-weight: 500; color: var(--text-ink);"
+                id="teachable-basic-label"
+                >Basic ($39/mo + 5%)</span
+              >
+              <div style="text-align: right; display: flex; align-items: baseline; gap: 6px;">
+                <span
+                  id="teachable-basic-net"
+                  style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
+                  >$1,097.25</span
+                >
+                <span
+                  id="teachable-basic-net-compact"
+                  style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono);"
+                  >(≈ $1K)</span
+                >
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 11px; color: var(--text-mute);"
+                >Fees: <span id="teachable-basic-fees">$152.75</span></span
+              >
+              <span
+                id="teachable-basic-rate"
+                style="font-size: 11px; color: var(--text-mute); font-family: var(--font-mono);"
+                >12.2%</span
+              >
+            </div>
+          </div>
+          <!-- Pro tier -->
+          <div
+            id="teachable-pro-row"
+            style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-hairline);"
+          >
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;"
+            >
+              <span
+                style="font-size: 12px; font-weight: 500; color: var(--text-ink);"
+                id="teachable-pro-label"
+                >Pro ($119/mo + 0%)</span
+              >
+              <div style="text-align: right; display: flex; align-items: baseline; gap: 6px;">
+                <span
+                  id="teachable-pro-net"
+                  style="font-size: 14px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);"
+                  >$1,079.75</span
+                >
+                <span
+                  id="teachable-pro-net-compact"
+                  style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono);"
+                  >(≈ $1K)</span
+                >
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: 11px; color: var(--text-mute);"
+                >Fees: <span id="teachable-pro-fees">$170.25</span></span
+              >
+              <span
+                id="teachable-pro-rate"
+                style="font-size: 11px; color: var(--text-mute); font-family: var(--font-mono);"
+                >13.6%</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Best tier indicator -->
+        <p
+          id="teachable-best-label"
+          style="font-size: 11px; color: var(--text-mute); margin: 0; text-align: center;"
+        >
+          ↑ <strong style="color: var(--text-body);">Basic Plan</strong> is best at this volume
+        </p>
+      </div>
+
+      <!-- ─── FIVERR ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-fiverr"
+        data-categories="marketplace"
+        data-name="Fiverr"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/fiverr.svg" width="20" height="20" alt="Fiverr" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Fiverr
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="fiverr-subtitle"
+            >
+              20% flat seller commission
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.3);">Freelance Marketplace</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="fiverr-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="fiverr-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$250.00</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="fiverr-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,000.00</span
+              >
+              <span
+                id="fiverr-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="fiverr-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >20.0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ETSY ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-etsy"
+        data-categories="marketplace"
+        data-name="Etsy"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/etsy.svg" width="20" height="20" alt="Etsy" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Etsy
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="etsy-subtitle"
+            >
+              $0.20 listing + 6.5% + 3% + $0.25 card
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border-color: rgba(245, 158, 11, 0.3);">Creator Marketplace</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="etsy-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="etsy-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$141.25</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="etsy-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,108.75</span
+              >
+              <span
+                id="etsy-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1.1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="etsy-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >11.3%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── AMAZON KDP ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-kdp"
+        data-categories="marketplace"
+        data-name="Amazon KDP"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/kdp.svg" width="20" height="20" alt="Amazon KDP" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Amazon KDP
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="kdp-subtitle"
+            >
+              30% platform fee (70% royalty) + $0.15/MB delivery
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax" style="background: rgba(59, 130, 246, 0.15); color: #60A5FA; border-color: rgba(59, 130, 246, 0.3);">Digital Book Publishing</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="kdp-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="kdp-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$382.50</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="kdp-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$867.50</span
+              >
+              <span
+                id="kdp-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $868)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="kdp-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >30.6%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── UPWORK ─── -->
+      <div
+        class="card-base platform-card"
+        id="card-upwork"
+        data-categories="marketplace"
+        data-name="Upwork"
+        style="padding: 24px;"
+      >
+        <div
+          style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;"
+        >
+          <div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"
+            >
+              <img src="/icons/upwork.svg" width="20" height="20" alt="Upwork" style="border-radius: 4px;" />
+              <h3
+                style="font-size: 15px; font-weight: 600; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;"
+              >
+                Upwork
+              </h3>
+            </div>
+            <p
+              style="font-size: 12px; color: var(--text-mute); margin: 0; font-family: var(--font-mono);"
+              id="upwork-subtitle"
+            >
+              10% freelancer contract service fee
+            </p>
+          </div>
+          <div
+            style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end;"
+          >
+            <span class="badge badge-tax" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.3);">Freelance Platform</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Gross Revenue</span
+            >
+            <span
+              id="upwork-gross"
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
+              >$1,250.00</span
+            >
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);"
+              >Platform & Fees</span
+            >
+            <span
+              id="upwork-fees"
+              style="font-size: 13px; font-weight: 500; color: var(--color-error); font-family: var(--font-mono);"
+              >−$125.00</span
+            >
+          </div>
+          <div style="height: 1px; background: var(--border-hairline);"></div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
+          >
+            <span
+              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
+              >Net Profit</span
+            >
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+              <span
+                id="upwork-net"
+                style="font-size: 17px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono); letter-spacing: -0.5px;"
+                >$1,125.00</span
+              >
+              <span
+                id="upwork-net-compact"
+                style="font-size: 11px; font-weight: 600; color: var(--color-profit); opacity: 0.85; font-family: var(--font-mono); margin-top: 1px;"
+                >(≈ $1.1K)</span
+              >
+            </div>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);"
+              >Effective fee rate</span
+            >
+            <span
+              id="upwork-rate"
+              style="font-size: 13px; font-weight: 600; color: var(--text-ink); font-family: var(--font-mono);"
+              >10.0%</span
+            >
+          </div>
+        </div>
+      </div>
+
       <!-- ─── BEST VALUE SUMMARY CARD ─── -->
       <div
         id="card-winner"
         class="card-base"
-        style="padding: 24px; background: var(--bg-card-soft);"
+        style="padding: 24px; background: var(--bg-card-soft); grid-column: span 1;"
       >
         <p
           style="
@@ -771,7 +1831,7 @@
           Summary
         </p>
 
-        <div style="margin-bottom: 20px;">
+        <div style="margin-bottom: 16px;">
           <p style="font-size: 13px; color: var(--text-mute); margin: 0 0 6px;">
             Best net profit
           </p>
@@ -781,60 +1841,84 @@
           >
             Stripe Direct
           </p>
-          <p
-            id="winner-net"
-            style="font-size: 14px; color: var(--color-profit); font-family: var(--font-mono); font-weight: 600; margin: 4px 0 0;"
-          >
-            $1,198.75 net
-          </p>
+          <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 4px;">
+            <p
+              id="winner-net"
+              style="font-size: 14px; color: var(--color-profit); font-family: var(--font-mono); font-weight: 600; margin: 0;"
+            >
+              $1,198.75 net
+            </p>
+            <span
+              id="winner-net-compact"
+              style="font-size: 12px; color: var(--color-profit); font-family: var(--font-mono); font-weight: 600; opacity: 0.85;"
+            >
+              (≈ $1K)
+            </span>
+          </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div
-            style="display: flex; justify-content: space-between; font-size: 12px;"
-          >
+        <div style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; padding-right: 4px;" id="deltas-container">
+          <div class="delta-row" data-categories="direct" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Stripe Direct</span>
+            <span id="delta-stripe" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$0.00</span>
+          </div>
+          <div class="delta-row" data-categories="direct" style="display: flex; justify-content: space-between; font-size: 12px;">
             <span style="color: var(--text-mute);">vs. Gumroad</span>
-            <span
-              id="delta-gumroad"
-              style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;"
-              >+$183.75</span
-            >
+            <span id="delta-gumroad" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$183.75</span>
           </div>
-          <div
-            style="display: flex; justify-content: space-between; font-size: 12px;"
-          >
+          <div class="delta-row" data-categories="mor" style="display: flex; justify-content: space-between; font-size: 12px;">
             <span style="color: var(--text-mute);">vs. Lemon Squeezy</span>
-            <span
-              id="delta-ls"
-              style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;"
-              >+$36.25</span
-            >
+            <span id="delta-ls" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$36.25</span>
           </div>
-          <div
-            style="display: flex; justify-content: space-between; font-size: 12px;"
-          >
+          <div class="delta-row" data-categories="mor" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Paddle</span>
+            <span id="delta-paddle" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$36.25</span>
+          </div>
+          <div class="delta-row" data-categories="direct monthly" style="display: flex; justify-content: space-between; font-size: 12px;">
             <span style="color: var(--text-mute);">vs. Payhip</span>
-            <span
-              id="delta-payhip"
-              style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;"
-              >+$11.25</span
-            >
+            <span id="delta-payhip" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$11.25</span>
           </div>
-          <div
-            style="display: flex; justify-content: space-between; font-size: 12px;"
-          >
+          <div class="delta-row" data-categories="direct" style="display: flex; justify-content: space-between; font-size: 12px;">
             <span style="color: var(--text-mute);">vs. Whop</span>
-            <span
-              id="delta-whop"
-              style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;"
-              >+$37.50</span
-            >
+            <span id="delta-whop" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$37.50</span>
+          </div>
+          <div class="delta-row" data-categories="direct monthly" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Sellfy</span>
+            <span id="delta-sellfy" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$29.00</span>
+          </div>
+          <div class="delta-row" data-categories="direct monthly" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Podia</span>
+            <span id="delta-podia" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$39.00</span>
+          </div>
+          <div class="delta-row" data-categories="direct monthly" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Stan Store</span>
+            <span id="delta-stan" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$29.00</span>
+          </div>
+          <div class="delta-row" data-categories="direct monthly" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Teachable</span>
+            <span id="delta-teachable" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$101.50</span>
+          </div>
+          <div class="delta-row" data-categories="marketplace" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Fiverr</span>
+            <span id="delta-fiverr" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$0.00</span>
+          </div>
+          <div class="delta-row" data-categories="marketplace" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Etsy</span>
+            <span id="delta-etsy" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$0.00</span>
+          </div>
+          <div class="delta-row" data-categories="marketplace" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Amazon KDP</span>
+            <span id="delta-kdp" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$0.00</span>
+          </div>
+          <div class="delta-row" data-categories="marketplace" style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-mute);">vs. Upwork</span>
+            <span id="delta-upwork" style="color: var(--color-profit); font-family: var(--font-mono); font-weight: 500;">+$0.00</span>
           </div>
         </div>
 
         <div
           style="
-          margin-top: 20px;
+          margin-top: 16px;
           padding: 10px 14px;
           border-radius: 8px;
           background: var(--badge-mor-bg);
@@ -845,8 +1929,7 @@
         >
           <strong>💡 Pro tip:</strong>
           <span id="pro-tip-text"
-            >Stripe gives max profit but requires tax self-filing. Lemon Squeezy
-            handles all VAT/GST globally.</span
+            >Stripe gives max profit but requires tax self-filing. Lemon Squeezy & Paddle handle all VAT/GST globally.</span
           >
         </div>
       </div>
@@ -856,24 +1939,91 @@
     <p
       style="text-align: center; font-size: 12px; color: var(--text-mute); margin-top: 24px;"
     >
-      Calculations are estimates. Stripe card fee applied on all platforms where
-      payment processing is separate. Payhip uses Stripe/PayPal for payments.
-      <a href="/#guide" style="color: var(--color-link);">Learn more ↓</a>
+      Calculations are estimates. Live mid-market exchange rates fetched automatically. Fixed monthly plans spread costs across sales volume.
+      <a href="#guide" style="color: var(--color-link);">Learn more in our guide ↓</a>
     </p>
   </div>
 </section>
 
 <!-- ─────────────────────────────────────────────────────────────
-     Calculator JavaScript — all fee logic runs client-side
+     Calculator JavaScript — Live exchange rate & currency engine
      ───────────────────────────────────────────────────────── -->
 <script>
-  // ── Helpers ──────────────────────────────────────────────────
-  const fmt = (n: number) =>
-    n.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
+  // ── Currency Definitions & Live Rates ────────────────────────
+  interface CurrencyConfig {
+    symbol: string;
+    code: string;
+    locale: string;
+    rate: number; // 1 USD = rate units
+  }
+
+  const CURRENCIES: Record<string, CurrencyConfig> = {
+    USD: { symbol: "$", code: "USD", locale: "en-US", rate: 1.0 },
+    EUR: { symbol: "€", code: "EUR", locale: "de-DE", rate: 0.8688 },
+    GBP: { symbol: "£", code: "GBP", locale: "en-GB", rate: 0.7446 },
+    INR: { symbol: "₹", code: "INR", locale: "en-IN", rate: 95.69 },
+    CAD: { symbol: "C$", code: "CAD", locale: "en-CA", rate: 1.4018 },
+    AUD: { symbol: "A$", code: "AUD", locale: "en-AU", rate: 1.4270 },
+  };
+
+  let selectedCurrency = "USD";
+
+  // ── Formatters ───────────────────────────────────────────────
+  const fmt = (n: number) => {
+    const cfg = CURRENCIES[selectedCurrency] || CURRENCIES.USD;
+    const absVal = Math.abs(n);
+    const formattedNum = absVal.toLocaleString(cfg.locale, {
       minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     });
+    const prefix = n < 0 ? "−" : "";
+    return `${prefix}${cfg.symbol}${formattedNum}`;
+  };
+
+  const fmtCompact = (n: number) => {
+    const cfg = CURRENCIES[selectedCurrency] || CURRENCIES.USD;
+    const absVal = Math.abs(n);
+    const sign = n < 0 ? "−" : "";
+
+    if (selectedCurrency === "INR") {
+      // Indian Numbering System: Crore (Cr), Lakh (L), Thousand (K)
+      if (absVal >= 10000000) { // 1 Crore = 10^7
+        const val = absVal / 10000000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted} Cr)`;
+      }
+      if (absVal >= 100000) { // 1 Lakh = 10^5
+        const val = absVal / 100000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted} L)`;
+      }
+      if (absVal >= 1000) { // 1 Thousand
+        const val = absVal / 1000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1).replace(/\.0$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted} K)`;
+      }
+      return `(≈ ${sign}${cfg.symbol}${absVal.toFixed(0)})`;
+    } else {
+      // Western System: Billion (B), Million (M), Thousand (K)
+      if (absVal >= 1000000000) { // 1 Billion
+        const val = absVal / 1000000000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted}B)`;
+      }
+      if (absVal >= 1000000) { // 1 Million
+        const val = absVal / 1000000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted}M)`;
+      }
+      if (absVal >= 1000) { // 1 Thousand
+        const val = absVal / 1000;
+        const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1).replace(/\.0$/, "");
+        return `(≈ ${sign}${cfg.symbol}${formatted}K)`;
+      }
+      return `(≈ ${sign}${cfg.symbol}${absVal.toFixed(0)})`;
+    }
+  };
+
   const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
   function el(id: string): HTMLElement | null {
@@ -885,272 +2035,573 @@
     if (e) e.textContent = val;
   }
 
-  // ── State ──────────────────────────────────────────────────────
-  let price = 25;
+  // ── State (Base USD values) ──────────────────────────────────
+  let price = 25; // Base price in USD
   let volume = 50;
   let intl = false;
   let paypal = false;
   let gumroadDiscover = false;
+  let activeFilter = "all";
+  let activeSort = "net-desc";
 
   // ── Fee Formulas ───────────────────────────────────────────────
-  // Card processing fee (Stripe-standard)
-  function cardFee(p: number, international: boolean): number {
-    const rate = 0.029 + (international ? 0.015 : 0);
-    return p * rate + 0.3;
-  }
-
-  // PayPal fee
-  function paypalFee(p: number): number {
-    return p * 0.0349 + 0.49;
-  }
-
-  // Choose card processing (paypal toggle)
-  function processingFee(
-    p: number,
-    international: boolean,
-    usePaypal: boolean,
-  ): number {
-    return usePaypal ? paypalFee(p) : cardFee(p, international);
-  }
-
-  // Per-unit net calculations
-  function calcGumroad(
-    p: number,
-    intl: boolean,
-    pp: boolean,
-    discover: boolean,
-  ) {
+  function calcGumroad(p: number, intl: boolean, pp: boolean, discover: boolean, rate: number) {
     if (discover) {
-      const platformCut = p * 0.3;
+      const platformCut = p * 0.30;
       return { gross: p, fees: platformCut, net: p - platformCut };
     }
-    const platformCut = p * 0.1 + 0.5;
-    const proc = processingFee(p, intl, pp);
-    const totalFees = platformCut + proc;
+    const platformCut = p * 0.10 + 0.50 * rate;
+    const proc = (0.029 + (intl ? 0.015 : 0)) * p + 0.30 * rate;
+    const totalProc = pp ? (0.0349 * p + 0.49 * rate) : proc;
+    const totalFees = platformCut + totalProc;
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
 
-  function calcLemonSqueezy(p: number, intl: boolean, pp: boolean) {
-    // MoR: 5% + $0.50 includes card processing
-    const platformCut = p * 0.05 + 0.5;
-    // Additional intl surcharge still applies
+  function calcLemonSqueezy(p: number, intl: boolean, rate: number) {
+    const platformCut = p * 0.05 + 0.50 * rate;
     const intlExtra = intl ? p * 0.015 : 0;
     const totalFees = platformCut + intlExtra;
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
 
-  function calcPayhip(p: number, vol: number, intl: boolean, pp: boolean) {
-    const proc = processingFee(p, intl, pp);
+  function calcPaddle(p: number, intl: boolean, rate: number) {
+    const platformCut = p * 0.05 + 0.50 * rate;
+    const intlExtra = intl ? p * 0.015 : 0;
+    const totalFees = platformCut + intlExtra;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
 
-    // Free: 5% platform + processing
+  function calcProcFee(p: number, intl: boolean, pp: boolean, rate: number) {
+    if (pp) return 0.0349 * p + 0.49 * rate;
+    return (0.029 + (intl ? 0.015 : 0)) * p + 0.30 * rate;
+  }
+
+  function calcPayhip(p: number, vol: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
+
     const freeFees = p * 0.05 + proc;
     const freeNet = p - freeFees;
 
-    // Plus: $29/mo + 2% platform + processing
-    const plusMonthlyCost = 29;
+    const plusMonthlyCost = 29 * rate;
     const plusTxFees = p * 0.02 + proc;
     const plusNetPerUnit = p - plusTxFees - plusMonthlyCost / vol;
     const plusFees = p - plusNetPerUnit;
 
-    // Pro: $99/mo + 0% platform + processing
-    const proMonthlyCost = 99;
+    const proMonthlyCost = 99 * rate;
     const proTxFees = proc;
     const proNetPerUnit = p - proTxFees - proMonthlyCost / vol;
     const proFees = p - proNetPerUnit;
 
     return {
-      free: {
-        fees: freeFees,
-        net: freeNet,
-        totalFees: freeFees * vol,
-        totalNet: freeNet * vol,
-      },
-      plus: {
-        fees: plusFees,
-        net: plusNetPerUnit,
-        totalFees: plusFees * vol,
-        totalNet: plusNetPerUnit * vol,
-      },
-      pro: {
-        fees: proFees,
-        net: proNetPerUnit,
-        totalFees: proFees * vol,
-        totalNet: proNetPerUnit * vol,
-      },
+      free: { fees: freeFees, net: freeNet, totalFees: freeFees * vol, totalNet: freeNet * vol },
+      plus: { fees: plusFees, net: plusNetPerUnit, totalFees: plusFees * vol, totalNet: plusNetPerUnit * vol },
+      pro: { fees: proFees, net: proNetPerUnit, totalFees: proFees * vol, totalNet: proNetPerUnit * vol },
     };
   }
 
-  function calcStripe(p: number, intl: boolean, pp: boolean) {
-    const proc = processingFee(p, intl, pp);
+  function calcStripe(p: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
     return { gross: p, fees: proc, net: p - proc };
   }
 
-  function calcWhop(p: number, intl: boolean, pp: boolean) {
+  function calcWhop(p: number, intl: boolean, pp: boolean, rate: number) {
     const platformCut = p * 0.03;
-    const proc = processingFee(p, intl, pp);
+    const proc = calcProcFee(p, intl, pp, rate);
     const totalFees = platformCut + proc;
     return { gross: p, fees: totalFees, net: p - totalFees };
   }
 
-  // ── Render ─────────────────────────────────────────────────────
-  function update() {
-    const gross = price * volume;
+  function calcSellfy(p: number, vol: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
+    const monthlyCost = 29 * rate;
+    const feesPerUnit = proc + monthlyCost / vol;
+    const netPerUnit = p - feesPerUnit;
+    return { gross: p, fees: feesPerUnit, net: netPerUnit };
+  }
 
-    // Gumroad
-    const gu = calcGumroad(price, intl, paypal, gumroadDiscover);
-    const guTotalFees = gu.fees * volume;
+  function calcPodia(p: number, vol: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
+    const monthlyCost = 39 * rate;
+    const feesPerUnit = proc + monthlyCost / vol;
+    const netPerUnit = p - feesPerUnit;
+    return { gross: p, fees: feesPerUnit, net: netPerUnit };
+  }
+
+  function calcStan(p: number, vol: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
+    const monthlyCost = 29 * rate;
+    const feesPerUnit = proc + monthlyCost / vol;
+    const netPerUnit = p - feesPerUnit;
+    return { gross: p, fees: feesPerUnit, net: netPerUnit };
+  }
+
+  function calcTeachable(p: number, vol: number, intl: boolean, pp: boolean, rate: number) {
+    const proc = calcProcFee(p, intl, pp, rate);
+
+    const basicMonthlyCost = 39 * rate;
+    const basicTxFees = p * 0.05 + proc;
+    const basicNetPerUnit = p - basicTxFees - basicMonthlyCost / vol;
+    const basicFees = p - basicNetPerUnit;
+
+    const proMonthlyCost = 119 * rate;
+    const proTxFees = proc;
+    const proNetPerUnit = p - proTxFees - proMonthlyCost / vol;
+    const proFees = p - proNetPerUnit;
+
+    return {
+      basic: { fees: basicFees, net: basicNetPerUnit, totalFees: basicFees * vol, totalNet: basicNetPerUnit * vol },
+      pro: { fees: proFees, net: proNetPerUnit, totalFees: proFees * vol, totalNet: proNetPerUnit * vol },
+    };
+  }
+
+  function calcFiverr(p: number) {
+    const fees = p * 0.20;
+    return { gross: p, fees, net: p - fees };
+  }
+
+  function calcEtsy(p: number, rate: number) {
+    const listingFee = 0.20 * rate;
+    const txFee = p * 0.065;
+    const procFee = p * 0.03 + 0.25 * rate;
+    const totalFees = listingFee + txFee + procFee;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
+
+  function calcKDP(p: number, rate: number) {
+    const platformCut = p * 0.30;
+    const deliveryFee = 0.15 * rate;
+    const totalFees = platformCut + deliveryFee;
+    return { gross: p, fees: totalFees, net: p - totalFees };
+  }
+
+  function calcUpwork(p: number) {
+    const fees = p * 0.10;
+    return { gross: p, fees, net: p - fees };
+  }
+
+  // ── Render / Recalculate Matrix ──────────────────────────────
+  function update() {
+    const curr = CURRENCIES[selectedCurrency] || CURRENCIES.USD;
+    const rate = curr.rate;
+    const convPrice = price * rate;
+    const gross = convPrice * volume;
+
+    // Update Live Exchange Rate Badge
+    const rateBadge = el("exchange-rate-badge");
+    if (rateBadge) {
+      if (selectedCurrency === "USD") {
+        rateBadge.textContent = "🟢 Live rate: 1 USD = 1.00 USD (Base)";
+      } else {
+        rateBadge.textContent = `🟢 Live rate: 1 USD = ${rate.toFixed(4)} ${selectedCurrency}`;
+      }
+    }
+
+    // Update Input value to show converted price (without stealing active focus)
+    const pInput = el("price-input") as HTMLInputElement | null;
+    if (pInput && document.activeElement !== pInput) {
+      pInput.value = convPrice.toFixed(2).replace(/\.00$/, "");
+    }
+
+    // Update Currency Labels & Subtitles
+    setText("price-symbol-label", curr.symbol);
+    setText("price-min-label", fmt(1 * rate));
+    const pSlider = el("price-slider") as HTMLInputElement | null;
+    if (pSlider) setText("price-max-label", fmt(Number(pSlider.max) * rate));
+    const vSlider = el("volume-slider") as HTMLInputElement | null;
+    if (vSlider) setText("volume-max-label", Number(vSlider.max).toLocaleString());
+
+    setText("paypal-toggle-desc", `3.49% + ${fmt(0.49 * rate)} per transaction`);
+    setText("gumroad-toggle-desc", `Switch to marketplace (30% cut) vs. Direct (10% + ${fmt(0.50 * rate)})`);
+
+    // Update Presets Meta Text
+    setText("preset-meta-1", `${fmt(5 * rate)} × 100 sales`);
+    setText("preset-meta-2", `${fmt(29 * rate)} × 50 sales`);
+    setText("preset-meta-3", `${fmt(149 * rate)} × 20 sales`);
+    setText("preset-meta-4", `${fmt(49 * rate)} × 30 sales`);
+
+    // 1. Gumroad
+    const gu = calcGumroad(convPrice, intl, paypal, gumroadDiscover, rate);
     const guTotalNet = gu.net * volume;
-    const guRate = gu.fees / price;
+    const guTotalFees = gu.fees * volume;
+    const guRate = gu.fees / convPrice;
     setText(
       "gumroad-mode-label",
       gumroadDiscover
         ? "Discover — 30% marketplace cut"
-        : "Direct — 10% + $0.50 per sale",
+        : `Direct — 10% + ${fmt(0.50 * rate)} per sale`,
     );
     setText("gumroad-gross", fmt(gross));
-    setText("gumroad-fees", `−${fmt(guTotalFees)}`);
+    setText("gumroad-fees", fmt(-guTotalFees));
     setText("gumroad-net", fmt(guTotalNet));
+    setText("gumroad-net-compact", fmtCompact(guTotalNet));
     setText("gumroad-rate", pct(guRate));
 
-    // Lemon Squeezy
-    const ls = calcLemonSqueezy(price, intl, paypal);
-    const lsTotalFees = ls.fees * volume;
+    // 2. Lemon Squeezy
+    const ls = calcLemonSqueezy(convPrice, intl, rate);
     const lsTotalNet = ls.net * volume;
-    const lsRate = ls.fees / price;
+    const lsTotalFees = ls.fees * volume;
+    const lsRate = ls.fees / convPrice;
+    setText("ls-subtitle", `5% + ${fmt(0.50 * rate)} per sale`);
     setText("ls-gross", fmt(gross));
-    setText("ls-fees", `−${fmt(lsTotalFees)}`);
+    setText("ls-fees", fmt(-lsTotalFees));
     setText("ls-net", fmt(lsTotalNet));
+    setText("ls-net-compact", fmtCompact(lsTotalNet));
     setText("ls-rate", pct(lsRate));
 
-    // Payhip
-    const ph = calcPayhip(price, volume, intl, paypal);
-    const highlightPayhip = (id: string, active: boolean) => {
+    // 3. Paddle
+    const pd = calcPaddle(convPrice, intl, rate);
+    const pdTotalNet = pd.net * volume;
+    const pdTotalFees = pd.fees * volume;
+    const pdRate = pd.fees / convPrice;
+    setText("paddle-subtitle", `5% + ${fmt(0.50 * rate)} per sale · Auto VAT`);
+    setText("paddle-gross", fmt(gross));
+    setText("paddle-fees", fmt(-pdTotalFees));
+    setText("paddle-net", fmt(pdTotalNet));
+    setText("paddle-net-compact", fmtCompact(pdTotalNet));
+    setText("paddle-rate", pct(pdRate));
+
+    // 4. Payhip
+    const ph = calcPayhip(convPrice, volume, intl, paypal, rate);
+    const highlightTier = (id: string, active: boolean) => {
       const row = el(id);
       if (!row) return;
       row.style.background = active ? "var(--color-profit-bg)" : "";
-      row.style.borderColor = active
-        ? "var(--color-profit)"
-        : "var(--border-hairline)";
+      row.style.borderColor = active ? "var(--color-profit)" : "var(--border-hairline)";
     };
-    // Find best payhip tier
     const phNets = [ph.free.totalNet, ph.plus.totalNet, ph.pro.totalNet];
     const phBestIdx = phNets.indexOf(Math.max(...phNets));
     const phBestLabels = ["Free Plan", "Plus Plan", "Pro Plan"];
     const phBestNet = phNets[phBestIdx];
+    const phBestRate = [ph.free.fees / convPrice, ph.plus.fees / convPrice, ph.pro.fees / convPrice][phBestIdx];
 
-    highlightPayhip("payhip-free-row", phBestIdx === 0);
-    highlightPayhip("payhip-plus-row", phBestIdx === 1);
-    highlightPayhip("payhip-pro-row", phBestIdx === 2);
+    highlightTier("payhip-free-row", phBestIdx === 0);
+    highlightTier("payhip-plus-row", phBestIdx === 1);
+    highlightTier("payhip-pro-row", phBestIdx === 2);
 
+    setText("payhip-subtitle", `Free 5% · Plus ${fmt(29 * rate)}/mo · Pro ${fmt(99 * rate)}/mo`);
+    setText("payhip-plus-label", `Plus Plan (${fmt(29 * rate)}/mo + 2%)`);
+    setText("payhip-pro-label", `Pro Plan (${fmt(99 * rate)}/mo + 0%)`);
     setText("payhip-free-net", fmt(ph.free.totalNet));
+    setText("payhip-free-net-compact", fmtCompact(ph.free.totalNet));
     setText("payhip-free-fees", fmt(ph.free.totalFees));
-    setText("payhip-free-rate", pct(ph.free.fees / price));
+    setText("payhip-free-rate", pct(ph.free.fees / convPrice));
     setText("payhip-plus-net", fmt(ph.plus.totalNet));
+    setText("payhip-plus-net-compact", fmtCompact(ph.plus.totalNet));
     setText("payhip-plus-fees", fmt(ph.plus.totalFees));
-    setText("payhip-plus-rate", pct(ph.plus.fees / price));
+    setText("payhip-plus-rate", pct(ph.plus.fees / convPrice));
     setText("payhip-pro-net", fmt(ph.pro.totalNet));
+    setText("payhip-pro-net-compact", fmtCompact(ph.pro.totalNet));
     setText("payhip-pro-fees", fmt(ph.pro.totalFees));
-    setText("payhip-pro-rate", pct(ph.pro.fees / price));
-    setText(
-      "payhip-best-label",
-      `↑ ${phBestLabels[phBestIdx]} is best at this volume`,
-    );
+    setText("payhip-pro-rate", pct(ph.pro.fees / convPrice));
+    setText("payhip-best-label", `↑ ${phBestLabels[phBestIdx]} is best at this volume`);
 
-    // Stripe
-    const st = calcStripe(price, intl, paypal);
-    const stTotalFees = st.fees * volume;
+    // 5. Stripe
+    const st = calcStripe(convPrice, intl, paypal, rate);
     const stTotalNet = st.net * volume;
-    const stRate = st.fees / price;
+    const stTotalFees = st.fees * volume;
+    const stRate = st.fees / convPrice;
+    setText("stripe-subtitle", `2.9% + ${fmt(0.30 * rate)} · No platform fee`);
     setText("stripe-gross", fmt(gross));
-    setText("stripe-fees", `−${fmt(stTotalFees)}`);
+    setText("stripe-fees", fmt(-stTotalFees));
     setText("stripe-net", fmt(stTotalNet));
+    setText("stripe-net-compact", fmtCompact(stTotalNet));
     setText("stripe-rate", pct(stRate));
 
-    // Whop
-    const wh = calcWhop(price, intl, paypal);
-    const whTotalFees = wh.fees * volume;
+    // 6. Whop
+    const wh = calcWhop(convPrice, intl, paypal, rate);
     const whTotalNet = wh.net * volume;
-    const whRate = wh.fees / price;
+    const whTotalFees = wh.fees * volume;
+    const whRate = wh.fees / convPrice;
+    setText("whop-subtitle", `3% flat + 2.9% + ${fmt(0.30 * rate)} card fee`);
     setText("whop-gross", fmt(gross));
-    setText("whop-fees", `−${fmt(whTotalFees)}`);
+    setText("whop-fees", fmt(-whTotalFees));
     setText("whop-net", fmt(whTotalNet));
+    setText("whop-net-compact", fmtCompact(whTotalNet));
     setText("whop-rate", pct(whRate));
 
-    // ── Winner Summary ───────────────────────────────────────────
-    const results: Array<{ name: string; net: number; isMoR: boolean }> = [
-      { name: "Gumroad", net: guTotalNet, isMoR: false },
-      { name: "Lemon Squeezy", net: lsTotalNet, isMoR: true },
-      {
-        name: `Payhip (${phBestLabels[phBestIdx]})`,
-        net: phBestNet,
-        isMoR: false,
-      },
-      { name: "Stripe Direct", net: stTotalNet, isMoR: false },
-      { name: "Whop", net: whTotalNet, isMoR: false },
+    // 7. Sellfy
+    const sf = calcSellfy(convPrice, volume, intl, paypal, rate);
+    const sfTotalNet = sf.net * volume;
+    const sfTotalFees = sf.fees * volume;
+    const sfRate = sf.fees / convPrice;
+    setText("sellfy-subtitle", `${fmt(29 * rate)}/mo Starter · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+    setText("sellfy-gross", fmt(gross));
+    setText("sellfy-fees", fmt(-sfTotalFees));
+    setText("sellfy-net", fmt(sfTotalNet));
+    setText("sellfy-net-compact", fmtCompact(sfTotalNet));
+    setText("sellfy-rate", pct(sfRate));
+
+    // 8. Podia
+    const po = calcPodia(convPrice, volume, intl, paypal, rate);
+    const poTotalNet = po.net * volume;
+    const poTotalFees = po.fees * volume;
+    const poRate = po.fees / convPrice;
+    setText("podia-subtitle", `${fmt(39 * rate)}/mo Mover · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+    setText("podia-gross", fmt(gross));
+    setText("podia-fees", fmt(-poTotalFees));
+    setText("podia-net", fmt(poTotalNet));
+    setText("podia-net-compact", fmtCompact(poTotalNet));
+    setText("podia-rate", pct(poRate));
+
+    // 9. Stan Store
+    const sn = calcStan(convPrice, volume, intl, paypal, rate);
+    const snTotalNet = sn.net * volume;
+    const snTotalFees = sn.fees * volume;
+    const snRate = sn.fees / convPrice;
+    setText("stan-subtitle", `${fmt(29 * rate)}/mo Plan · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+    setText("stan-gross", fmt(gross));
+    setText("stan-fees", fmt(-snTotalFees));
+    setText("stan-net", fmt(snTotalNet));
+    setText("stan-net-compact", fmtCompact(snTotalNet));
+    setText("stan-rate", pct(snRate));
+
+    // 10. Teachable
+    const tc = calcTeachable(convPrice, volume, intl, paypal, rate);
+    const tcNets = [tc.basic.totalNet, tc.pro.totalNet];
+    const tcBestIdx = tcNets.indexOf(Math.max(...tcNets));
+    const tcBestLabels = ["Basic Plan", "Pro Plan"];
+    const tcBestNet = tcNets[tcBestIdx];
+    const tcBestRate = [tc.basic.fees / convPrice, tc.pro.fees / convPrice][tcBestIdx];
+
+    highlightTier("teachable-basic-row", tcBestIdx === 0);
+    highlightTier("teachable-pro-row", tcBestIdx === 1);
+
+    setText("teachable-subtitle", `Basic ${fmt(39 * rate)}/mo + 5% · Pro ${fmt(119 * rate)}/mo + 0%`);
+    setText("teachable-basic-label", `Basic (${fmt(39 * rate)}/mo + 5%)`);
+    setText("teachable-pro-label", `Pro (${fmt(119 * rate)}/mo + 0%)`);
+    setText("teachable-basic-net", fmt(tc.basic.totalNet));
+    setText("teachable-basic-net-compact", fmtCompact(tc.basic.totalNet));
+    setText("teachable-basic-fees", fmt(tc.basic.totalFees));
+    setText("teachable-basic-rate", pct(tc.basic.fees / convPrice));
+    setText("teachable-pro-net", fmt(tc.pro.totalNet));
+    setText("teachable-pro-net-compact", fmtCompact(tc.pro.totalNet));
+    setText("teachable-pro-fees", fmt(tc.pro.totalFees));
+    setText("teachable-pro-rate", pct(tc.pro.fees / convPrice));
+    setText("teachable-best-label", `↑ ${tcBestLabels[tcBestIdx]} is best at this volume`);
+
+    // 11. Fiverr
+    const fv = calcFiverr(convPrice);
+    const fvTotalNet = fv.net * volume;
+    const fvTotalFees = fv.fees * volume;
+    const fvRate = fv.fees / convPrice;
+    setText("fiverr-subtitle", `20% flat seller commission`);
+    setText("fiverr-gross", fmt(gross));
+    setText("fiverr-fees", fmt(-fvTotalFees));
+    setText("fiverr-net", fmt(fvTotalNet));
+    setText("fiverr-net-compact", fmtCompact(fvTotalNet));
+    setText("fiverr-rate", pct(fvRate));
+
+    // 12. Etsy
+    const et = calcEtsy(convPrice, rate);
+    const etTotalNet = et.net * volume;
+    const etTotalFees = et.fees * volume;
+    const etRate = et.fees / convPrice;
+    setText("etsy-subtitle", `${fmt(0.20 * rate)} listing + 6.5% + 3% + ${fmt(0.25 * rate)} card`);
+    setText("etsy-gross", fmt(gross));
+    setText("etsy-fees", fmt(-etTotalFees));
+    setText("etsy-net", fmt(etTotalNet));
+    setText("etsy-net-compact", fmtCompact(etTotalNet));
+    setText("etsy-rate", pct(etRate));
+
+    // 13. Amazon KDP
+    const kd = calcKDP(convPrice, rate);
+    const kdTotalNet = kd.net * volume;
+    const kdTotalFees = kd.fees * volume;
+    const kdRate = kd.fees / convPrice;
+    setText("kdp-subtitle", `30% platform fee (70% royalty) + ${fmt(0.15 * rate)}/MB delivery`);
+    setText("kdp-gross", fmt(gross));
+    setText("kdp-fees", fmt(-kdTotalFees));
+    setText("kdp-net", fmt(kdTotalNet));
+    setText("kdp-net-compact", fmtCompact(kdTotalNet));
+    setText("kdp-rate", pct(kdRate));
+
+    // 14. Upwork
+    const uw = calcUpwork(convPrice);
+    const uwTotalNet = uw.net * volume;
+    const uwTotalFees = uw.fees * volume;
+    const uwRate = uw.fees / convPrice;
+    setText("upwork-subtitle", `10% freelancer contract service fee`);
+    setText("upwork-gross", fmt(gross));
+    setText("upwork-fees", fmt(-uwTotalFees));
+    setText("upwork-net", fmt(uwTotalNet));
+    setText("upwork-net-compact", fmtCompact(uwTotalNet));
+    setText("upwork-rate", pct(uwRate));
+
+    // ── Collect Platform Dataset ─────────────────────────────
+    interface PlatformData {
+      id: string;
+      cardId: string;
+      name: string;
+      net: number;
+      rate: number;
+      isMoR: boolean;
+      categories: string[];
+    }
+
+    const platforms: PlatformData[] = [
+      { id: "gumroad", cardId: "card-gumroad", name: "Gumroad", net: guTotalNet, rate: guRate, isMoR: false, categories: ["direct"] },
+      { id: "lemonsqueezy", cardId: "card-lemonsqueezy", name: "Lemon Squeezy", net: lsTotalNet, rate: lsRate, isMoR: true, categories: ["mor"] },
+      { id: "paddle", cardId: "card-paddle", name: "Paddle", net: pdTotalNet, rate: pdRate, isMoR: true, categories: ["mor"] },
+      { id: "payhip", cardId: "card-payhip", name: `Payhip (${phBestLabels[phBestIdx]})`, net: phBestNet, rate: phBestRate, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "stripe", cardId: "card-stripe", name: "Stripe Direct", net: stTotalNet, rate: stRate, isMoR: false, categories: ["direct"] },
+      { id: "whop", cardId: "card-whop", name: "Whop", net: whTotalNet, rate: whRate, isMoR: false, categories: ["direct"] },
+      { id: "sellfy", cardId: "card-sellfy", name: "Sellfy", net: sfTotalNet, rate: sfRate, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "podia", cardId: "card-podia", name: "Podia", net: poTotalNet, rate: poRate, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "stan", cardId: "card-stan", name: "Stan Store", net: snTotalNet, rate: snRate, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "teachable", cardId: "card-teachable", name: `Teachable (${tcBestLabels[tcBestIdx]})`, net: tcBestNet, rate: tcBestRate, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "fiverr", cardId: "card-fiverr", name: "Fiverr", net: fvTotalNet, rate: fvRate, isMoR: false, categories: ["marketplace"] },
+      { id: "etsy", cardId: "card-etsy", name: "Etsy", net: etTotalNet, rate: etRate, isMoR: false, categories: ["marketplace"] },
+      { id: "kdp", cardId: "card-kdp", name: "Amazon KDP", net: kdTotalNet, rate: kdRate, isMoR: false, categories: ["marketplace"] },
+      { id: "upwork", cardId: "card-upwork", name: "Upwork", net: uwTotalNet, rate: uwRate, isMoR: false, categories: ["marketplace"] },
     ];
 
-    results.sort((a, b) => b.net - a.net);
-    const winner = results[0];
+    // Filter platforms based on activeFilter
+    const filteredPlatforms = platforms.filter(
+      (p) => activeFilter === "all" || p.categories.includes(activeFilter)
+    );
 
-    setText("winner-name", winner.name);
-    setText("winner-net", `${fmt(winner.net)} net`);
+    // Find Winner within active filter category
+    const activeWinner = [...filteredPlatforms].sort((a, b) => b.net - a.net)[0] || platforms[0];
 
-    // Dispatch winner metadata for floating dock
+    setText("winner-name", activeWinner.name);
+    setText("winner-net", `${fmt(activeWinner.net)} net`);
+    setText("winner-net-compact", fmtCompact(activeWinner.net));
+
+    // Dispatch floating dock notification for active filter winner
     if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("matrix-winner-updated", {
           detail: {
-            name: winner.name,
-            netFormatted: `${fmt(winner.net)} net`,
+            name: activeWinner.name,
+            netFormatted: `${fmt(activeWinner.net)} net`,
+            netCompact: fmtCompact(activeWinner.net),
+            activeFilter: activeFilter,
           },
         })
       );
     }
 
-    // Deltas vs winner
-    const deltaMap: Record<string, number> = {
-      "delta-gumroad": winner.net - guTotalNet,
-      "delta-ls": winner.net - lsTotalNet,
-      "delta-payhip": winner.net - phBestNet,
-      "delta-whop": winner.net - whTotalNet,
-    };
+    // Deltas vs Active Winner (filtered by activeFilter, hide self-comparison, format ties)
+    interface DeltaConfig {
+      id: string;
+      cardId: string;
+      net: number;
+      categories: string[];
+    }
 
-    for (const [id, delta] of Object.entries(deltaMap)) {
-      const e = el(id);
+    const deltasConfig: DeltaConfig[] = [
+      { id: "delta-stripe", cardId: "card-stripe", net: stTotalNet, categories: ["direct"] },
+      { id: "delta-gumroad", cardId: "card-gumroad", net: guTotalNet, categories: ["direct"] },
+      { id: "delta-ls", cardId: "card-lemonsqueezy", net: lsTotalNet, categories: ["mor"] },
+      { id: "delta-paddle", cardId: "card-paddle", net: pdTotalNet, categories: ["mor"] },
+      { id: "delta-payhip", cardId: "card-payhip", net: phBestNet, categories: ["direct", "monthly"] },
+      { id: "delta-whop", cardId: "card-whop", net: whTotalNet, categories: ["direct"] },
+      { id: "delta-sellfy", cardId: "card-sellfy", net: sfTotalNet, categories: ["direct", "monthly"] },
+      { id: "delta-podia", cardId: "card-podia", net: poTotalNet, categories: ["direct", "monthly"] },
+      { id: "delta-stan", cardId: "card-stan", net: snTotalNet, categories: ["direct", "monthly"] },
+      { id: "delta-teachable", cardId: "card-teachable", net: tcBestNet, categories: ["direct", "monthly"] },
+      { id: "delta-fiverr", cardId: "card-fiverr", net: fvTotalNet, categories: ["marketplace"] },
+      { id: "delta-etsy", cardId: "card-etsy", net: etTotalNet, categories: ["marketplace"] },
+      { id: "delta-kdp", cardId: "card-kdp", net: kdTotalNet, categories: ["marketplace"] },
+      { id: "delta-upwork", cardId: "card-upwork", net: uwTotalNet, categories: ["marketplace"] },
+    ];
+
+    for (const item of deltasConfig) {
+      const e = el(item.id);
       if (!e) continue;
-      if (delta === 0) {
-        e.textContent = "Winner ✓";
-        e.style.color = "var(--color-profit)";
-      } else {
-        e.textContent = `−${fmt(delta)}`;
-        e.style.color = "var(--text-mute)";
+      const row = (e.closest(".delta-row") as HTMLElement | null) || e.parentElement;
+      const isWinnerCard = item.cardId === activeWinner.cardId;
+      const isCategoryMatch = activeFilter === "all" || item.categories.includes(activeFilter);
+      // Hide self-comparison row and non-category matching rows
+      const isVisible = isCategoryMatch && !isWinnerCard;
+
+      if (row) {
+        row.style.display = isVisible ? "flex" : "none";
+      }
+
+      if (isVisible) {
+        const delta = activeWinner.net - item.net;
+        if (Math.abs(delta) < 0.01) {
+          e.textContent = `${fmt(0)} (Tied)`;
+          e.style.color = "var(--text-body)";
+        } else {
+          e.textContent = fmt(-delta);
+          e.style.color = "var(--text-mute)";
+        }
       }
     }
 
-    // Pro tip
-    const tip = winner.isMoR
-      ? `${winner.name} handles all VAT/GST globally — no tax headaches.`
-      : `${winner.name} gives max profit. Consider Lemon Squeezy for automatic tax compliance.`;
+    // Pro Tip
+    let tip = "";
+    if (activeFilter === "mor") {
+      tip = "Lemon Squeezy and Paddle both charge 5% + $0.50 as Merchants of Record, auto-filing global VAT/GST taxes.";
+    } else if (activeWinner.isMoR) {
+      tip = `${activeWinner.name} handles all VAT/GST globally — no tax headaches.`;
+    } else {
+      tip = `${activeWinner.name} gives maximum profit in this view. Consider Lemon Squeezy or Paddle for automatic global tax compliance.`;
+    }
     setText("pro-tip-text", tip);
 
-    // Highlight best card with active emerald-to-amber glowing border
+    // Highlight Winner Card
     document.querySelectorAll(".platform-card").forEach((c) => {
       c.classList.remove("card-winner-glow");
     });
-    const winnerCardMap: Record<string, string> = {
-      Gumroad: "card-gumroad",
-      "Lemon Squeezy": "card-lemonsqueezy",
-      "Stripe Direct": "card-stripe",
-      Whop: "card-whop",
-    };
-    const cardId = winnerCardMap[winner.name.split(" (")[0]];
-    const winnerEl = cardId ? el(cardId) : el("card-payhip");
+    const winnerEl = el(activeWinner.cardId);
     if (winnerEl) {
       winnerEl.classList.add("card-winner-glow");
     }
+
+    // ── Apply Filtering & Sorting to DOM Grid ───────────────────
+    const grid = el("platforms");
+    if (!grid) return;
+
+    // Filter cards
+    platforms.forEach((p) => {
+      const card = el(p.cardId);
+      if (!card) return;
+      const isVisible = activeFilter === "all" || p.categories.includes(activeFilter);
+      card.style.display = isVisible ? "flex" : "none";
+      if (isVisible) {
+        card.style.flexDirection = "column";
+      }
+    });
+
+    // Sort visible cards via CSS order property
+    const sortedPlatforms = [...platforms];
+    if (activeSort === "net-desc") {
+      sortedPlatforms.sort((a, b) => b.net - a.net);
+    } else if (activeSort === "rate-asc") {
+      sortedPlatforms.sort((a, b) => a.rate - b.rate);
+    } else if (activeSort === "name-asc") {
+      sortedPlatforms.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    sortedPlatforms.forEach((p, index) => {
+      const card = el(p.cardId);
+      if (card) {
+        card.style.order = String(index);
+      }
+    });
+
+    // Keep Summary Card at order 999
+    const summaryCard = el("card-winner");
+    if (summaryCard) {
+      summaryCard.style.order = "999";
+    }
+
+    // Highlight active preset button if price/volume match
+    document.querySelectorAll(".preset-btn").forEach((btn) => {
+      const pAttr = Number(btn.getAttribute("data-price"));
+      const vAttr = Number(btn.getAttribute("data-volume"));
+      if (pAttr === price && vAttr === volume) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
   }
 
-  // ── Event wiring ───────────────────────────────────────────────
+  // ── Event Wiring ───────────────────────────────────────────────
   function updateTrackFill(slider: HTMLInputElement) {
     const min = Number(slider.min) || 1;
     const max = Number(slider.max) || 100;
@@ -1159,43 +2610,61 @@
     slider.style.background = `linear-gradient(to right, #F59E0B 0%, #F59E0B ${pct}%, rgba(255, 255, 255, 0.1) ${pct}%, rgba(255, 255, 255, 0.1) 100%)`;
   }
 
-  function wireSlider(
-    sliderId: string,
-    inputId: string,
-    setter: (n: number) => void,
-  ) {
-    const slider = el(sliderId) as HTMLInputElement | null;
-    const input = el(inputId) as HTMLInputElement | null;
+  function wirePriceControls() {
+    const slider = el("price-slider") as HTMLInputElement | null;
+    const input = el("price-input") as HTMLInputElement | null;
     if (!slider || !input) return;
 
     updateTrackFill(slider);
 
     slider.addEventListener("input", () => {
       const v = Number(slider.value);
-      setter(v);
-      input.value = String(v);
+      price = v;
       updateTrackFill(slider);
       update();
     });
 
     input.addEventListener("input", () => {
       let v = Number(input.value);
-      const min = Number(slider.min);
-      const max = Number(slider.max);
-      v = Math.max(min, Math.min(max, v));
-      setter(v);
-      slider.value = String(v);
+      const rate = CURRENCIES[selectedCurrency]?.rate || 1;
+      if (!isNaN(v) && v > 0) {
+        price = v / rate;
+        if (price > Number(slider.max)) {
+          slider.max = String(Math.ceil(price));
+        }
+        slider.value = String(Math.round(price));
+      }
       updateTrackFill(slider);
       update();
     });
   }
 
-  wireSlider("price-slider", "price-input", (v) => {
-    price = v;
-  });
-  wireSlider("volume-slider", "volume-input", (v) => {
-    volume = v;
-  });
+  wirePriceControls();
+
+  // Volume slider wire
+  const volSlider = el("volume-slider") as HTMLInputElement | null;
+  const volInput = el("volume-input") as HTMLInputElement | null;
+  if (volSlider && volInput) {
+    updateTrackFill(volSlider);
+    volSlider.addEventListener("input", () => {
+      volume = Number(volSlider.value);
+      volInput.value = String(volume);
+      updateTrackFill(volSlider);
+      update();
+    });
+    volInput.addEventListener("input", () => {
+      let v = Number(volInput.value);
+      if (!isNaN(v) && v > 0) {
+        volume = v;
+        if (volume > Number(volSlider.max)) {
+          volSlider.max = String(volume);
+        }
+        volSlider.value = String(volume);
+      }
+      updateTrackFill(volSlider);
+      update();
+    });
+  }
 
   function wireToggle(id: string, setter: (b: boolean) => void) {
     const t = el(id) as HTMLInputElement | null;
@@ -1206,27 +2675,184 @@
     });
   }
 
-  wireToggle("toggle-intl", (b) => {
-    intl = b;
-  });
-  wireToggle("toggle-paypal", (b) => {
-    paypal = b;
-  });
-  wireToggle("toggle-gumroad-mode", (b) => {
-    gumroadDiscover = b;
+  wireToggle("toggle-intl", (b) => { intl = b; });
+  wireToggle("toggle-paypal", (b) => { paypal = b; });
+  wireToggle("toggle-gumroad-mode", (b) => { gumroadDiscover = b; });
+
+  // Currency Selector Buttons
+  document.querySelectorAll(".curr-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".curr-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const curr = btn.getAttribute("data-curr");
+      if (curr && CURRENCIES[curr]) {
+        selectedCurrency = curr;
+        update();
+      }
+    });
   });
 
-  // Initial render
+  // Quick Presets
+  document.querySelectorAll(".preset-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const pAttr = Number(btn.getAttribute("data-price"));
+      const vAttr = Number(btn.getAttribute("data-volume"));
+      if (pAttr && vAttr) {
+        price = pAttr;
+        volume = vAttr;
+
+        const pSlider = el("price-slider") as HTMLInputElement | null;
+        const vInput = el("volume-input") as HTMLInputElement | null;
+        const vSlider = el("volume-slider") as HTMLInputElement | null;
+
+        if (pSlider) { pSlider.value = String(price); updateTrackFill(pSlider); }
+        if (vInput) vInput.value = String(volume);
+        if (vSlider) { vSlider.value = String(volume); updateTrackFill(vSlider); }
+
+        update();
+      }
+    });
+  });
+
+  // Filter Tabs
+  document.querySelectorAll(".filter-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".filter-tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      const filter = tab.getAttribute("data-filter");
+      if (filter) {
+        activeFilter = filter;
+        update();
+      }
+    });
+  });
+
+  // Sort Dropdown
+  const sortSelect = el("sort-select") as HTMLSelectElement | null;
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      activeSort = sortSelect.value;
+      update();
+    });
+  }
+
+  // ── Fetch Live Exchange Rates Async ─────────────────────────
+  async function fetchLiveRates() {
+    try {
+      const res = await fetch("https://open.er-api.com/v6/latest/USD");
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.rates) {
+          let updated = false;
+          Object.keys(CURRENCIES).forEach((code) => {
+            if (data.rates[code] && typeof data.rates[code] === "number") {
+              CURRENCIES[code].rate = data.rates[code];
+              updated = true;
+            }
+          });
+          if (updated) {
+            update();
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Exchange rate fetch fallback:", e);
+    }
+  }
+
+  // Initial render & fetch live rates
   update();
+  fetchLiveRates();
 </script>
 
 <style>
+  /* Currency Buttons */
+  .curr-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-mute);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .curr-btn:hover {
+    color: var(--text-ink);
+  }
+  .curr-btn.active {
+    background: var(--color-primary);
+    color: #0b0f17;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  }
+
+  /* Preset Buttons */
+  .preset-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-hairline);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+  }
+  .preset-btn:hover {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+    transform: translateY(-1px);
+  }
+  .preset-btn.active {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  }
+  .preset-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-ink);
+  }
+  .preset-btn.active .preset-title {
+    color: var(--color-primary);
+  }
+  .preset-meta {
+    font-size: 11px;
+    color: var(--text-mute);
+    font-family: var(--font-mono);
+  }
+
+  /* Filter Tabs */
+  .filter-tab {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-body);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-tab:hover {
+    color: var(--text-ink);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .filter-tab.active {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-primary);
+    border-color: rgba(245, 158, 11, 0.4);
+    font-weight: 600;
+  }
+
   @media (max-width: 960px) {
     .platforms-grid {
       grid-template-columns: repeat(2, 1fr) !important;
     }
   }
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
     .platforms-grid {
       grid-template-columns: 1fr !important;
     }
@@ -1236,6 +2862,10 @@
     .toggles-row {
       flex-direction: column !important;
       gap: 16px !important;
+    }
+    .matrix-toolbar {
+      flex-direction: column !important;
+      align-items: stretch !important;
     }
   }
 </style>

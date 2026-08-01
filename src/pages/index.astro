@@ -4,6 +4,7 @@ import Nav from "../components/Nav.astro";
 import Calculator from "../components/Calculator.astro";
 import GuideSection from "../components/GuideSection.astro";
 import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
 ---
 
 <Layout
@@ -68,7 +69,7 @@ import Footer from "../components/Footer.astro";
         "
           >NEW</span
         >
-        <span>5 platforms. Real-time take-home math. No spreadsheets.</span>
+        <span>14 platforms compared. Real-time take-home math. No spreadsheets.</span>
       </div>
 
       <!-- Headline -->
@@ -96,13 +97,13 @@ import Footer from "../components/Footer.astro";
         font-size: 18px;
         color: var(--text-body);
         line-height: 1.65;
-        max-width: 580px;
+        max-width: 640px;
         margin: 0 auto 40px;
       "
       >
         The interactive fee calculator that shows you exactly how much Gumroad,
-        Lemon Squeezy, Payhip, Stripe, and Whop actually cost — at your exact
-        price and volume.
+        Lemon Squeezy, Payhip, Stripe, Whop, Paddle, Sellfy, Podia, Stan Store, Teachable, Fiverr, Etsy, Amazon KDP, and Upwork
+        actually cost — at your exact price and volume.
       </p>
 
       <!-- CTA row -->
@@ -186,34 +187,38 @@ import Footer from "../components/Footer.astro";
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 16px;
+        gap: 12px;
         margin-top: 56px;
         flex-wrap: wrap;
       "
       >
         {
-          ["Gumroad", "Lemon Squeezy", "Payhip", "Stripe", "Whop"].map(
-            (name) => (
-              <div
-                style="
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-body);
-            padding: 6px 16px;
-            border-radius: 100px;
-            background: rgba(17, 23, 38, 0.5);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--border-hairline);
-          "
-              >
-                <span style="width: 6px; height: 6px; background: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10B981;" />
-                {name}
-              </div>
-            ),
-          )
+          [
+            { name: "Gumroad", icon: "/icons/gumroad.svg" },
+            { name: "Lemon Squeezy", icon: "/icons/lemonsqueezy.svg" },
+            { name: "Payhip", icon: "/icons/payhip.svg" },
+            { name: "Stripe", icon: "/icons/stripe.svg" },
+            { name: "Whop", icon: "/icons/whop.svg" },
+            { name: "Paddle", icon: "/icons/paddle.svg" },
+            { name: "Sellfy", icon: "/icons/sellfy.svg" },
+            { name: "Podia", icon: "/icons/podia.svg" },
+            { name: "Stan Store", icon: "/icons/stan.svg" },
+            { name: "Teachable", icon: "/icons/teachable.svg" },
+            { name: "Fiverr", icon: "/icons/fiverr.svg" },
+            { name: "Etsy", icon: "/icons/etsy.svg" },
+            { name: "Amazon KDP", icon: "/icons/kdp.svg" },
+            { name: "Upwork", icon: "/icons/upwork.svg" },
+          ].map(({ name, icon }) => (
+            <button
+              type="button"
+              class="hero-platform-pill"
+              data-platform={name}
+              title={`View ${name} fee details and overview`}
+            >
+              <img src={icon} width="16" height="16" alt={name} style="border-radius: 4px; pointer-events: none;" />
+              <span>{name}</span>
+            </button>
+          ))
         }
       </div>
     </div>
@@ -244,7 +249,7 @@ import Footer from "../components/Footer.astro";
     >
       {
         [
-          { value: "5", label: "Platforms compared" },
+          { value: "14", label: "Platforms compared" },
           { value: "0ms", label: "Calculation latency" },
           { value: "3", label: "Toggle variables" },
           { value: "100%", label: "Client-side, no tracking" },
@@ -393,6 +398,7 @@ import Footer from "../components/Footer.astro";
     </div>
   </section>
 
+  <PlatformModal />
   <Footer />
 </Layout>
 
@@ -467,6 +473,34 @@ import Footer from "../components/Footer.astro";
 </script>
 
 <style>
+  .hero-platform-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-body);
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: rgba(17, 23, 38, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-hairline);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: var(--font-sans);
+  }
+  .hero-platform-pill:hover {
+    color: var(--text-ink);
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.45);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);
+  }
+  .hero-platform-pill:active {
+    transform: translateY(0) scale(0.97);
+  }
+
   @media (max-width: 768px) {
     .stats-grid {
       grid-template-columns: repeat(2, 1fr) !important;

@@ -4,110 +4,46 @@
   id="floating-winner-dock"
   role="region"
   aria-label="Floating Navigation and Winner Summary"
-  style="
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    opacity: 0;
-    z-index: 990;
-    background: rgba(11, 15, 23, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    border-radius: 100px;
-    padding: 8px 18px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.2);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-    pointer-events: auto;
-    white-space: nowrap;
-  "
+  class="floating-dock-container"
 >
-  <!-- Live Winner Badge -->
-  <div
-    style="
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding-right: 14px;
-      border-right: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 13px;
-      font-weight: 600;
-      color: #F9FAFB;
-    "
-  >
-    <span
-      id="dock-pulse-dot"
-      style="
-        width: 8px;
-        height: 8px;
-        background: #10B981;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #10B981;
-        display: inline-block;
-      "
-    ></span>
-    <span id="dock-winner-text" style="color: var(--text-ink); font-weight: 600;">
-      ⚡ Best Take-Home: Calculating...
-    </span>
-  </div>
+  <!-- Animated Gradient Aura Border Layer -->
+  <div class="dock-aura-border"></div>
 
-  <!-- Quick Anchors -->
-  <div style="display: flex; align-items: center; gap: 8px;">
-    <a
-      href="#calculator"
-      style="
-        color: #D1D5DB;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        padding: 4px 10px;
-        border-radius: 100px;
-        transition: color 0.15s ease, background 0.15s ease;
-      "
-      onmouseover="this.style.color='#F59E0B';this.style.background='rgba(245, 158, 11, 0.1)'"
-      onmouseout="this.style.color='#D1D5DB';this.style.background='transparent'"
-    >
-      Calculator
-    </a>
-    <a
-      href="#guide"
-      style="
-        color: #D1D5DB;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        padding: 4px 10px;
-        border-radius: 100px;
-        transition: color 0.15s ease, background 0.15s ease;
-      "
-      onmouseover="this.style.color='#F59E0B';this.style.background='rgba(245, 158, 11, 0.1)'"
-      onmouseout="this.style.color='#D1D5DB';this.style.background='transparent'"
-    >
-      Guide
-    </a>
-    <button
-      id="dock-back-to-top"
-      aria-label="Back to Top"
-      style="
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #F9FAFB;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 100px;
-        cursor: pointer;
-        transition: background 0.15s ease, border-color 0.15s ease;
-      "
-      onmouseover="this.style.background='rgba(245, 158, 11, 0.2)';this.style.borderColor='rgba(245, 158, 11, 0.4)'"
-      onmouseout="this.style.background='rgba(255, 255, 255, 0.08)';this.style.borderColor='rgba(255, 255, 255, 0.15)'"
-    >
-      Top ↑
-    </button>
+  <!-- Main Glass Capsule -->
+  <div class="dock-glass-content">
+    <!-- Live Winner Badge -->
+    <div class="dock-badge-wrapper">
+      <span id="dock-pulse-dot" class="radar-pulse-dot"></span>
+      <div id="dock-winner-text-wrap" class="dock-text-wrap">
+        <span id="dock-winner-text" class="dock-winner-text">
+          <span style="color: #9CA3AF; font-weight: 500;">⚡ Best:</span>
+          <span style="color: #F59E0B; font-weight: 700; margin-left: 4px;">Calculating...</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Quick Anchors -->
+    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+      <a
+        href="#calculator"
+        class="dock-chip-btn"
+      >
+        Calc
+      </a>
+      <a
+        href="#guide"
+        class="dock-chip-btn dock-link-hide-mobile"
+      >
+        Guide
+      </a>
+      <button
+        id="dock-back-to-top"
+        aria-label="Back to Top"
+        class="dock-chip-btn dock-chip-btn-primary"
+      >
+        Top ↑
+      </button>
+    </div>
   </div>
 </div>
 
@@ -115,6 +51,7 @@
   function initFloatingDock() {
     const dock = document.getElementById('floating-winner-dock');
     const winnerText = document.getElementById('dock-winner-text');
+    const textWrap = document.getElementById('dock-winner-text-wrap');
     const topBtn = document.getElementById('dock-back-to-top');
     if (!dock) return;
 
@@ -122,11 +59,9 @@
     let ticking = false;
     function checkScroll() {
       if (window.scrollY > 350) {
-        dock.style.transform = 'translateX(-50%) translateY(0)';
-        dock.style.opacity = '1';
+        dock.classList.add('dock-visible');
       } else {
-        dock.style.transform = 'translateX(-50%) translateY(120px)';
-        dock.style.opacity = '0';
+        dock.classList.remove('dock-visible');
       }
       ticking = false;
     }
@@ -144,11 +79,36 @@
       });
     }
 
+    // Filter label titles for display
+    const FILTER_LABELS: Record<string, string> = {
+      all: "Overall Best",
+      mor: "Best Auto-Tax (MoR)",
+      direct: "Best Direct Gateway",
+      monthly: "Best Monthly Plan",
+    };
+
     // Listen for custom winner-updated event from Calculator component
     window.addEventListener('matrix-winner-updated', ((e: CustomEvent) => {
       if (winnerText && e.detail) {
-        const { name, netFormatted } = e.detail;
-        winnerText.innerHTML = `⚡ Best: <span style="color: #10B981; font-weight: 700;">${name}</span> (${netFormatted})`;
+        const { name, netFormatted, netCompact, activeFilter } = e.detail;
+        const compactClean = netCompact ? netCompact.replace(/[\(\)]/g, '').replace(/^≈\s*/, '') : '';
+        const filterBadgeText = FILTER_LABELS[activeFilter || 'all'] || 'Best';
+
+        // Trigger Dock Scale Pulse Animation
+        dock.classList.remove('dock-pop-pulse');
+        void dock.offsetWidth; // Force reflow
+        dock.classList.add('dock-pop-pulse');
+
+        // Smooth text transition
+        if (textWrap) {
+          textWrap.style.opacity = '0';
+          textWrap.style.transform = 'translateY(-4px)';
+          setTimeout(() => {
+            winnerText.innerHTML = `<span style="color: #9CA3AF; font-weight: 500;">⚡ ${filterBadgeText}:</span> <strong style="color: #F59E0B; font-weight: 700; font-size: 14px;">${name}</strong> <span style="color: #10B981; font-weight: 700; font-family: var(--font-mono); font-size: 14px; margin-left: 6px;">${compactClean ? compactClean + ' net' : netFormatted}</span> <span style="color: #9CA3AF; font-size: 12px; font-family: var(--font-mono); margin-left: 4px;">(${netFormatted})</span>`;
+            textWrap.style.opacity = '1';
+            textWrap.style.transform = 'translateY(0)';
+          }, 150);
+        }
       }
     }) as EventListener);
   }
@@ -159,3 +119,181 @@
     initFloatingDock();
   }
 </script>
+
+<style>
+  /* Container Positioning & Ambient Float */
+  .floating-dock-container {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(140px);
+    opacity: 0;
+    z-index: 990;
+    pointer-events: auto;
+    white-space: nowrap;
+    max-width: calc(100vw - 32px);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    border-radius: 100px;
+    padding: 2px;
+  }
+
+  .floating-dock-container.dock-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    animation: ambient-float 5s ease-in-out infinite alternate;
+  }
+
+  /* Winner Update Pop Scale Pulse */
+  .floating-dock-container.dock-pop-pulse {
+    animation: dock-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes dock-pop {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+    100% { transform: translateX(-50%) scale(1); }
+  }
+
+  @keyframes ambient-float {
+    0% { transform: translateX(-50%) translateY(0); }
+    100% { transform: translateX(-50%) translateY(-4px); }
+  }
+
+  /* Shimmering Aura Border Layer */
+  .dock-aura-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 100px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.8), rgba(16, 185, 129, 0.6), rgba(245, 158, 11, 0.2));
+    background-size: 200% 200%;
+    animation: aura-shimmer 4s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @keyframes aura-shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Main Glass Capsule Inner */
+  .dock-glass-content {
+    position: relative;
+    background: rgba(13, 19, 32, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 100px;
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.25), 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+
+  /* Live Winner Badge */
+  .dock-badge-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 16px;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #F9FAFB;
+    min-width: 0;
+  }
+
+  .dock-text-wrap {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Radar Pulse Dot */
+  .radar-pulse-dot {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    background: #10B981;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .radar-pulse-dot::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.4);
+    animation: radar-wave 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+
+  @keyframes radar-wave {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* Nav Chip Buttons */
+  .dock-chip-btn {
+    color: #F9FAFB;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dock-chip-btn:hover {
+    color: #F59E0B;
+    background: rgba(245, 158, 11, 0.18);
+    border-color: rgba(245, 158, 11, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  }
+
+  .dock-chip-btn-primary {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: rgba(245, 158, 11, 0.5);
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .dock-chip-btn-primary:hover {
+    background: rgba(245, 158, 11, 0.35);
+    border-color: rgba(245, 158, 11, 0.8);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 640px) {
+    .floating-dock-container {
+      bottom: 16px !important;
+      max-width: calc(100vw - 20px) !important;
+    }
+    .dock-glass-content {
+      padding: 8px 14px !important;
+      gap: 10px !important;
+    }
+    .dock-badge-wrapper {
+      padding-right: 10px !important;
+      font-size: 11.5px !important;
+    }
+    .dock-winner-text {
+      font-size: 11.5px !important;
+      max-width: 190px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .dock-link-hide-mobile {
+      display: none !important;
+    }
+  }
+</style>
