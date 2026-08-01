@@ -1,0 +1,519 @@
+---
+---
+
+<div id="platform-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card-container">
+    <!-- Close Cross Button -->
+    <button id="modal-close-btn" class="modal-close-chip" aria-label="Close modal">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Modal Body Content -->
+    <div id="modal-body-content">
+      <!-- Dynamic header -->
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+        <img id="modal-icon" src="/icons/stripe.svg" width="36" height="36" alt="Platform Logo" style="border-radius: 8px; flex-shrink: 0;" />
+        <div>
+          <h3 id="modal-title" style="font-size: 22px; font-weight: 700; color: var(--text-ink); margin: 0; letter-spacing: -0.5px;">
+            Platform Name
+          </h3>
+          <span id="modal-badge" class="badge badge-tax" style="margin-top: 4px; display: inline-block;">
+            Category Badge
+          </span>
+        </div>
+      </div>
+
+      <!-- Overview description -->
+      <p id="modal-description" style="font-size: 14.5px; color: var(--text-body); line-height: 1.65; margin: 0 0 20px;">
+        Overview description text goes here.
+      </p>
+
+      <!-- Fee Breakdown Grid -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 13px; color: var(--text-mute);">Fee Structure</span>
+          <span id="modal-fee-structure" style="font-size: 13.5px; font-weight: 600; color: #F59E0B; font-family: var(--font-mono);">
+            5% + $0.50
+          </span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 13px; color: var(--text-mute);">Tax Handling</span>
+          <span id="modal-tax-mode" style="font-size: 13px; font-weight: 600; color: var(--text-ink);">
+            MoR — Auto Tax
+          </span>
+        </div>
+        <div style="height: 1px; background: var(--border-hairline); margin: 10px 0;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 13px; color: var(--text-mute);">Effective Fee Rate</span>
+          <span id="modal-eff-rate" style="font-size: 13.5px; font-weight: 700; color: var(--color-profit); font-family: var(--font-mono);">
+            ~5.5%
+          </span>
+        </div>
+      </div>
+
+      <!-- Key Highlights -->
+      <div style="margin-bottom: 24px;">
+        <p style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-mute); margin: 0 0 10px; font-family: var(--font-mono);">
+          Key Highlights
+        </p>
+        <ul id="modal-highlights" style="margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--text-body); line-height: 1.7;">
+          <li>Highlight item 1</li>
+          <li>Highlight item 2</li>
+          <li>Highlight item 3</li>
+        </ul>
+      </div>
+
+      <!-- Action Row -->
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button id="modal-calc-btn" class="modal-primary-btn">
+          Compare in Calculator ↓
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface PlatformModalData {
+    id: string;
+    cardId: string;
+    name: string;
+    icon: string;
+    badge: string;
+    badgeClass: string;
+    feeStructure: string;
+    taxMode: string;
+    effRate: string;
+    description: string;
+    highlights: string[];
+  }
+
+  const PLATFORM_MODAL_DATA: Record<string, PlatformModalData> = {
+    Gumroad: {
+      id: "gumroad",
+      cardId: "card-gumroad",
+      name: "Gumroad",
+      icon: "/icons/gumroad.svg",
+      badge: "Direct / Marketplace",
+      badgeClass: "badge-tax",
+      feeStructure: "10% + $0.50 (Direct) · 30% (Discover)",
+      taxMode: "Self-File Taxes (Seller responsible)",
+      effRate: "~10.5% (at $50 price point)",
+      description: "Gumroad is a creator-first digital commerce platform for selling ebooks, templates, software, and courses directly to your audience or via organic Discover search.",
+      highlights: [
+        "Built-in email marketing & automated product delivery",
+        "Flexible pay-what-you-want pricing options",
+        "Discover marketplace drives organic buyers for 30% cut"
+      ]
+    },
+    "Lemon Squeezy": {
+      id: "lemonsqueezy",
+      cardId: "card-lemonsqueezy",
+      name: "Lemon Squeezy",
+      icon: "/icons/lemonsqueezy.svg",
+      badge: "MoR — Auto-Tax",
+      badgeClass: "badge-mor",
+      feeStructure: "5% + $0.50 per sale",
+      taxMode: "Merchant of Record (Auto VAT & GST)",
+      effRate: "~6.0% (at $50 price point)",
+      description: "Lemon Squeezy acts as a Merchant of Record, legally handling all global sales tax, EU VAT, and GST calculation and remittance so you never have to file international tax returns.",
+      highlights: [
+        "100% automated global VAT/GST tax remittance",
+        "Built-in software license key generation & subscription engine",
+        "Localized checkout currencies with instant global routing"
+      ]
+    },
+    Paddle: {
+      id: "paddle",
+      cardId: "card-paddle",
+      name: "Paddle",
+      icon: "/icons/paddle.svg",
+      badge: "MoR — Auto-Tax",
+      badgeClass: "badge-mor",
+      feeStructure: "5% + $0.50 per sale",
+      taxMode: "Merchant of Record (Auto VAT & Sales Tax)",
+      effRate: "~6.0% (at $50 price point)",
+      description: "Paddle is a dedicated Merchant of Record built specifically for SaaS, software, and digital download businesses to manage global billing, sales tax, chargebacks, and invoicing.",
+      highlights: [
+        "Full global tax compliance in over 200 jurisdictions",
+        "Built-in recurring subscription & invoice management",
+        "B2B reverse charge VAT automation"
+      ]
+    },
+    Payhip: {
+      id: "payhip",
+      cardId: "card-payhip",
+      name: "Payhip",
+      icon: "/icons/payhip.svg",
+      badge: "Direct Gateways / Monthly Plans",
+      badgeClass: "badge-tax",
+      feeStructure: "Free (5%) · Plus ($29/mo + 2%) · Pro ($99/mo + 0%)",
+      taxMode: "Self-File Taxes (Direct Stripe/PayPal)",
+      effRate: "0% platform fee on $99 Pro plan",
+      description: "Payhip is a flexible storefront platform that lets creators sell digital downloads, memberships, and physical products with zero transaction fees at high volume.",
+      highlights: [
+        "Pro plan ($99/mo) eliminates all platform transaction fees",
+        "Instant payouts directly to your Stripe or PayPal account",
+        "Built-in affiliate marketing, coupons, & PDF stamping"
+      ]
+    },
+    Stripe: {
+      id: "stripe",
+      cardId: "card-stripe",
+      name: "Stripe Direct",
+      icon: "/icons/stripe.svg",
+      badge: "Direct Payment Gateway",
+      badgeClass: "badge-tax",
+      feeStructure: "2.9% + $0.30 per sale (Standard US card)",
+      taxMode: "Self-File Taxes (Seller responsible)",
+      effRate: "~3.5% (at $50 price point)",
+      description: "Stripe Direct offers the lowest per-transaction costs for creators and developers building custom websites or using direct payment integrations.",
+      highlights: [
+        "Lowest effective fee percentage for maximum profit margin",
+        "Full control over customer relationship & custom checkout UI",
+        "Instant funds routing & flexible payout schedules"
+      ]
+    },
+    Whop: {
+      id: "whop",
+      cardId: "card-whop",
+      name: "Whop",
+      icon: "/icons/whop.svg",
+      badge: "Direct Gateway",
+      badgeClass: "badge-tax",
+      feeStructure: "3% platform fee + 2.9% + $0.30 card fee",
+      taxMode: "Self-File Taxes",
+      effRate: "~6.5% (at $50 price point)",
+      description: "Whop is an all-in-one digital marketplace for selling Discord memberships, trading groups, digital courses, software access, and community passes.",
+      highlights: [
+        "Native Discord, Telegram, and web application access gating",
+        "Flexible recurring subscriptions & one-time access passes",
+        "Built-in seller marketplace & affiliate recruitment"
+      ]
+    },
+    Sellfy: {
+      id: "sellfy",
+      cardId: "card-sellfy",
+      name: "Sellfy",
+      icon: "/icons/sellfy.svg",
+      badge: "Fixed Monthly Plan",
+      badgeClass: "badge-tax",
+      feeStructure: "$29/mo Starter Plan + 0% platform fee + 2.9% + $0.30",
+      taxMode: "Self-File Taxes",
+      effRate: "0% platform fee on all monthly plans",
+      description: "Sellfy is an easy-to-use digital storefront builder designed for creators selling merchandise, digital products, and video streaming with fixed monthly pricing.",
+      highlights: [
+        "0% platform transaction fee on all monthly plans",
+        "Built-in print-on-demand merchandise integration",
+        "Custom domain support & video streaming hosting"
+      ]
+    },
+    Podia: {
+      id: "podia",
+      cardId: "card-podia",
+      name: "Podia",
+      icon: "/icons/podia.svg",
+      badge: "Fixed Monthly Plan",
+      badgeClass: "badge-tax",
+      feeStructure: "$39/mo Mover Plan + 0% transaction fee + 2.9% + $0.30",
+      taxMode: "Self-File Taxes",
+      effRate: "0% transaction fee on Mover & Shaker plans",
+      description: "Podia is an all-in-one creator platform for hosting online courses, digital downloads, webinars, and coaching products under a single monthly subscription.",
+      highlights: [
+        "0% transaction fee on Mover ($39/mo) & Shaker plans",
+        "Full website builder, blogging, & email marketing included",
+        "Unlimited course hosting & community memberships"
+      ]
+    },
+    "Stan Store": {
+      id: "stan",
+      cardId: "card-stan",
+      name: "Stan Store",
+      icon: "/icons/stan.svg",
+      badge: "Fixed Monthly Plan",
+      badgeClass: "badge-tax",
+      feeStructure: "$29/mo Creator Plan + 0% transaction fee + 2.9% + $0.30",
+      taxMode: "Self-File Taxes",
+      effRate: "0% platform transaction fee",
+      description: "Stan Store is the premier link-in-bio storefront built for TikTok, Instagram, and social media creators for 1-click checkout inside mobile browsers.",
+      highlights: [
+        "High-converting mobile-first link-in-bio checkout UI",
+        "1-click booking for 1:1 coaching calls & audits",
+        "0% platform fee on all digital earnings"
+      ]
+    },
+    Teachable: {
+      id: "teachable",
+      cardId: "card-teachable",
+      name: "Teachable",
+      icon: "/icons/teachable.svg",
+      badge: "Fixed Monthly Plan",
+      badgeClass: "badge-tax",
+      feeStructure: "Basic ($39/mo + 5%) · Pro ($119/mo + 0%)",
+      taxMode: "Self-File Taxes",
+      effRate: "0% fee on $119/mo Pro plan",
+      description: "Teachable is an industry-standard online academy platform for educators, course creators, and coaching businesses scaling student enrollments.",
+      highlights: [
+        "Comprehensive student quiz & course completion certificates",
+        "Multi-author payout routing & student analytics",
+        "Pro plan ($119/mo) eliminates 5% transaction fees"
+      ]
+    },
+    Fiverr: {
+      id: "fiverr",
+      cardId: "card-fiverr",
+      name: "Fiverr",
+      icon: "/icons/fiverr.svg",
+      badge: "Freelance Marketplace",
+      badgeClass: "badge-tax",
+      feeStructure: "20% flat seller commission on all completed orders",
+      taxMode: "Marketplace Facilitator Tax",
+      effRate: "20.0% flat seller commission",
+      description: "Fiverr is a global freelance services marketplace connecting digital service providers, designers, and creators with buyers searching for productized services.",
+      highlights: [
+        "Access to millions of organic buyer searches globally",
+        "Built-in buyer protection & milestone payouts",
+        "20% commission covers platform infra & buyer acquisition"
+      ]
+    },
+    Etsy: {
+      id: "etsy",
+      cardId: "card-etsy",
+      name: "Etsy",
+      icon: "/icons/etsy.svg",
+      badge: "Creator Marketplace",
+      badgeClass: "badge-tax",
+      feeStructure: "$0.20 listing + 6.5% transaction + 3% + $0.25 card",
+      taxMode: "Marketplace Facilitator Tax",
+      effRate: "~10.0% (at $20 price point)",
+      description: "Etsy is the premier global marketplace for digital downloads, SVG designs, printables, and creative crafts with built-in buyer discovery.",
+      highlights: [
+        "Massive organic search volume for creative templates & downloads",
+        "Automatic digital download file fulfillment",
+        "Built-in customer reviews & shop branding"
+      ]
+    },
+    "Amazon KDP": {
+      id: "kdp",
+      cardId: "card-kdp",
+      name: "Amazon KDP",
+      icon: "/icons/kdp.svg",
+      badge: "Digital Book Publishing",
+      badgeClass: "badge-tax",
+      feeStructure: "30% platform fee (70% royalty tier) + $0.15/MB delivery",
+      taxMode: "Publishing Royalty Tax Withholding",
+      effRate: "~30.5% (70% royalty tier)",
+      description: "Amazon Kindle Direct Publishing allows self-published authors to sell ebooks globally on the Kindle Store with up to 70% royalty rates.",
+      highlights: [
+        "Unmatched distribution on Amazon's global Kindle store",
+        "KDP Select & Kindle Unlimited page-read royalty pool",
+        "Instant digital delivery to Kindle devices & mobile apps"
+      ]
+    },
+    Upwork: {
+      id: "upwork",
+      cardId: "card-upwork",
+      name: "Upwork",
+      icon: "/icons/upwork.svg",
+      badge: "Freelance Platform",
+      badgeClass: "badge-tax",
+      feeStructure: "10% standard freelancer contract service fee",
+      taxMode: "Marketplace Facilitator Tax",
+      effRate: "10.0% flat freelancer service fee",
+      description: "Upwork is the leading work marketplace connecting freelancers, agencies, and independent consultants with enterprise & SMB clients worldwide.",
+      highlights: [
+        "Standard 10% flat freelancer service fee on all contracts",
+        "Payment protection for hourly & fixed-price contracts",
+        "Built-in time tracking, invoicing, & escrow system"
+      ]
+    }
+  };
+
+  function initPlatformModal() {
+    const rawOverlay = document.getElementById("platform-modal-overlay");
+    const closeBtn = document.getElementById("modal-close-btn");
+    const calcBtn = document.getElementById("modal-calc-btn");
+    if (!rawOverlay) return;
+    const overlay = rawOverlay;
+
+    let activeCardId = "";
+
+    function openModal(name: string) {
+      const data = PLATFORM_MODAL_DATA[name];
+      if (!data) return;
+
+      activeCardId = data.cardId;
+
+      // Fill content
+      const icon = document.getElementById("modal-icon") as HTMLImageElement;
+      const title = document.getElementById("modal-title");
+      const badge = document.getElementById("modal-badge");
+      const desc = document.getElementById("modal-description");
+      const feeStruct = document.getElementById("modal-fee-structure");
+      const taxMode = document.getElementById("modal-tax-mode");
+      const effRate = document.getElementById("modal-eff-rate");
+      const highlights = document.getElementById("modal-highlights");
+
+      if (icon) { icon.src = data.icon; icon.alt = data.name; }
+      if (title) title.textContent = data.name;
+      if (badge) {
+        badge.textContent = data.badge;
+        badge.className = `badge ${data.badgeClass}`;
+      }
+      if (desc) desc.textContent = data.description;
+      if (feeStruct) feeStruct.textContent = data.feeStructure;
+      if (taxMode) taxMode.textContent = data.taxMode;
+      if (effRate) effRate.textContent = data.effRate;
+
+      if (highlights) {
+        highlights.innerHTML = data.highlights.map(h => `<li>${h}</li>`).join("");
+      }
+
+      // Show overlay with class
+      overlay.classList.add("modal-open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      overlay.classList.remove("modal-open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    // Attach click handlers to pill buttons in Hero
+    document.querySelectorAll(".hero-platform-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const platformName = btn.getAttribute("data-platform");
+        if (platformName) openModal(platformName);
+      });
+    });
+
+    // Close button click
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    // Backdrop click outside card container
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    // Escape key listener
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("modal-open")) {
+        closeModal();
+      }
+    });
+
+    // Scroll to Matrix Card button
+    if (calcBtn) {
+      calcBtn.addEventListener("click", () => {
+        closeModal();
+        if (activeCardId) {
+          const targetCard = document.getElementById(activeCardId);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+            targetCard.classList.remove("card-winner-glow");
+            void targetCard.offsetWidth; // Force reflow
+            targetCard.classList.add("card-winner-glow");
+          }
+        }
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPlatformModal);
+  } else {
+    initPlatformModal();
+  }
+</script>
+
+<style>
+  /* Glassmorphism Backdrop Overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(11, 15, 23, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .modal-overlay.modal-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Centered Modal Card Box */
+  .modal-card-container {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: rgba(17, 23, 38, 0.95);
+    border: 1px solid var(--border-hairline-strong);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.15);
+    transform: scale(0.92) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  .modal-overlay.modal-open .modal-card-container {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Close Chip Button */
+  .modal-close-chip {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close-chip:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-ink);
+    transform: rotate(90deg);
+  }
+
+  /* Primary Action Button */
+  .modal-primary-btn {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #0B0F17;
+    border: none;
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+    transition: all 0.2s ease;
+  }
+
+  .modal-primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.6);
+  }
+</style>
