@@ -10,7 +10,7 @@ interface Props {
 }
 
 const {
-  title = "Platform Fee Matrix — Compare Digital Product Platform Fees",
+  title = "Platform Fee Matrix | Compare Digital Product Platform Fees",
   description = "Compare net profit across Gumroad, Lemon Squeezy, Payhip, Stripe, and Whop with our real-time interactive fee calculator. Find the best platform for your digital products.",
   canonical = `https://platformfeematrix.com${Astro.url.pathname}`,
 } = Astro.props;
@@ -66,16 +66,22 @@ const {
     <!-- Ambient Mouse-Following Spotlight (Strictly in Background) -->
     <div
       id="mouse-spotlight"
-      style="
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background: radial-gradient(650px circle at var(--spotlight-x, 50vw) var(--spotlight-y, 30vh), rgba(245, 158, 11, 0.07), rgba(121, 40, 202, 0.04), transparent 75%);
-        transition: opacity 0.3s ease;
-      "
+      class="mouse-spotlight-bg"
       aria-hidden="true"
     >
+    </div>
+
+    <!-- Ambient Floating Greenish Neon Orbs (Random Drifting Mesh Glow) -->
+    <div class="bg-neon-orbs" aria-hidden="true">
+      <div class="neon-orb-wrapper neon-orb-wrapper-1">
+        <div class="neon-orb neon-orb-1"></div>
+      </div>
+      <div class="neon-orb-wrapper neon-orb-wrapper-2">
+        <div class="neon-orb neon-orb-2"></div>
+      </div>
+      <div class="neon-orb-wrapper neon-orb-wrapper-3">
+        <div class="neon-orb neon-orb-3"></div>
+      </div>
     </div>
 
     <ScrollProgress />
@@ -86,7 +92,7 @@ const {
 
     <FloatingDock />
 
-    <!-- 60 FPS Mouse Spotlight Tracking Script -->
+    <!-- 60 FPS Mouse Spotlight & Interactive Parallax Orbs Tracking Script -->
     <script is:inline>
       (function () {
         let mouseX = window.innerWidth / 2;
@@ -96,6 +102,28 @@ const {
         let ticking = false;
 
         const spotlight = document.getElementById("mouse-spotlight");
+        const orb1 = document.querySelector(".neon-orb-1");
+        const orb2 = document.querySelector(".neon-orb-2");
+        const orb3 = document.querySelector(".neon-orb-3");
+        const neonOrbsContainer = document.querySelector(".bg-neon-orbs");
+        const guideSection = document.getElementById("guide");
+
+        function checkLightGuideSoftening() {
+          if (guideSection && neonOrbsContainer && document.documentElement.classList.contains("light")) {
+            const rect = guideSection.getBoundingClientRect();
+            if (rect.top <= window.innerHeight - 50) {
+              neonOrbsContainer.classList.add("guide-softened");
+            } else {
+              neonOrbsContainer.classList.remove("guide-softened");
+            }
+          } else if (neonOrbsContainer) {
+            neonOrbsContainer.classList.remove("guide-softened");
+          }
+        }
+
+        window.addEventListener("scroll", checkLightGuideSoftening, { passive: true });
+        window.addEventListener("themechanged", checkLightGuideSoftening);
+        checkLightGuideSoftening();
 
         window.addEventListener("mousemove", function (e) {
           mouseX = e.clientX;
@@ -104,17 +132,26 @@ const {
           if (!ticking) {
             window.requestAnimationFrame(function () {
               // Smooth lerp interpolation for soft fluid motion
-              currentX += (mouseX - currentX) * 0.15;
-              currentY += (mouseY - currentY) * 0.15;
+              currentX += (mouseX - currentX) * 0.12;
+              currentY += (mouseY - currentY) * 0.12;
               if (spotlight) {
                 spotlight.style.setProperty("--spotlight-x", currentX + "px");
                 spotlight.style.setProperty("--spotlight-y", currentY + "px");
               }
+
+              // Interactive mouse parallax drift on floating neon orbs
+              const offsetX = (currentX - window.innerWidth / 2) * 0.05;
+              const offsetY = (currentY - window.innerHeight / 2) * 0.05;
+
+              if (orb1) orb1.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
+              if (orb2) orb2.style.transform = `translate3d(${-offsetX * 1.3}px, ${-offsetY * 1.3}px, 0)`;
+              if (orb3) orb3.style.transform = `translate3d(${offsetX * 0.9}px, ${-offsetY * 0.9}px, 0)`;
+
               ticking = false;
             });
             ticking = true;
           }
-        });
+        }, { passive: true });
       })();
     </script>
   </body>

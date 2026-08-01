@@ -32,7 +32,7 @@
       </p>
 
       <!-- Fee Breakdown Grid -->
-      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <div class="modal-breakdown-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <span style="font-size: 13px; color: var(--text-mute);">Fee Structure</span>
           <span id="modal-fee-structure" style="font-size: 13.5px; font-weight: 600; color: #F59E0B; font-family: var(--font-mono);">
@@ -42,7 +42,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <span style="font-size: 13px; color: var(--text-mute);">Tax Handling</span>
           <span id="modal-tax-mode" style="font-size: 13px; font-weight: 600; color: var(--text-ink);">
-            MoR — Auto Tax
+            MoR (Auto-Tax)
           </span>
         </div>
         <div style="height: 1px; background: var(--border-hairline); margin: 10px 0;"></div>
@@ -114,7 +114,7 @@
       cardId: "card-lemonsqueezy",
       name: "Lemon Squeezy",
       icon: "/icons/lemonsqueezy.svg",
-      badge: "MoR — Auto-Tax",
+      badge: "MoR (Auto-Tax)",
       badgeClass: "badge-mor",
       feeStructure: "5% + $0.50 per sale",
       taxMode: "Merchant of Record (Auto VAT & GST)",
@@ -131,7 +131,7 @@
       cardId: "card-paddle",
       name: "Paddle",
       icon: "/icons/paddle.svg",
-      badge: "MoR — Auto-Tax",
+      badge: "MoR (Auto-Tax)",
       badgeClass: "badge-mor",
       feeStructure: "5% + $0.50 per sale",
       taxMode: "Merchant of Record (Auto VAT & Sales Tax)",
@@ -474,6 +474,28 @@
     transform: scale(1) translateY(0);
   }
 
+  .modal-breakdown-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-hairline);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  :global(html.light) .modal-breakdown-box {
+    background: rgba(241, 245, 249, 0.8);
+    border-color: rgba(15, 23, 42, 0.1);
+  }
+
+  :global(html.light) .modal-overlay {
+    background: rgba(15, 23, 42, 0.4);
+  }
+
+  :global(html.light) .modal-card-container {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 0 30px rgba(217, 119, 6, 0.1);
+  }
+
   /* Close Chip Button */
   .modal-close-chip {
     position: absolute;
@@ -496,6 +518,15 @@
     background: rgba(255, 255, 255, 0.15);
     color: var(--text-ink);
     transform: rotate(90deg);
+  }
+  :global(html.light) .modal-close-chip {
+    background: rgba(15, 23, 42, 0.06);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: var(--text-mute);
+  }
+  :global(html.light) .modal-close-chip:hover {
+    background: rgba(15, 23, 42, 0.12);
+    color: var(--text-ink);
   }
 
   /* Primary Action Button */
