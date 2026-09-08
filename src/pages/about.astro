@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About Platform Fee Matrix",
+  "url": "https://platformfeematrix.com/about",
+  "description": "Platform Fee Matrix is a free, transparent creator monetization and payment fee comparison utility built to help developers and creators calculate true net profit."
+};
+---
+
+<Layout
+  title="About Us & Methodology | Platform Fee Matrix"
+  description="Learn about the mission, data verification standards, and calculation principles behind Platform Fee Matrix."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <section style="position: relative; padding: 70px 24px 80px; max-width: 800px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div class="reveal-on-scroll stagger-1 hero-eyebrow">
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+          margin-right: 4px;
+          flex-shrink: 0;
+        "
+          >ABOUT</span
+        >
+        <span>Mission & Methodology</span>
+      </div>
+    </div>
+
+    <h1 style="font-size: clamp(28px, 4.5vw, 40px); font-weight: 700; color: var(--text-ink); text-align: center; margin-bottom: 24px; letter-spacing: -0.8px;">
+      About Platform Fee Matrix
+    </h1>
+
+    <div class="card-base" style="padding: 36px; line-height: 1.8; color: var(--text-body); font-size: 15px;">
+      <h2 style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 0 0 12px;">Our Mission</h2>
+      <p style="margin: 0 0 20px;">
+        Digital creators, indie hackers, authors, and freelancers face an increasingly opaque matrix of payment processing rates, marketplace cuts, international surcharges, and Merchant of Record tax models.
+      </p>
+      <p style="margin: 0 0 20px;">
+        <strong>Platform Fee Matrix</strong> was built to eliminate guesswork by providing an instant, 100% client-side simulation engine that models actual take-home earnings at your exact product price point and sales volume.
+      </p>
+
+      <h2 style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 28px 0 12px;">Our Standards & Independence</h2>
+      <ul style="padding-left: 20px; margin: 0 0 20px;">
+        <li><strong>Zero Data Tracking:</strong> All calculations run 100% locally in your browser. We never collect or store your financial figures or product pricing.</li>
+        <li><strong>Unbiased Math:</strong> We do not artificially elevate any platform. Comparison rankings strictly reflect mathematical net take-home based on current pricing schedules.</li>
+        <li><strong>Regular Updates:</strong> Pricing models and exchange rate algorithms are continuously verified against official documentation.</li>
+      </ul>
+
+      <h2 style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 28px 0 12px;">Get in Touch</h2>
+      <p style="margin: 0;">
+        Have feedback, spotted a platform fee update, or want to suggest a new platform? Contact our team at <a href="mailto:support@platformfeematrix.com" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">support@platformfeematrix.com</a>.
+      </p>
+    </div>
+  </section>
+
+  <PlatformModal />
+  <Footer />
+</Layout>

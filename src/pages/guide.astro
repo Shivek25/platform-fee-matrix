@@ -1,0 +1,234 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "The Definitive Creator Platform Fee & Tax Guide",
+  "description": "A comprehensive analysis of digital product platform fees, Merchant of Record (MoR) global VAT/GST compliance, payment processing surcharges, and subscription break-even math.",
+  "url": "https://platformfeematrix.com/guide",
+  "author": {
+    "@type": "Organization",
+    "name": "Platform Fee Matrix"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Platform Fee Matrix",
+    "url": "https://platformfeematrix.com"
+  },
+  "datePublished": "2026-01-01",
+  "dateModified": "2026-09-01"
+};
+---
+
+<Layout
+  title="Digital Product Platform Fee & Tax Guide (2026) | Platform Fee Matrix"
+  description="Master the economics of selling digital products: Merchant of Record (MoR) vs Direct Gateways, Stripe vs PayPal surcharges, and break-even subscription analysis."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <!-- ─── Guide Header ───────────────────────────────── -->
+  <section
+    style="
+    position: relative;
+    padding: 70px 24px 30px;
+    text-align: center;
+  "
+  >
+    <div style="max-width: 840px; margin: 0 auto;">
+      <div class="reveal-on-scroll stagger-1 hero-eyebrow" style="margin-bottom: 16px;">
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+          margin-right: 4px;
+          flex-shrink: 0;
+        "
+          >EDITORIAL GUIDE</span
+        >
+        <span>Platform Economics · Tax Compliance · Payment Surcharges</span>
+      </div>
+
+      <h1 class="reveal-on-scroll stagger-2 hero-headline" style="font-size: clamp(28px, 4.5vw, 44px); margin-bottom: 16px;">
+        Understanding Digital Platform Fees & Taxes
+      </h1>
+
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
+        font-size: 17px;
+        color: var(--text-body);
+        line-height: 1.65;
+        max-width: 680px;
+        margin: 0 auto;
+      "
+      >
+        A practical, no-nonsense breakdown of how platforms monetize, when Merchant of Record (MoR) saves money, and how hidden fees compound against creator margins.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── Editorial Guide Body ────────────────────────── -->
+  <section
+    style="
+    padding: 20px 24px 80px;
+    max-width: 860px;
+    margin: 0 auto;
+  "
+  >
+    <!-- Table of Contents Card -->
+    <div
+      style="
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 48px;
+    "
+    >
+      <p style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--color-primary); margin: 0 0 12px;">
+        Table of Contents
+      </p>
+      <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px;">
+        <li><a href="#how-fees-work" style="color: var(--text-ink); text-decoration: none; font-size: 14px; font-weight: 500;">1. The 3 Layers of Platform Pricing →</a></li>
+        <li><a href="#fixed-fee-penalty" style="color: var(--text-ink); text-decoration: none; font-size: 14px; font-weight: 500;">2. The Low-Ticket Fixed Fee Trap →</a></li>
+        <li><a href="#mor-vs-direct" style="color: var(--text-ink); text-decoration: none; font-size: 14px; font-weight: 500;">3. Merchant of Record (MoR) Explained →</a></li>
+        <li><a href="#payment-gateways" style="color: var(--text-ink); text-decoration: none; font-size: 14px; font-weight: 500;">4. Stripe vs PayPal vs Intl Cards →</a></li>
+        <li><a href="#decision-framework" style="color: var(--text-ink); text-decoration: none; font-size: 14px; font-weight: 500;">5. The Creator Platform Decision Tree →</a></li>
+      </ul>
+    </div>
+
+    <!-- Article Content -->
+    <article class="guide-article" style="font-size: 16px; line-height: 1.8; color: var(--text-body);">
+      <h2 id="how-fees-work" style="font-size: 26px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.6px; margin: 40px 0 16px;">
+        1. The 3 Layers of Platform Pricing
+      </h2>
+      <p>
+        Every platform selling digital products—whether an ebook, Notion template, Figma kit, video course, or SaaS subscription—charges some combination of three fee components:
+      </p>
+      <ol style="padding-left: 24px; margin-bottom: 24px;">
+        <li><strong style="color: var(--text-ink);">Platform Revenue Cut:</strong> A percentage taken by the software provider (e.g. Gumroad 10%, Fiverr 20%, Whop 3%, Amazon KDP 30%).</li>
+        <li><strong style="color: var(--text-ink);">Payment Processing Cut:</strong> Interchange and gateway fees charged by credit card networks (Stripe standard: 2.9% + $0.30, PayPal standard: 3.49% + $0.49).</li>
+        <li><strong style="color: var(--text-ink);">Fixed Monthly Overhead:</strong> Flat software subscription costs (Sellfy $29/mo, Stan Store $29/mo, Podia $39/mo, Teachable $39–$119/mo, Payhip $29–$99/mo).</li>
+      </ol>
+      <p>
+        Because these layers interact non-linearly, a platform with a "low percentage" can actually cost you more take-home profit than a platform with a fixed monthly subscription once you exceed certain volume thresholds.
+      </p>
+
+      <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid var(--color-primary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 24px 0;">
+        <p style="margin: 0; font-size: 14px; color: var(--text-ink);">
+          💡 <strong>Key Takeaway:</strong> Never compare platforms on percentage alone. Always simulate your specific product price combined with your projected monthly sales volume.
+        </p>
+      </div>
+
+      <h2 id="fixed-fee-penalty" style="font-size: 26px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.6px; margin: 48px 0 16px;">
+        2. The Low-Ticket Fixed Fee Trap
+      </h2>
+      <p>
+        Fixed per-transaction fees like $0.30 (Stripe) or $0.50 (Lemon Squeezy, Gumroad) are disproportionately damaging on low price points ($1–$10).
+      </p>
+      <ul style="padding-left: 24px; margin-bottom: 24px;">
+        <li>Selling a <strong>$1.00</strong> digital sticker with a $0.30 fixed fee loses <strong>30% of revenue</strong> on that line item alone, before any percentage cuts.</li>
+        <li>Selling a <strong>$5.00</strong> micro-template loses <strong>6%</strong> to the fixed fee.</li>
+        <li>Selling a <strong>$100.00</strong> masterclass loses only <strong>0.3%</strong> to the fixed fee.</li>
+      </ul>
+      <p>
+        If your product strategy relies on low-ticket "tripwire" products, bundle them or use platforms like <a href="/platforms#payhip" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Payhip Pro</a> ($99/mo flat with 0% transaction fee) once sales volume scales.
+      </p>
+
+      <h2 id="mor-vs-direct" style="font-size: 26px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.6px; margin: 48px 0 16px;">
+        3. Merchant of Record (MoR) Explained
+      </h2>
+      <p>
+        A <strong style="color: var(--text-ink);">Merchant of Record (MoR)</strong> is an entity authorized to act on behalf of a business to process payments and handle the associated legal and financial liabilities. Platforms like <a href="/platforms#lemonsqueezy" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Lemon Squeezy</a> and <a href="/platforms#paddle" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Paddle</a> act as your MoR.
+      </p>
+      <p>
+        When a customer in Germany or California purchases your software or ebook through an MoR:
+      </p>
+      <ul style="padding-left: 24px; margin-bottom: 24px;">
+        <li>The MoR is legally the reseller on the invoice.</li>
+        <li>The MoR calculates, charges, files, and remits European VAT, UK VAT, Australian GST, and US State economic nexus sales taxes.</li>
+        <li>You receive a single clean B2B payout without having to register for foreign tax authorities.</li>
+      </ul>
+      <p>
+        Without an MoR, maintaining global tax registrations and filing software (TaxJar, Quaderno, Avalara) typically costs between $50 to $300+ per month plus accounting overhead. For global sellers, an MoR's 5% fee often represents significant net savings.
+      </p>
+
+      <h2 id="payment-gateways" style="font-size: 26px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.6px; margin: 48px 0 16px;">
+        4. Stripe vs. PayPal vs. International Surcharges
+      </h2>
+      <p>
+        Payment processing options create meaningful variance in take-home profit:
+      </p>
+      <ul style="padding-left: 24px; margin-bottom: 24px;">
+        <li><strong style="color: var(--text-ink);">Stripe Standard:</strong> 2.9% + $0.30 per successful card charge.</li>
+        <li><strong style="color: var(--text-ink);">PayPal Merchant Rate:</strong> 3.49% + $0.49 per transaction. While more expensive, PayPal can boost checkout conversion rates by 15%–25% for buyers who hesitate to input card numbers directly.</li>
+        <li><strong style="color: var(--text-ink);">International Card Surcharge:</strong> Stripe charges an additional 1.5% for non-domestic cards (+1% if currency conversion is required). On creator storefronts passing card costs through, this reduces your net margin on global traffic.</li>
+      </ul>
+
+      <h2 id="decision-framework" style="font-size: 26px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.6px; margin: 48px 0 16px;">
+        5. The Creator Platform Decision Tree
+      </h2>
+      <div style="background: var(--bg-card); border: 1px solid var(--border-hairline); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+          <li><strong>Selling software, SaaS, or digital templates worldwide?</strong> → Choose <a href="/platforms#lemonsqueezy" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Lemon Squeezy</a> or <a href="/platforms#paddle" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Paddle</a> for automatic global tax remittance.</li>
+          <li><strong>Selling courses and coaching with an academy feel?</strong> → Choose <a href="/platforms#teachable" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Teachable</a> (Pro) or <a href="/platforms#podia" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Podia</a>.</li>
+          <li><strong>Building a social link-in-bio mobile storefront?</strong> → Choose <a href="/platforms#stan" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Stan Store</a> for 1-click checkout.</li>
+          <li><strong>High-volume custom application with in-house taxes?</strong> → Use <a href="/platforms#stripe" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Stripe Direct</a> for maximum margin.</li>
+          <li><strong>Offering freelance services or digital downloads needing marketplace discovery?</strong> → Use <a href="/platforms#upwork" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Upwork</a>, <a href="/platforms#fiverr" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Fiverr</a>, or <a href="/platforms#etsy" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Etsy</a>.</li>
+        </ul>
+      </div>
+
+      <!-- CTA Box -->
+      <div
+        style="
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.05));
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        margin-top: 40px;
+      "
+      >
+        <h3 style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 0 0 12px;">
+          Calculate Your Exact Margin Right Now
+        </h3>
+        <p style="font-size: 15px; color: var(--text-body); max-width: 520px; margin: 0 auto 24px;">
+          Plug in your exact product price and monthly sales volume to see real take-home numbers across all 14 platforms side-by-side.
+        </p>
+        <a
+          href="/calculator"
+          style="
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          height: 44px;
+          padding: 0 24px;
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          border-radius: 100px;
+          font-size: 14px;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+        "
+        >
+          Open Free Calculator →
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <PlatformModal />
+  <Footer />
+</Layout>

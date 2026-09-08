@@ -1,82 +1,133 @@
 ---
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Floating winner dock is only relevant where the interactive calculator exists
+const isCalcPage = pathname === "/" || pathname === "/calculator";
 ---
-<div
-  id="floating-winner-dock"
-  role="region"
-  aria-label="Floating Navigation and Winner Summary"
-  class="floating-dock-container"
->
-  <!-- Animated Gradient Aura Border Layer -->
-  <div class="dock-aura-border"></div>
 
-  <!-- Main Glass Capsule -->
-  <div class="dock-glass-content">
-    <!-- Live Winner Badge -->
-    <div class="dock-badge-wrapper">
-      <span id="dock-pulse-dot" class="radar-pulse-dot"></span>
-      <div id="dock-winner-text-wrap" class="dock-text-wrap">
-        <span id="dock-winner-text" class="dock-winner-text">
-          <span class="dock-label">⚡ Best:</span>
-          <span class="dock-winner-name">Calculating...</span>
-        </span>
+{isCalcPage && (
+  <div
+    id="floating-winner-dock"
+    role="region"
+    aria-label="Floating Navigation and Winner Summary"
+    class="floating-dock-container"
+  >
+    <!-- Animated Gradient Aura Border Layer -->
+    <div class="dock-aura-border"></div>
+
+    <!-- Main Glass Capsule -->
+    <div class="dock-glass-content">
+      <!-- Live Winner Badge -->
+      <div class="dock-badge-wrapper">
+        <span id="dock-pulse-dot" class="radar-pulse-dot"></span>
+        <div id="dock-winner-text-wrap" class="dock-text-wrap">
+          <span id="dock-winner-text" class="dock-winner-text">
+            <span class="dock-label">⚡ Best:</span>
+            <span class="dock-winner-name">Calculating...</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Anchors -->
+      <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+        <a
+          href="/calculator"
+          class="dock-chip-btn"
+        >
+          Calc
+        </a>
+        <a
+          href="/guide"
+          class="dock-chip-btn dock-link-hide-mobile"
+        >
+          Guide
+        </a>
+        <button
+          id="dock-back-to-top"
+          aria-label="Back to Top"
+          class="dock-chip-btn dock-chip-btn-primary"
+        >
+          Top ↑
+        </button>
       </div>
     </div>
-
-    <!-- Quick Anchors -->
-    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-      <a
-        href="#calculator"
-        class="dock-chip-btn"
-      >
-        Calc
-      </a>
-      <a
-        href="#guide"
-        class="dock-chip-btn dock-link-hide-mobile"
-      >
-        Guide
-      </a>
-      <button
-        id="dock-back-to-top"
-        aria-label="Back to Top"
-        class="dock-chip-btn dock-chip-btn-primary"
-      >
-        Top ↑
-      </button>
-    </div>
   </div>
-</div>
+)}
 
 <script>
   function initFloatingDock() {
     const dock = document.getElementById('floating-winner-dock');
-    const winnerText = document.getElementById('dock-winner-text');
-    const textWrap = document.getElementById('dock-winner-text-wrap');
-    const topBtn = document.getElementById('dock-back-to-top');
     if (!dock) return;
     const dockEl = dock;
 
-    const guideSection = document.getElementById('guide');
+    const calcSection = document.getElementById('calculator');
+    const platformsGrid = document.getElementById('platforms');
+    // If not on calculator or platforms grid isn't present, stay hidden
+    if (!calcSection || !platformsGrid) {
+      dockEl.classList.remove('dock-visible');
+      return;
+    }
 
-    // Toggle Dock visibility: show in calculator area (>350px), hide before guide section
+    const methodologySection = document.getElementById('calc-methodology');
+    const guideSection = document.getElementById('guide');
+    const bottomBoundary = methodologySection || guideSection;
+
+    const winnerText = document.getElementById('dock-winner-text');
+    const textWrap = document.getElementById('dock-winner-text-wrap');
+    const topBtn = document.getElementById('dock-back-to-top');
+
+    // Drag & Drop State
+    let currentOffsetX = 0;
+    let currentOffsetY = 0;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialOffsetX = 0;
+    let initialOffsetY = 0;
+
+    // Mobile Long-Press (> 1s) Drag State
+    let longPressTimer: any = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    function applyTransform() {
+      if (!dockEl) return;
+      const isVisible = dockEl.classList.contains('dock-visible');
+      const baseOffsetY = isVisible ? 0 : 140;
+      const finalY = currentOffsetY + baseOffsetY;
+      dockEl.style.transform = `translate3d(calc(-50% + ${currentOffsetX}px), ${finalY}px, 0)`;
+    }
+
+    // Toggle Dock visibility: show strictly within platform cards area, hide above calculator & before methodology/guide
     let ticking = false;
     function checkScroll() {
       if (!dockEl) return;
-      const scrollY = window.scrollY;
-      let isBeforeGuide = true;
 
-      if (guideSection) {
-        const guideRect = guideSection.getBoundingClientRect();
-        if (guideRect.top <= window.innerHeight - 80) {
-          isBeforeGuide = false;
+      const calcRect = calcSection.getBoundingClientRect();
+      const platformsRect = platformsGrid.getBoundingClientRect();
+
+      // Top threshold: User has scrolled into the calculator section
+      const isPastCalcTop = calcRect.top <= 250;
+
+      // Bottom threshold: User is within the platform cards area
+      // When the bottom of the platforms grid reaches near viewport bottom,
+      // or when the methodology / guide section enters the viewport, hide the dock.
+      let isBeforeBottom = platformsRect.bottom > (window.innerHeight - 80);
+
+      if (bottomBoundary) {
+        const bottomRect = bottomBoundary.getBoundingClientRect();
+        if (bottomRect.top <= (window.innerHeight - 80)) {
+          isBeforeBottom = false;
         }
       }
 
-      if (scrollY > 350 && isBeforeGuide) {
+      const isInCalcSection = isPastCalcTop && isBeforeBottom;
+
+      if (isInCalcSection) {
         dockEl.classList.add('dock-visible');
       } else {
         dockEl.classList.remove('dock-visible');
       }
+      applyTransform();
       ticking = false;
     }
 
@@ -86,6 +137,130 @@
         ticking = true;
       }
     }, { passive: true });
+
+    // ─── Drag & Drop Handlers ─────────────────────────────────
+    function constrainOffset(x: number, y: number) {
+      const rect = dockEl.getBoundingClientRect();
+      const halfWidth = rect.width / 2;
+      const halfHeight = rect.height / 2;
+
+      // Calculate max allowed offsets from center
+      const maxOffX = Math.max(0, (window.innerWidth / 2) - halfWidth - 12);
+      const minOffX = -maxOffX;
+
+      // Bottom baseline is 28px from bottom
+      const defaultCenterY = window.innerHeight - 28 - halfHeight;
+
+      // Constrain Top Edge: Keep dock strictly within calculator section
+      let minAllowedTop = 16;
+      if (calcSection) {
+        const calcRect = calcSection.getBoundingClientRect();
+        if (calcRect.top > 0) {
+          minAllowedTop = Math.max(16, calcRect.top + 16);
+        }
+      }
+
+      const minOffY = minAllowedTop - (defaultCenterY - halfHeight);
+      const maxOffY = 20; // 20px lower than baseline
+
+      const clampedX = Math.min(Math.max(x, minOffX), maxOffX);
+      const clampedY = Math.min(Math.max(y, minOffY), maxOffY);
+      return { x: clampedX, y: clampedY };
+    }
+
+    function startDrag(clientX: number, clientY: number) {
+      isDragging = true;
+      dragStartX = clientX;
+      dragStartY = clientY;
+      initialOffsetX = currentOffsetX;
+      initialOffsetY = currentOffsetY;
+      dockEl.classList.add('dock-is-dragging');
+    }
+
+    function moveDrag(clientX: number, clientY: number) {
+      if (!isDragging) return;
+      const deltaX = clientX - dragStartX;
+      const deltaY = clientY - dragStartY;
+      const targetX = initialOffsetX + deltaX;
+      const targetY = initialOffsetY + deltaY;
+
+      const constrained = constrainOffset(targetX, targetY);
+      currentOffsetX = constrained.x;
+      currentOffsetY = constrained.y;
+      applyTransform();
+    }
+
+    function stopDrag() {
+      if (isDragging) {
+        isDragging = false;
+        dockEl.classList.remove('dock-is-dragging');
+        dockEl.classList.remove('dock-mobile-drag-ready');
+      }
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    }
+
+    // ─── Desktop Mouse Drag ──────────────────────────────────
+    dockEl.addEventListener('mousedown', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button')) return;
+
+      startDrag(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mousemove', (e: MouseEvent) => {
+      if (isDragging) {
+        moveDrag(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      stopDrag();
+    });
+
+    // ─── Mobile Touch Drag (Long Press > 0.5 Seconds) ───────────
+    dockEl.addEventListener('touchstart', (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button')) return;
+
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+
+      if (longPressTimer) clearTimeout(longPressTimer);
+
+      longPressTimer = setTimeout(() => {
+        startDrag(touch.clientX, touch.clientY);
+        dockEl.classList.add('dock-mobile-drag-ready');
+        if (navigator.vibrate) {
+          try { navigator.vibrate(50); } catch (_) {}
+        }
+      }, 500);
+    }, { passive: true });
+
+    dockEl.addEventListener('touchmove', (e: TouchEvent) => {
+      const touch = e.touches[0];
+
+      if (!isDragging) {
+        const dist = Math.hypot(touch.clientX - touchStartX, touch.clientY - touchStartY);
+        if (dist > 10 && longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      } else {
+        if (e.cancelable) e.preventDefault();
+        moveDrag(touch.clientX, touch.clientY);
+      }
+    }, { passive: false });
+
+    dockEl.addEventListener('touchend', () => {
+      stopDrag();
+    });
+    dockEl.addEventListener('touchcancel', () => {
+      stopDrag();
+    });
 
     if (topBtn) {
       topBtn.addEventListener('click', () => {
@@ -108,10 +283,13 @@
         const compactClean = netCompact ? netCompact.replace(/[\(\)]/g, '').replace(/^≈\s*/, '') : '';
         const filterBadgeText = FILTER_LABELS[activeFilter || 'all'] || 'Best';
 
-        // Trigger Dock Scale Pulse Animation
-        dockEl.classList.remove('dock-pop-pulse');
-        void dockEl.offsetWidth; // Force reflow
-        dockEl.classList.add('dock-pop-pulse');
+        // Trigger Dock Scale Pulse Animation on inner capsule
+        const glassContent = dockEl.querySelector('.dock-glass-content') as HTMLElement;
+        if (glassContent) {
+          glassContent.classList.remove('dock-pop-pulse');
+          void glassContent.offsetWidth; // Force reflow
+          glassContent.classList.add('dock-pop-pulse');
+        }
 
         // Smooth text transition
         if (textWrap) {
@@ -149,28 +327,40 @@
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
     border-radius: 100px;
     padding: 2px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .floating-dock-container.dock-is-dragging {
+    transition: none !important;
+    animation: none !important;
+    cursor: grabbing !important;
+  }
+
+  .floating-dock-container.dock-mobile-drag-ready {
+    border-color: rgba(245, 158, 11, 1) !important;
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.7), 0 16px 40px rgba(0, 0, 0, 0.9) !important;
   }
 
   .floating-dock-container.dock-visible {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
-    animation: ambient-float 5s ease-in-out infinite alternate;
   }
 
-  /* Winner Update Pop Scale Pulse */
-  .floating-dock-container.dock-pop-pulse {
+  /* Winner Update Pop Scale Pulse on Inner Capsule */
+  .dock-glass-content.dock-pop-pulse {
     animation: dock-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   @keyframes dock-pop {
-    0% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.05); }
-    100% { transform: translateX(-50%) scale(1); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
   }
 
   @keyframes ambient-float {
-    0% { transform: translateX(-50%) translateY(0); }
-    100% { transform: translateX(-50%) translateY(-4px); }
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-3px); }
   }
 
   /* Shimmering Aura Border Layer */
@@ -206,6 +396,12 @@
     align-items: center;
     gap: 18px;
     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.35), 0 0 15px rgba(245, 158, 11, 0.2);
+    cursor: grab;
+    animation: ambient-float 5s ease-in-out infinite alternate;
+  }
+
+  .floating-dock-container.dock-is-dragging .dock-glass-content {
+    cursor: grabbing !important;
   }
 
   /* Live Winner Badge */
@@ -219,10 +415,23 @@
     font-weight: 600;
     color: #F9FAFB;
     min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .dock-text-wrap {
     transition: opacity 0.2s ease, transform 0.2s ease;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .dock-winner-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    min-width: 0;
   }
 
   .dock-label {

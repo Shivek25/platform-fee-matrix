@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Privacy Policy | Platform Fee Matrix"
+  description="Privacy Policy for Platform Fee Matrix. Learn how your data and preferences are protected with 100% client-side calculation."
+>
+  <Nav />
+
+  <section style="position: relative; padding: 70px 24px 80px; max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size: clamp(28px, 4.5vw, 38px); font-weight: 700; color: var(--text-ink); margin-bottom: 24px; letter-spacing: -0.8px;">
+      Privacy Policy
+    </h1>
+
+    <div class="card-base" style="padding: 36px; line-height: 1.8; color: var(--text-body); font-size: 15px;">
+      <p style="font-size: 13px; color: var(--text-mute); margin-bottom: 20px;">
+        Last updated: September 1, 2026
+      </p>
+
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 24px 0 10px;">1. Overview</h2>
+      <p style="margin: 0 0 16px;">
+        Platform Fee Matrix ("we", "us", or "our") is dedicated to protecting user privacy. This website operates as a client-side calculation utility.
+      </p>
+
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 24px 0 10px;">2. Data Collection & Processing</h2>
+      <p style="margin: 0 0 16px;">
+        All pricing simulations, volume inputs, currency preferences, and toggle selections are executed <strong>locally inside your web browser</strong>. We do not store, log, or transmit your financial inputs to any external database or third party.
+      </p>
+
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 24px 0 10px;">3. Cookies & Local Storage</h2>
+      <p style="margin: 0 0 16px;">
+        We use browser LocalStorage strictly to persist your UI theme preference (Light / Dark mode). No tracking cookies are used to identify individual users.
+      </p>
+
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 24px 0 10px;">4. Advertising & Third-Party Partners</h2>
+      <p style="margin: 0 0 16px;">
+        Third-party vendors, including Google, may use cookies to serve ads based on prior visits to this or other websites. You may opt out of personalized advertising by visiting Google Ads Settings.
+      </p>
+
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 24px 0 10px;">5. Contact</h2>
+      <p style="margin: 0;">
+        For privacy inquiries, please contact <a href="mailto:privacy@platformfeematrix.com" style="color: var(--color-primary); text-decoration: none;">privacy@platformfeematrix.com</a>.
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
