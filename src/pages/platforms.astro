@@ -1,0 +1,530 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
+
+interface PlatformDetail {
+  id: string;
+  name: string;
+  icon: string;
+  category: string;
+  badge: string;
+  badgeColor: string;
+  feeFormula: string;
+  taxMode: string;
+  payoutTime: string;
+  bestFor: string;
+  pros: string[];
+  cons: string[];
+  description: string;
+}
+
+const platforms: PlatformDetail[] = [
+  {
+    id: "lemonsqueezy",
+    name: "Lemon Squeezy",
+    icon: "/icons/lemonsqueezy.svg",
+    category: "mor",
+    badge: "Merchant of Record",
+    badgeColor: "#10B981",
+    feeFormula: "5% + $0.50 per transaction (+1.5% PayPal/intl)",
+    taxMode: "Full Auto-Remit (Global VAT, GST, US Sales Tax)",
+    payoutTime: "Weekly or Bi-weekly (direct bank deposit / PayPal)",
+    bestFor: "Software, SaaS licenses, templates, and digital downloads sold worldwide",
+    pros: [
+      "Zero tax compliance liability (handles EU VAT, UK VAT, US sales taxes automatically)",
+      "Built-in license key generation & recurring subscription engine",
+      "Hosted high-converting checkout overlays & customer portal"
+    ],
+    cons: [
+      "5% platform cut is higher than direct Stripe for high-volume domestic sellers",
+      "+1.5% surcharge on PayPal payments and cross-border transactions"
+    ],
+    description: "Lemon Squeezy operates as your Merchant of Record, legally acting as the seller to handle all global sales taxes, invoicing, and fraud prevention."
+  },
+  {
+    id: "paddle",
+    name: "Paddle",
+    icon: "/icons/paddle.svg",
+    category: "mor",
+    badge: "Merchant of Record",
+    badgeColor: "#10B981",
+    feeFormula: "5% + $0.50 per transaction",
+    taxMode: "Full Auto-Remit (Global VAT, GST & Sales Tax)",
+    payoutTime: "Monthly wire or ACH",
+    bestFor: "B2B SaaS, desktop software, and developer tools scaling globally",
+    pros: [
+      "Complete global tax filing and compliance in 200+ countries",
+      "Enterprise billing, quote-to-cash, and dunning workflows",
+      "Built-in localization, multi-currency pricing, and localized payment rails"
+    ],
+    cons: [
+      "Steeper integration learning curve compared to simple creator storefronts",
+      "Monthly payout threshold applies"
+    ],
+    description: "Paddle is the complete payments and billing infrastructure built specifically for SaaS and digital software companies selling globally."
+  },
+  {
+    id: "stripe",
+    name: "Stripe Direct",
+    icon: "/icons/stripe.svg",
+    category: "direct",
+    badge: "Direct Gateway",
+    badgeColor: "#3B82F6",
+    feeFormula: "2.9% + $0.30 per transaction (+1.5% international)",
+    taxMode: "Self-File Taxes (Stripe Tax available for extra 0.5%)",
+    payoutTime: "Rolling 2-day automatic bank transfer",
+    bestFor: "Custom web applications, developers, and high-volume businesses with existing tax infrastructure",
+    pros: [
+      "Lowest baseline transaction fees with zero fixed monthly software overhead",
+      "Immediate rolling 2-day payouts directly to your business bank account",
+      "Infinite API customization and developer control"
+    ],
+    cons: [
+      "You are the legal Merchant of Record: you must file your own state/global sales taxes",
+      "Requires building or integrating your own storefront, auth, and file delivery stack"
+    ],
+    description: "Stripe is the world standard developer payment gateway, delivering maximum profit margins for businesses willing to self-manage tax compliance."
+  },
+  {
+    id: "gumroad",
+    name: "Gumroad",
+    icon: "/icons/gumroad.svg",
+    category: "direct",
+    badge: "Creator Storefront",
+    badgeColor: "#06B6D4",
+    feeFormula: "Direct: 10% + $0.50 + Card (2.9% + $0.30) · Discover: 30% flat",
+    taxMode: "Gumroad Collects & Remits EU/UK VAT and US Sales Tax",
+    payoutTime: "Weekly (every Friday via PayPal/Stripe/Direct Deposit)",
+    bestFor: "Indie creators, artists, ebook authors, and Notion template designers",
+    pros: [
+      "Huge built-in creator audience and Discover marketplace network",
+      "Zero monthly subscription fee: start selling immediately for free",
+      "Handles EU VAT and digital product delivery seamlessly"
+    ],
+    cons: [
+      "10% + $0.50 platform cut plus payment gateway fees adds up quickly",
+      "Discover marketplace traffic takes a steep 30% revenue cut"
+    ],
+    description: "Gumroad is the classic zero-friction digital storefront for creators to sell ebooks, design assets, software, and subscriptions."
+  },
+  {
+    id: "whop",
+    name: "Whop",
+    icon: "/icons/whop.svg",
+    category: "direct",
+    badge: "Social & Digital Hub",
+    badgeColor: "#8B5CF6",
+    feeFormula: "3% platform cut + 2.9% + $0.30 card fee",
+    taxMode: "Self-File Taxes (Integrated tax calculating options)",
+    payoutTime: "Instant to 2-day payouts",
+    bestFor: "Discord communities, software apps, trading groups, and creator memberships",
+    pros: [
+      "Low 3% platform commission compared to 10% on Gumroad",
+      "Built-in marketplace discovery and social community features",
+      "Deep integration with Discord, Telegram, and web apps"
+    ],
+    cons: [
+      "Creator is responsible for international tax filings",
+      "Card fees (2.9% + $0.30) charged on top of the 3% platform cut"
+    ],
+    description: "Whop is a fast-growing digital marketplace and subscription platform tailored for modern community creators, bot developers, and software sellers."
+  },
+  {
+    id: "payhip",
+    name: "Payhip",
+    icon: "/icons/payhip.svg",
+    category: "monthly",
+    badge: "Tier-Optimized Storefront",
+    badgeColor: "#EC4899",
+    feeFormula: "Free (5% + gateway) · Plus ($29/mo + 2%) · Pro ($99/mo + 0%)",
+    taxMode: "Payhip handles EU/UK VAT auto-reporting",
+    payoutTime: "Instant payouts directly to Stripe or PayPal",
+    bestFor: "Digital downloads, online courses, coaching, and physical craft sellers",
+    pros: [
+      "Instant payouts directly to your connected Stripe/PayPal account",
+      "Flexible tier scaling: switch from 5% Free to 0% Pro as volume increases",
+      "Automatic EU VAT calculation and reporting"
+    ],
+    cons: [
+      "Connecting your own Stripe/PayPal means payment dispute risk is on you",
+      "Storefront themes are simpler than dedicated website builders"
+    ],
+    description: "Payhip is an all-in-one e-commerce platform offering an easy graduation path from a 5% free tier up to 0% transaction fees on the $99/mo Pro plan."
+  },
+  {
+    id: "sellfy",
+    name: "Sellfy",
+    icon: "/icons/sellfy.svg",
+    category: "monthly",
+    badge: "Fixed Monthly Plan",
+    badgeColor: "#6366F1",
+    feeFormula: "$29/mo Starter · 0% transaction fee + 2.9% + $0.30 card",
+    taxMode: "Self-File Taxes",
+    payoutTime: "Instant payouts via Stripe / PayPal",
+    bestFor: "YouTubers and creators selling merch, print-on-demand, and digital downloads",
+    pros: [
+      "0% platform transaction cut on all paid subscription plans",
+      "Built-in Print-on-Demand merchandise fulfillment alongside digital goods",
+      "Custom domain support and built-in email marketing"
+    ],
+    cons: [
+      "Fixed $29/mo overhead regardless of whether you make any sales that month",
+      "Annual sales limits on lower tier plans ($10k/year on Starter)"
+    ],
+    description: "Sellfy allows creators to launch a customizable online store with print-on-demand merchandise and digital goods with 0% platform transaction fees."
+  },
+  {
+    id: "podia",
+    name: "Podia",
+    icon: "/icons/podia.svg",
+    category: "monthly",
+    badge: "All-in-One Academy",
+    badgeColor: "#14B8A6",
+    feeFormula: "$39/mo Mover (0% fee) + 2.9% + $0.30 card",
+    taxMode: "Self-File Taxes",
+    payoutTime: "Instant directly to connected gateway",
+    bestFor: "Course creators, community leaders, and coaching webinars",
+    pros: [
+      "Zero transaction fees on Mover ($39/mo) and Shaker plans",
+      "Unlimited digital downloads, coaching packages, and course hosting",
+      "Includes website builder, community platform, and email marketing"
+    ],
+    cons: [
+      "$39/mo fixed recurring expense",
+      "Free tier has an 8% transaction fee"
+    ],
+    description: "Podia is an all-in-one creator platform combining websites, digital products, online courses, and community memberships under one roof."
+  },
+  {
+    id: "stan",
+    name: "Stan Store",
+    icon: "/icons/stan.svg",
+    category: "monthly",
+    badge: "Link-in-Bio Store",
+    badgeColor: "#F97316",
+    feeFormula: "$29/mo Creator Plan · 0% transaction fee + 2.9% + $0.30 card",
+    taxMode: "Self-File Taxes",
+    payoutTime: "Direct Stripe payouts (1–2 business days)",
+    bestFor: "TikTok, Instagram, and short-form video creators driving mobile traffic",
+    pros: [
+      "Ultra-fast 1-click mobile checkout built for social media bio links",
+      "0% transaction cut on all digital product sales",
+      "Built-in 1:1 calendar booking and coaching call scheduling"
+    ],
+    cons: [
+      "$29/mo minimum subscription fee",
+      "Limited desktop website customization compared to traditional storefronts"
+    ],
+    description: "Stan Store is the premier mobile-first link-in-bio storefront designed to convert TikTok and Instagram followers into paying clients in 1 click."
+  },
+  {
+    id: "teachable",
+    name: "Teachable",
+    icon: "/icons/teachable.svg",
+    category: "monthly",
+    badge: "Course Platform",
+    badgeColor: "#8B5CF6",
+    feeFormula: "Basic ($39/mo + 5%) · Pro ($119/mo + 0%) + card fees",
+    taxMode: "Teachable handles student tax collection & payout remittance",
+    payoutTime: "Daily or Monthly payouts (via teachable:pay)",
+    bestFor: "Online educators, corporate training, and structured multi-module courses",
+    pros: [
+      "Pro plan ($119/mo) eliminates all 5% transaction fees",
+      "Advanced student quizzes, completion certificates, and student compliance",
+      "Automated affiliate payouts and multi-instructor revenue sharing"
+    ],
+    cons: [
+      "Basic plan charges 5% on top of $39/mo subscription",
+      "Pro plan has a high $119/mo starting price"
+    ],
+    description: "Teachable is the industry-standard academy and online school platform for educators building structured course curriculums and certifications."
+  },
+  {
+    id: "fiverr",
+    name: "Fiverr",
+    icon: "/icons/fiverr.svg",
+    category: "marketplace",
+    badge: "Freelance Marketplace",
+    badgeColor: "#10B981",
+    feeFormula: "20% flat seller commission on completed orders",
+    taxMode: "Marketplace Facilitator Tax",
+    payoutTime: "14-day clearing period (7 days for Top Rated Sellers)",
+    bestFor: "Freelance designers, video editors, voice artists, and productized gig sellers",
+    pros: [
+      "Access to millions of active buyers searching for digital services",
+      "Buyer pays payment processing and platform service fees",
+      "Milestone escrow and guaranteed payment upon order approval"
+    ],
+    cons: [
+      "Heavy 20% platform cut on all earnings and tips",
+      "14-day mandatory funds clearance hold before withdrawal"
+    ],
+    description: "Fiverr connects freelance digital service providers with global clients through structured gigs and standardized service packages."
+  },
+  {
+    id: "etsy",
+    name: "Etsy",
+    icon: "/icons/etsy.svg",
+    category: "marketplace",
+    badge: "Creator Marketplace",
+    badgeColor: "#06B6D4",
+    feeFormula: "$0.20 listing + 6.5% transaction + 3% + $0.25 card fee",
+    taxMode: "Marketplace Facilitator (Etsy handles sales tax)",
+    payoutTime: "Daily / Weekly deposit schedule to bank account",
+    bestFor: "Digital SVG cut files, printable planners, templates, and digital art",
+    pros: [
+      "Massive organic buyer intent for printables, templates, and creative craft assets",
+      "Automatic digital file fulfillment upon checkout",
+      "Etsy handles sales tax collection across US states and countries"
+    ],
+    cons: [
+      "$0.20 fee per item renewed every 4 months or each sale",
+      "Offsite Ads program can claim an additional 12%–15% fee on attributed sales"
+    ],
+    description: "Etsy is the global marketplace for creative digital downloads, templates, and handmade goods with massive built-in search discovery."
+  },
+  {
+    id: "kdp",
+    name: "Amazon KDP",
+    icon: "/icons/kdp.svg",
+    category: "marketplace",
+    badge: "Digital Book Publishing",
+    badgeColor: "#D97706",
+    feeFormula: "30% platform cut (70% royalty tier) + $0.15/MB file delivery",
+    taxMode: "Publishing Royalty Tax Withholding (US 1099/W-8BEN)",
+    payoutTime: "Monthly (60 days after month close)",
+    bestFor: "Self-published authors, digital book publishers, and comic creators",
+    pros: [
+      "Unmatched global reach on Amazon.com and Kindle e-readers worldwide",
+      "Amazon handles all customer checkout, payment processing, and customer service",
+      "Participation in Kindle Unlimited page-read royalty pool"
+    ],
+    cons: [
+      "30% platform cut on standard $2.99–$9.99 pricing (35% royalty on other prices)",
+      "60-day delayed payout schedule"
+    ],
+    description: "Amazon Kindle Direct Publishing allows indie authors to publish ebooks globally to millions of Kindle devices with up to 70% royalty rates."
+  },
+  {
+    id: "upwork",
+    name: "Upwork",
+    icon: "/icons/upwork.svg",
+    category: "marketplace",
+    badge: "Freelance Platform",
+    badgeColor: "#10B981",
+    feeFormula: "10% standard freelancer contract service fee",
+    taxMode: "Marketplace Facilitator Tax",
+    payoutTime: "Weekly (hourly) / Milestone release (fixed-price)",
+    bestFor: "Freelancers, software engineers, copywriters, and agency consultants",
+    pros: [
+      "Flat 10% service fee (reduced from previous 20% sliding scale)",
+      "Hourly payment protection with automated time tracker screenshots",
+      "Clients absorb payment processing fees directly at contract initiation"
+    ],
+    cons: [
+      "10% fee applies to all billings across long-term contracts",
+      "Connects cost money to submit proposals to prospective clients"
+    ],
+    description: "Upwork is the world's premier freelance work marketplace connecting independent professionals and agencies with SMB & enterprise clients."
+  }
+];
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Digital Creator & Freelance Platforms Fee Directory",
+  "url": "https://platformfeematrix.com/platforms",
+  "description": "Comprehensive directory and fee comparison of 14 leading creator storefronts, payment gateways, and freelance marketplaces.",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": platforms.map((p, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": p.name,
+      "description": p.description,
+      "url": `https://platformfeematrix.com/platforms#${p.id}`
+    }))
+  }
+};
+---
+
+<Layout
+  title="All 14 Creator & Digital Product Platforms Compared | Platform Fee Matrix"
+  description="Explore detailed fee breakdowns, tax compliance modes, payout timelines, and pros/cons for Gumroad, Lemon Squeezy, Stripe, Payhip, Whop, Paddle, Fiverr, Upwork, and more."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <!-- ─── Header ─────────────────────────────────────── -->
+  <section
+    style="
+    position: relative;
+    padding: 70px 24px 30px;
+    text-align: center;
+  "
+  >
+    <div style="max-width: 860px; margin: 0 auto;">
+      <div class="reveal-on-scroll stagger-1 hero-eyebrow" style="margin-bottom: 16px;">
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+          margin-right: 4px;
+          flex-shrink: 0;
+        "
+          >PLATFORM DIRECTORY</span
+        >
+        <span>14 Platforms · Fee Structures · Tax Models · Payout Rules</span>
+      </div>
+
+      <h1 class="reveal-on-scroll stagger-2 hero-headline" style="font-size: clamp(28px, 4.5vw, 44px); margin-bottom: 16px;">
+        Compare All 14 Creator Platforms
+      </h1>
+
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
+        font-size: 17px;
+        color: var(--text-body);
+        line-height: 1.65;
+        max-width: 680px;
+        margin: 0 auto;
+      "
+      >
+        Understand the legal, tax, and fee implications of each platform before choosing where to sell your digital goods, courses, or services.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── Platforms Grid ─────────────────────────────── -->
+  <section
+    style="
+    padding: 20px 24px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  "
+  >
+    <div
+      style="
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    "
+    >
+      {
+        platforms.map((p) => (
+          <article
+            id={p.id}
+            class="card-base"
+            style="
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+          "
+          >
+            <div>
+              <!-- Card Header -->
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <img src={p.icon} width="32" height="32" alt={p.name} style="border-radius: 6px;" />
+                  <div>
+                    <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">
+                      {p.name}
+                    </h2>
+                    <span style="font-size: 12px; color: var(--text-mute); font-family: var(--font-mono);">
+                      {p.taxMode.split('(')[0]}
+                    </span>
+                  </div>
+                </div>
+                <span
+                  class="badge"
+                  style={`background: ${p.badgeColor}15; color: ${p.badgeColor}; border: 1px solid ${p.badgeColor}35; font-size: 11px;`}
+                >
+                  {p.badge}
+                </span>
+              </div>
+
+              <p style="font-size: 14px; color: var(--text-body); line-height: 1.6; margin: 0 0 16px;">
+                {p.description}
+              </p>
+
+              <!-- Fee Pill -->
+              <div
+                style="
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-hairline);
+                border-radius: 10px;
+                padding: 12px 14px;
+                margin-bottom: 16px;
+              "
+              >
+                <span style="font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-mute); display: block; margin-bottom: 4px;">
+                  Fee Structure
+                </span>
+                <span style="font-size: 13px; font-weight: 600; color: var(--color-primary); font-family: var(--font-mono);">
+                  {p.feeFormula}
+                </span>
+              </div>
+
+              <!-- Pros / Cons -->
+              <div style="margin-bottom: 16px;">
+                <p style="font-size: 12px; font-weight: 600; color: var(--color-profit); margin: 0 0 6px;">
+                  ✓ Key Advantages:
+                </p>
+                <ul style="margin: 0 0 12px; padding-left: 18px; font-size: 13px; color: var(--text-body); line-height: 1.5;">
+                  {p.pros.map((pro) => <li>{pro}</li>)}
+                </ul>
+
+                <p style="font-size: 12px; font-weight: 600; color: var(--color-error); margin: 0 0 6px;">
+                  ⚠ Considerations:
+                </p>
+                <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-mute); line-height: 1.5;">
+                  {p.cons.map((con) => <li>{con}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <!-- Card Footer / Actions -->
+            <div style="border-top: 1px solid var(--border-hairline); padding-top: 16px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 12px; color: var(--text-mute);">
+                Best for: <strong style="color: var(--text-ink);">{p.bestFor.split(',')[0]}</strong>
+              </span>
+              <a
+                href="/calculator"
+                style="
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: rgba(245, 158, 11, 0.12);
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                color: var(--color-primary);
+                padding: 6px 12px;
+                border-radius: 100px;
+                font-size: 12px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.15s ease;
+              "
+              >
+                Simulate Fee →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <PlatformModal />
+  <Footer />
+</Layout>

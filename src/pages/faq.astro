@@ -1,0 +1,363 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
+
+const faqItems = [
+  {
+    q: "Which digital product platform has the lowest fees?",
+    a: "Stripe Direct offers the lowest raw transaction fees at 2.9% + $0.30 per sale with 0% platform take. However, you must handle your own hosting, file fulfillment, and international tax compliance. For storefront platforms, Payhip Pro ($99/mo with 0% platform fee) or Whop (3% + card fees) typically yield the highest net take-home at higher sales volumes."
+  },
+  {
+    q: "Why is Lemon Squeezy / Paddle more expensive than Stripe?",
+    a: "Lemon Squeezy and Paddle operate as your Merchant of Record (MoR). Their 5% + $0.50 fee includes calculating, collecting, filing, and remitting global VAT, GST, and US state sales taxes in 200+ countries. They also absorb legal sales liability, international tax registrations, and chargeback protection. For cross-border sellers, this eliminates thousands of dollars in accounting and compliance software fees."
+  },
+  {
+    q: "Why does Gumroad charge a 10% platform cut?",
+    a: "Gumroad moved to a flat 10% fee (plus card processing fees) to simplify pricing across all seller tiers and fund their built-in creator marketplace, Gumroad Discover. Discover sales incur an additional marketplace fee (30% total cut) in exchange for driving organic buyers."
+  },
+  {
+    q: "Why are PayPal fees not applied on freelance marketplaces like Upwork and Fiverr?",
+    a: "On freelance platforms (Upwork: 10%, Fiverr: 20%), the platform charges a fixed freelancer service commission. The client/buyer pays the payment gateway and contract processing fees. Freelancers receive their net contract rate regardless of whether the client pays via PayPal, Credit Card, or bank transfer."
+  },
+  {
+    q: "How do fixed monthly software subscriptions (Stan Store, Sellfy, Podia) work in the calculator?",
+    a: "For platforms with fixed monthly plans (e.g. Stan Store $29/mo, Podia $39/mo, Sellfy $29/mo), the calculator amortizes the fixed monthly fee across your total monthly sales volume (Monthly Fee / Units Sold) and adds it to card processing fees to display your true effective take-home per unit."
+  },
+  {
+    q: "How does the live currency exchange rate engine work?",
+    a: "Platform Fee Matrix fetches live institutional exchange rates for USD, EUR, GBP, and INR via open exchange APIs. When you switch currencies, prices, sliders, presets, and platform fixed transaction fees (like $0.30 or $0.50) are dynamically converted in real time."
+  },
+  {
+    q: "What is the international card surcharge toggle?",
+    a: "When customers pay using a credit or debit card issued outside your domestic country, payment processors like Stripe charge an extra 1.5% international transaction surcharge. Toggling this on lets you simulate net earnings when selling to a global audience."
+  },
+  {
+    q: "Are calculations client-side and private?",
+    a: "Yes. 100% of calculations execute locally in your browser. No pricing data, sales volume figures, or financial inputs are transmitted, tracked, or stored on any server."
+  }
+];
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map((item) => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout
+  title="Platform Fees & Taxes FAQ (Methodology & Questions) | Platform Fee Matrix"
+  description="Frequently asked questions about digital product platform pricing, Merchant of Record (MoR) tax compliance, Stripe vs PayPal fees, and our calculation methodology."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <!-- ─── FAQ Header ─────────────────────────────────── -->
+  <section
+    style="
+    position: relative;
+    padding: 70px 24px 30px;
+    text-align: center;
+  "
+  >
+    <div style="max-width: 840px; margin: 0 auto;">
+      <div class="reveal-on-scroll stagger-1 hero-eyebrow" style="margin-bottom: 16px;">
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+          margin-right: 4px;
+          flex-shrink: 0;
+        "
+          >KNOWLEDGE BASE</span
+        >
+        <span>Frequently Asked Questions & Transparent Formulas</span>
+      </div>
+
+      <h1 class="reveal-on-scroll stagger-2 hero-headline" style="font-size: clamp(28px, 4.5vw, 44px); margin-bottom: 16px;">
+        Frequently Asked Questions & Methodology
+      </h1>
+
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
+        font-size: 17px;
+        color: var(--text-body);
+        line-height: 1.65;
+        max-width: 680px;
+        margin: 0 auto;
+      "
+      >
+        Everything you need to know about how platform fees are structured, how taxes are calculated, and how our simulation engine works.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── FAQ Accordion List ──────────────────────────── -->
+  <section
+    style="
+    padding: 20px 24px 60px;
+    max-width: 860px;
+    margin: 0 auto;
+  "
+  >
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      {
+        faqItems.map((item) => (
+          <details
+            class="card-base"
+            style="
+            padding: 20px 24px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          "
+          >
+            <summary
+              style="
+              font-size: 17px;
+              font-weight: 600;
+              color: var(--text-ink);
+              letter-spacing: -0.3px;
+              list-style: none;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              cursor: pointer;
+              user-select: none;
+            "
+            >
+              <span>{item.q}</span>
+              <span class="faq-icon" style="color: var(--color-primary); font-size: 20px; font-weight: 400; margin-left: 12px;">+</span>
+            </summary>
+            <p
+              style="
+              margin: 16px 0 0;
+              font-size: 15px;
+              color: var(--text-body);
+              line-height: 1.7;
+              border-top: 1px solid var(--border-hairline);
+              padding-top: 16px;
+            "
+            >
+              {item.a}
+            </p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ─── Calculation Methodology Section ────────────── -->
+  <section
+    style="
+    padding: 20px 24px 80px;
+    max-width: 860px;
+    margin: 0 auto;
+  "
+  >
+    <div
+      style="
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      box-shadow: var(--shadow-card);
+    "
+    >
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+        <h2 style="font-size: 22px; font-weight: 700; color: var(--text-ink); margin: 0; letter-spacing: -0.4px;">
+          Calculation Methodology & Formulas
+        </h2>
+        <span style="font-size: 11px; font-weight: 700; background: var(--badge-best-bg); color: var(--badge-best-text); padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;">
+          14 Platforms Modeled
+        </span>
+      </div>
+
+      <p style="font-size: 14px; color: var(--text-body); line-height: 1.7; margin: 0 0 24px;">
+        All fee algorithms in Platform Fee Matrix are modeled directly from verified official platform documentation. Below is the complete mathematical breakdown for every supported platform across all five ecosystem categories:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Group 1: Direct Processing -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #3B82F6;"></span>
+            <h3 style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #60A5FA; margin: 0;">
+              Direct Gateway & Developer Billing
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 13px;">
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Stripe Direct:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × (2.9% + (Intl ? 1.5% : 0)) + $0.30]</span>
+              <div style="font-size: 11px; color: var(--text-mute); margin-top: 4px; font-family: var(--font-sans);">
+                When PayPal is selected: Gross − [Price × 3.49% + $0.49]
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Merchant of Record -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-profit);"></span>
+            <h3 style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-profit); margin: 0;">
+              Merchant of Record (MoR) — Full Tax & Compliance Included
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 13px;">
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Lemon Squeezy:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 5% + $0.50 + (PayPal ? 1.5% : 0) + (Intl ? 1.5% : 0)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Paddle:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 5% + $0.50 + (Intl ? 1.5% : 0)]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 3: Creator Storefronts & Marketplaces -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #06B6D4;"></span>
+            <h3 class="cat-title-creator" style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #22D3EE; margin: 0;">
+              Creator Storefronts & Marketplaces
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 13px;">
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Gumroad Direct:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 10% + $0.50 + Processing Fee]</span>
+              <div style="font-size: 11px; color: var(--text-mute); margin-top: 4px; font-family: var(--font-sans);">
+                Discover marketplace sales: Gross − [Price × 30%] (includes all transaction processing)
+              </div>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Whop:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 3% + Processing Fee (2.9% + $0.30)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Etsy:</strong>
+              <span style="color: var(--text-ink);"> Gross − [$0.20 listing + (Price × 6.5%) + (Price × (3% + (Intl ? 2.5% : 0)) + $0.25)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Amazon KDP:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 30% + ($0.15/MB delivery file fee)]</span>
+              <div style="font-size: 11px; color: var(--text-mute); margin-top: 4px; font-family: var(--font-sans);">
+                Standard 70% digital royalty tier modeled for sales between $2.99 and $9.99
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 4: Subscription Storefronts -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #A855F7;"></span>
+            <h3 style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #C084FC; margin: 0;">
+              Subscription Storefronts (Amortized Monthly SaaS Costs)
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 13px;">
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Payhip:</strong>
+              <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                <div><span style="color: var(--text-mute);">• Free Plan:</span> <span style="color: var(--text-ink);">Gross − [Price × 5% + Processing Fee]</span></div>
+                <div><span style="color: var(--text-mute);">• Plus ($29/mo):</span> <span style="color: var(--text-ink);">Gross − [Price × 2% + Processing Fee + ($29 / Monthly Volume)]</span></div>
+                <div><span style="color: var(--text-mute);">• Pro ($99/mo):</span> <span style="color: var(--text-ink);">Gross − [Processing Fee + ($99 / Monthly Volume)]</span></div>
+              </div>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Sellfy ($29/mo Starter):</strong>
+              <span style="color: var(--text-ink);"> Gross − [Processing Fee + ($29 / Monthly Volume)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Podia ($39/mo Mover):</strong>
+              <span style="color: var(--text-ink);"> Gross − [Processing Fee + ($39 / Monthly Volume)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Stan Store ($29/mo Creator):</strong>
+              <span style="color: var(--text-ink);"> Gross − [Processing Fee + ($29 / Monthly Volume)]</span>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Teachable:</strong>
+              <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                <div><span style="color: var(--text-mute);">• Basic ($39/mo):</span> <span style="color: var(--text-ink);">Gross − [Price × 5% + Processing Fee + ($39 / Monthly Volume)]</span></div>
+                <div><span style="color: var(--text-mute);">• Pro ($119/mo):</span> <span style="color: var(--text-ink);">Gross − [Processing Fee + ($119 / Monthly Volume)]</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 5: Freelance Service Marketplaces -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #EC4899;"></span>
+            <h3 style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #F472B6; margin: 0;">
+              Freelance & Service Marketplaces
+            </h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 13px;">
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Upwork:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 10%]</span>
+              <div style="font-size: 11px; color: var(--text-mute); margin-top: 4px; font-family: var(--font-sans);">
+                Freelancer receives 90% net take-home; client pays contract initiation & gateway charges
+              </div>
+            </div>
+            <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 8px;">
+              <strong style="color: var(--color-primary);">Fiverr:</strong>
+              <span style="color: var(--text-ink);"> Gross − [Price × 20%]</span>
+              <div style="font-size: 11px; color: var(--text-mute); margin-top: 4px; font-family: var(--font-sans);">
+                Seller receives 80% net take-home; buyer pays checkout fee (5.5% + $3 on orders under $100)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Methodology Footnotes & Parameter Reference -->
+        <div style="background: var(--bg-card-soft); border: 1px solid var(--border-hairline); border-radius: 10px; padding: 18px 20px; font-size: 12px; color: var(--text-body); line-height: 1.65;">
+          <strong style="color: var(--text-ink); display: block; margin-bottom: 6px; font-size: 13px;">Key Formula Parameters & Assumptions:</strong>
+          <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px;">
+            <li><strong>Processing Fee:</strong> Standard Stripe card processing is modeled as <code style="font-family: var(--font-mono); color: var(--color-primary);">2.9% + $0.30</code>. When PayPal is selected, PayPal standard processing of <code style="font-family: var(--font-mono); color: var(--color-primary);">3.49% + $0.49</code> is applied.</li>
+            <li><strong>International Cards (Intl):</strong> An additional cross-border fee of <code style="font-family: var(--font-mono); color: var(--color-primary);">+1.5%</code> is applied when toggled (<code style="font-family: var(--font-mono); color: var(--color-primary);">+2.5%</code> on Etsy).</li>
+            <li><strong>Monthly Volume:</strong> Amortizes fixed monthly storefront subscriptions over your projected monthly sales count: <code style="font-family: var(--font-mono); color: var(--color-primary);">Monthly Cost / Total Units</code>.</li>
+            <li><strong>Currency Conversion:</strong> In EUR, GBP, or INR modes, all fixed currency amounts ($0.30, $0.50, $29, etc.) are dynamically converted using live institutional foreign exchange rates.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <PlatformModal />
+  <Footer />
+</Layout>
+
+<style>
+  details[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+  .faq-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  :global(html.light) .cat-title-creator {
+    color: #0891b2 !important;
+  }
+</style>

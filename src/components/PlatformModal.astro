@@ -83,7 +83,7 @@
     name: string;
     icon: string;
     badge: string;
-    badgeClass: string;
+    badgeColor: string;
     feeStructure: string;
     taxMode: string;
     effRate: string;
@@ -97,8 +97,8 @@
       cardId: "card-gumroad",
       name: "Gumroad",
       icon: "/icons/gumroad.svg",
-      badge: "Direct / Marketplace",
-      badgeClass: "badge-tax",
+      badge: "Creator Storefront",
+      badgeColor: "#06B6D4",
       feeStructure: "10% + $0.50 (Direct) · 30% (Discover)",
       taxMode: "Self-File Taxes (Seller responsible)",
       effRate: "~10.5% (at $50 price point)",
@@ -114,8 +114,8 @@
       cardId: "card-lemonsqueezy",
       name: "Lemon Squeezy",
       icon: "/icons/lemonsqueezy.svg",
-      badge: "MoR (Auto-Tax)",
-      badgeClass: "badge-mor",
+      badge: "Merchant of Record (MoR)",
+      badgeColor: "#10B981",
       feeStructure: "5% + $0.50 per sale",
       taxMode: "Merchant of Record (Auto VAT & GST)",
       effRate: "~6.0% (at $50 price point)",
@@ -131,8 +131,8 @@
       cardId: "card-paddle",
       name: "Paddle",
       icon: "/icons/paddle.svg",
-      badge: "MoR (Auto-Tax)",
-      badgeClass: "badge-mor",
+      badge: "Merchant of Record (MoR)",
+      badgeColor: "#10B981",
       feeStructure: "5% + $0.50 per sale",
       taxMode: "Merchant of Record (Auto VAT & Sales Tax)",
       effRate: "~6.0% (at $50 price point)",
@@ -148,8 +148,8 @@
       cardId: "card-payhip",
       name: "Payhip",
       icon: "/icons/payhip.svg",
-      badge: "Direct Gateways / Monthly Plans",
-      badgeClass: "badge-tax",
+      badge: "Subscription Storefront",
+      badgeColor: "#A855F7",
       feeStructure: "Free (5%) · Plus ($29/mo + 2%) · Pro ($99/mo + 0%)",
       taxMode: "Self-File Taxes (Direct Stripe/PayPal)",
       effRate: "0% platform fee on $99 Pro plan",
@@ -166,7 +166,7 @@
       name: "Stripe Direct",
       icon: "/icons/stripe.svg",
       badge: "Direct Payment Gateway",
-      badgeClass: "badge-tax",
+      badgeColor: "#3B82F6",
       feeStructure: "2.9% + $0.30 per sale (Standard US card)",
       taxMode: "Self-File Taxes (Seller responsible)",
       effRate: "~3.5% (at $50 price point)",
@@ -182,8 +182,8 @@
       cardId: "card-whop",
       name: "Whop",
       icon: "/icons/whop.svg",
-      badge: "Direct Gateway",
-      badgeClass: "badge-tax",
+      badge: "Creator Storefront / Hub",
+      badgeColor: "#06B6D4",
       feeStructure: "3% platform fee + 2.9% + $0.30 card fee",
       taxMode: "Self-File Taxes",
       effRate: "~6.5% (at $50 price point)",
@@ -199,8 +199,8 @@
       cardId: "card-sellfy",
       name: "Sellfy",
       icon: "/icons/sellfy.svg",
-      badge: "Fixed Monthly Plan",
-      badgeClass: "badge-tax",
+      badge: "Subscription Storefront",
+      badgeColor: "#A855F7",
       feeStructure: "$29/mo Starter Plan + 0% platform fee + 2.9% + $0.30",
       taxMode: "Self-File Taxes",
       effRate: "0% platform fee on all monthly plans",
@@ -216,8 +216,8 @@
       cardId: "card-podia",
       name: "Podia",
       icon: "/icons/podia.svg",
-      badge: "Fixed Monthly Plan",
-      badgeClass: "badge-tax",
+      badge: "Subscription Storefront",
+      badgeColor: "#A855F7",
       feeStructure: "$39/mo Mover Plan + 0% transaction fee + 2.9% + $0.30",
       taxMode: "Self-File Taxes",
       effRate: "0% transaction fee on Mover & Shaker plans",
@@ -233,8 +233,8 @@
       cardId: "card-stan",
       name: "Stan Store",
       icon: "/icons/stan.svg",
-      badge: "Fixed Monthly Plan",
-      badgeClass: "badge-tax",
+      badge: "Subscription Storefront",
+      badgeColor: "#A855F7",
       feeStructure: "$29/mo Creator Plan + 0% transaction fee + 2.9% + $0.30",
       taxMode: "Self-File Taxes",
       effRate: "0% platform transaction fee",
@@ -250,8 +250,8 @@
       cardId: "card-teachable",
       name: "Teachable",
       icon: "/icons/teachable.svg",
-      badge: "Fixed Monthly Plan",
-      badgeClass: "badge-tax",
+      badge: "Subscription Storefront",
+      badgeColor: "#A855F7",
       feeStructure: "Basic ($39/mo + 5%) · Pro ($119/mo + 0%)",
       taxMode: "Self-File Taxes",
       effRate: "0% fee on $119/mo Pro plan",
@@ -268,7 +268,7 @@
       name: "Fiverr",
       icon: "/icons/fiverr.svg",
       badge: "Freelance Marketplace",
-      badgeClass: "badge-tax",
+      badgeColor: "#EC4899",
       feeStructure: "20% flat seller commission on all completed orders",
       taxMode: "Marketplace Facilitator Tax",
       effRate: "20.0% flat seller commission",
@@ -285,7 +285,7 @@
       name: "Etsy",
       icon: "/icons/etsy.svg",
       badge: "Creator Marketplace",
-      badgeClass: "badge-tax",
+      badgeColor: "#06B6D4",
       feeStructure: "$0.20 listing + 6.5% transaction + 3% + $0.25 card",
       taxMode: "Marketplace Facilitator Tax",
       effRate: "~10.0% (at $20 price point)",
@@ -301,8 +301,8 @@
       cardId: "card-kdp",
       name: "Amazon KDP",
       icon: "/icons/kdp.svg",
-      badge: "Digital Book Publishing",
-      badgeClass: "badge-tax",
+      badge: "Creator Marketplace",
+      badgeColor: "#06B6D4",
       feeStructure: "30% platform fee (70% royalty tier) + $0.15/MB delivery",
       taxMode: "Publishing Royalty Tax Withholding",
       effRate: "~30.5% (70% royalty tier)",
@@ -318,8 +318,8 @@
       cardId: "card-upwork",
       name: "Upwork",
       icon: "/icons/upwork.svg",
-      badge: "Freelance Platform",
-      badgeClass: "badge-tax",
+      badge: "Freelance Marketplace",
+      badgeColor: "#EC4899",
       feeStructure: "10% standard freelancer contract service fee",
       taxMode: "Marketplace Facilitator Tax",
       effRate: "10.0% flat freelancer service fee",
@@ -361,7 +361,14 @@
       if (title) title.textContent = data.name;
       if (badge) {
         badge.textContent = data.badge;
-        badge.className = `badge ${data.badgeClass}`;
+        const color = data.badgeColor || '#10B981';
+        badge.className = "badge";
+        badge.style.background = `${color}18`;
+        badge.style.color = color;
+        badge.style.border = `1px solid ${color}40`;
+        badge.style.fontSize = "11.5px";
+        badge.style.fontWeight = "600";
+        badge.style.letterSpacing = "0.02em";
       }
       if (desc) desc.textContent = data.description;
       if (feeStruct) feeStruct.textContent = data.feeStructure;

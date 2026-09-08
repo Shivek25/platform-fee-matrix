@@ -1,5 +1,14 @@
 ---
-// Nav.astro: Vercel-inspired sticky top nav
+// Nav.astro: Vercel-inspired sticky top nav with multi-page route awareness
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Calculator", href: "/calculator" },
+  { label: "Platforms", href: "/platforms" },
+  { label: "Guide", href: "/guide" },
+  { label: "FAQ", href: "/faq" },
+];
 ---
 
 <header
@@ -87,21 +96,23 @@
     "
       class="nav-links-desktop"
     >
-      <a
-        href="/#calculator"
-        class="nav-link"
-        >Calculator</a
-      >
-      <a
-        href="/#guide"
-        class="nav-link"
-        >Guide</a
-      >
-      <a
-        href="/#platforms"
-        class="nav-link"
-        >Platforms</a
-      >
+      {
+        navItems.map((item) => {
+          const isActive =
+            item.href === "/"
+              ? currentPath === "/"
+              : currentPath === item.href || currentPath.startsWith(item.href + "/");
+          return (
+            <a
+              href={item.href}
+              class={`nav-link ${isActive ? "active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
     </nav>
 
     <!-- Right: theme toggle + CTA -->
@@ -158,7 +169,7 @@
 
       <!-- Try Calculator CTA -->
       <a
-        href="/#calculator"
+        href="/calculator"
         style="
           display: inline-flex;
           align-items: center;
@@ -246,10 +257,23 @@
     border-color: rgba(245, 158, 11, 0.3);
   }
 
+  .nav-link.active {
+    color: var(--color-primary);
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.4);
+    font-weight: 600;
+  }
+
   :global(html.light) .nav-link:hover {
     color: #b45309;
     background: rgba(245, 158, 11, 0.15);
     border-color: rgba(217, 119, 6, 0.35);
+  }
+
+  :global(html.light) .nav-link.active {
+    color: #92400e;
+    background: rgba(245, 158, 11, 0.2);
+    border-color: rgba(217, 119, 6, 0.5);
   }
 
   #theme-toggle {

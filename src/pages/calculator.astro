@@ -1,0 +1,226 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Calculator from "../components/Calculator.astro";
+import Footer from "../components/Footer.astro";
+import PlatformModal from "../components/PlatformModal.astro";
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Platform Fee Matrix Calculator",
+  "url": "https://platformfeematrix.com/calculator",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "description": "Interactive real-time fee calculator comparing net take-home earnings across 14 digital product, creator, and freelance platforms including Gumroad, Lemon Squeezy, Stripe, Payhip, Whop, Paddle, Fiverr, Upwork, and Etsy.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Real-time profit simulation at exact product price and monthly volume",
+    "Multi-currency support (USD, EUR, GBP, INR) with live exchange rates",
+    "PayPal vs Stripe standard fee comparison",
+    "International credit card surcharge modeling (+1.5%)",
+    "Merchant of Record (MoR) global VAT/GST compliance analysis",
+    "Subscription tier optimization for Payhip and Teachable"
+  ]
+};
+---
+
+<Layout
+  title="Interactive Creator & Digital Product Fee Calculator (14 Platforms) | Platform Fee Matrix"
+  description="Calculate your exact take-home profit across Gumroad, Lemon Squeezy, Stripe, Payhip, Whop, Paddle, Sellfy, Podia, Stan Store, Teachable, Fiverr, Etsy, Amazon KDP, and Upwork."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <!-- ─── Calculator Page Header ─────────────────────── -->
+  <section
+    style="
+    position: relative;
+    overflow: hidden;
+    padding: 70px 24px 30px;
+    background: transparent;
+    text-align: center;
+  "
+  >
+    <div style="position: relative; z-index: 1; max-width: 860px; margin: 0 auto;">
+      <div class="reveal-on-scroll stagger-1 hero-eyebrow" style="margin-bottom: 16px;">
+        <span
+          style="
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #0B0F17;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+          margin-right: 4px;
+          flex-shrink: 0;
+        "
+          >REAL-TIME ENGINE</span
+        >
+        <span>Simulating 14 Platforms · 4 Currencies · Live Forex Rates</span>
+      </div>
+
+      <h1 class="reveal-on-scroll stagger-2 hero-headline" style="font-size: clamp(28px, 4.5vw, 44px); margin-bottom: 16px;">
+        Platform Take-Home Fee Calculator
+      </h1>
+
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
+        font-size: 17px;
+        color: var(--text-body);
+        line-height: 1.65;
+        max-width: 680px;
+        margin: 0 auto;
+      "
+      >
+        Adjust your price point and monthly unit volume below to simulate net payouts, platform cuts, and payment processing surcharges instantly.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── Main Interactive Calculator Component ───────── -->
+  <Calculator />
+
+  <!-- ─── Educational Context & Calculation Methodology ─ -->
+  <section
+    id="calc-methodology"
+    style="
+    padding: 40px 24px 80px;
+    background: transparent;
+  "
+  >
+    <div
+      style="
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-xl);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-card);
+    "
+    >
+      <h2
+        style="
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-ink);
+        letter-spacing: -0.5px;
+        margin: 0 0 16px;
+      "
+      >
+        How We Calculate Platform Take-Home Profit
+      </h2>
+      <p
+        style="
+        font-size: 15px;
+        color: var(--text-body);
+        line-height: 1.7;
+        margin: 0 0 24px;
+      "
+      >
+        Every digital product sales platform utilizes one of three monetization models: transactional platform cut, direct payment gateway pass-through, or fixed monthly software subscriptions. Our engine calculates net take-home by combining all three layers:
+      </p>
+
+      <div
+        style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+      "
+      >
+        <div
+          style="
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-hairline);
+          border-radius: 12px;
+          padding: 20px;
+        "
+        >
+          <h3 style="font-size: 16px; font-weight: 600; color: var(--color-primary); margin: 0 0 8px;">
+            1. Platform Cut & Listing Fees
+          </h3>
+          <p style="font-size: 14px; color: var(--text-body); line-height: 1.6; margin: 0;">
+            Includes percentage revenue cuts (e.g. Gumroad 10%, Fiverr 20%, Amazon KDP 30%, Whop 3%) plus any fixed listing charges ($0.20 per item on Etsy).
+          </p>
+        </div>
+
+        <div
+          style="
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-hairline);
+          border-radius: 12px;
+          padding: 20px;
+        "
+        >
+          <h3 style="font-size: 16px; font-weight: 600; color: var(--color-profit); margin: 0 0 8px;">
+            2. Payment Gateway Processing
+          </h3>
+          <p style="font-size: 14px; color: var(--text-body); line-height: 1.6; margin: 0;">
+            Standard Stripe card processing is calculated at 2.9% + $0.30. Toggling PayPal applies PayPal's standard 3.49% + $0.49 rate. International cards add a 1.5% cross-border surcharge.
+          </p>
+        </div>
+
+        <div
+          style="
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-hairline);
+          border-radius: 12px;
+          padding: 20px;
+        "
+        >
+          <h3 style="font-size: 16px; font-weight: 600; color: #60A5FA; margin: 0 0 8px;">
+            3. Amortized Monthly Subscriptions
+          </h3>
+          <p style="font-size: 14px; color: var(--text-body); line-height: 1.6; margin: 0;">
+            For subscription storefronts (Sellfy $29/mo, Podia $39/mo, Stan Store $29/mo, Teachable $39–$119/mo, Payhip Plus/Pro), fixed monthly software costs are amortized per unit sold across your monthly volume.
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <a
+          href="/platforms"
+          style="
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--color-primary);
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+        "
+        >
+          Explore All 14 Platform Profiles →
+        </a>
+        <a
+          href="/guide"
+          style="
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--text-ink);
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+        "
+        >
+          Read the Creator Fee & Tax Guide →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Modal Backdrop System -->
+  <PlatformModal />
+
+  <Footer />
+</Layout>
