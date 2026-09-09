@@ -62,6 +62,7 @@ const schemaJson = {
 
   <!-- ─── FAQ Header ─────────────────────────────────── -->
   <section
+    class="faq-header-section"
     style="
     position: relative;
     padding: 70px 24px 30px;
@@ -109,6 +110,7 @@ const schemaJson = {
 
   <!-- ─── FAQ Accordion List ──────────────────────────── -->
   <section
+    class="faq-list-section"
     style="
     padding: 20px 24px 60px;
     max-width: 860px;
@@ -164,6 +166,7 @@ const schemaJson = {
 
   <!-- ─── Calculation Methodology Section ────────────── -->
   <section
+    class="faq-methodology-section"
     style="
     padding: 20px 24px 80px;
     max-width: 860px;
@@ -359,5 +362,23 @@ const schemaJson = {
   }
   :global(html.light) .cat-title-creator {
     color: #0891b2 !important;
+  }
+
+  @media (max-width: 768px) {
+    .faq-header-section {
+      padding: 50px 16px 20px !important;
+    }
+    .faq-list-section {
+      padding: 16px 16px 40px !important;
+    }
+    .faq-list-section details {
+      padding: 16px 18px !important;
+    }
+    .faq-methodology-section {
+      padding: 16px 16px 60px !important;
+    }
+    .faq-methodology-section > div {
+      padding: 24px 16px !important;
+    }
   }
 </style>

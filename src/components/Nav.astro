@@ -1,5 +1,5 @@
 ---
-// Nav.astro: Vercel-inspired sticky top nav with multi-page route awareness
+// Nav.astro: Vercel-inspired sticky top nav with multi-page route awareness & mobile menu
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 const navItems = [
@@ -24,18 +24,7 @@ const navItems = [
   border-bottom: 1px solid var(--border-hairline);
 "
 >
-  <div
-    style="
-    max-width: 1200px;
-    margin: 0 auto;
-    height: 100%;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  "
-  >
+  <div class="nav-container">
     <!-- Logo / Brand -->
     <a
       href="/"
@@ -56,6 +45,7 @@ const navItems = [
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
+        style="flex-shrink: 0;"
       >
         <rect
           x="2"
@@ -86,7 +76,7 @@ const navItems = [
       <span class="nav-logo-text">Platform Fee Matrix</span>
     </a>
 
-    <!-- Centre nav links -->
+    <!-- Centre nav links (Desktop) -->
     <nav
       aria-label="Primary navigation"
       style="
@@ -115,8 +105,8 @@ const navItems = [
       }
     </nav>
 
-    <!-- Right: theme toggle + CTA -->
-    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+    <!-- Right: theme toggle + CTA + Mobile Hamburger -->
+    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
       <!-- Theme toggle button -->
       <button
         id="theme-toggle"
@@ -167,9 +157,10 @@ const navItems = [
         </svg>
       </button>
 
-      <!-- Try Calculator CTA -->
+      <!-- Try Calculator CTA (Desktop/Tablet) -->
       <a
         href="/calculator"
+        class="nav-cta-desktop"
         style="
           display: inline-flex;
           align-items: center;
@@ -191,7 +182,60 @@ const navItems = [
       >
         Try Calculator
       </a>
+
+      <!-- Mobile Hamburger Menu Button -->
+      <button
+        id="mobile-menu-toggle"
+        class="mobile-menu-btn"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu-drawer"
+      >
+        <svg id="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg id="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>
+  </div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
+    <nav class="mobile-nav-links" aria-label="Mobile primary navigation">
+      {
+        navItems.map((item) => {
+          const isActive =
+            item.href === "/"
+              ? currentPath === "/"
+              : currentPath === item.href || currentPath.startsWith(item.href + "/");
+          return (
+            <a
+              href={item.href}
+              class={`mobile-nav-link ${isActive ? "active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <span>{item.label}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          );
+        })
+      }
+      <div style="padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border-hairline);">
+        <a
+          href="/calculator"
+          class="mobile-drawer-cta"
+        >
+          Open Calculator →
+        </a>
+      </div>
+    </nav>
   </div>
 </header>
 
@@ -221,9 +265,73 @@ const navItems = [
     syncIcons();
     window.dispatchEvent(new CustomEvent("themechanged"));
   });
+
+  // Mobile menu toggle handling
+  const menuToggle = document.getElementById("mobile-menu-toggle");
+  const menuDrawer = document.getElementById("mobile-menu-drawer");
+  const hamburgerIcon = document.getElementById("hamburger-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  function toggleMobileMenu(forceClose?: boolean) {
+    if (!menuDrawer || !menuToggle) return;
+    const isCurrentlyOpen = menuDrawer.classList.contains("drawer-open");
+    const willOpen = forceClose ? false : !isCurrentlyOpen;
+
+    if (willOpen) {
+      menuDrawer.classList.add("drawer-open");
+      menuDrawer.setAttribute("aria-hidden", "false");
+      menuToggle.setAttribute("aria-expanded", "true");
+      menuToggle.setAttribute("aria-label", "Close navigation menu");
+      if (hamburgerIcon) hamburgerIcon.style.display = "none";
+      if (closeIcon) closeIcon.style.display = "block";
+    } else {
+      menuDrawer.classList.remove("drawer-open");
+      menuDrawer.setAttribute("aria-hidden", "true");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open navigation menu");
+      if (hamburgerIcon) hamburgerIcon.style.display = "block";
+      if (closeIcon) closeIcon.style.display = "none";
+    }
+  }
+
+  menuToggle?.addEventListener("click", () => toggleMobileMenu());
+
+  // Close drawer on link clicks
+  const mobileLinks = document.querySelectorAll(".mobile-nav-link, .mobile-drawer-cta");
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => toggleMobileMenu(true));
+  });
+
+  // Close drawer when pressing Escape
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menuDrawer?.classList.contains("drawer-open")) {
+      toggleMobileMenu(true);
+    }
+  });
+
+  // Close drawer when clicking outside the header
+  document.addEventListener("click", (e) => {
+    const header = document.getElementById("nav");
+    if (header && !header.contains(e.target as Node) && menuDrawer?.classList.contains("drawer-open")) {
+      toggleMobileMenu(true);
+    }
+  });
 </script>
 
 <style>
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .nav-logo-text {
     font-size: 15px;
     font-weight: 600;
@@ -232,6 +340,7 @@ const navItems = [
     background: linear-gradient(135deg, #F9FAFB, #D1D5DB);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
   }
 
   :global(html.light) .nav-logo-text {
@@ -249,6 +358,7 @@ const navItems = [
     border-radius: 100px;
     transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
     border: 1px solid transparent;
+    white-space: nowrap;
   }
 
   .nav-link:hover {
@@ -288,6 +398,7 @@ const navItems = [
     align-items: center;
     justify-content: center;
     transition: all 0.15s ease;
+    flex-shrink: 0;
   }
 
   #theme-toggle:hover {
@@ -302,9 +413,139 @@ const navItems = [
     color: #b45309;
   }
 
-  @media (max-width: 600px) {
+  /* Mobile menu button */
+  .mobile-menu-btn {
+    display: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border-hairline);
+    background: var(--bg-card);
+    color: var(--text-ink);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-btn:hover {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: var(--color-primary);
+  }
+
+  /* Mobile navigation drawer */
+  .mobile-drawer {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(11, 15, 23, 0.96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border-hairline);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    padding: 16px 20px 24px;
+    display: none;
+    flex-direction: column;
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    z-index: 49;
+  }
+
+  :global(html.light) .mobile-drawer {
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobile-drawer.drawer-open {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-ink);
+    text-decoration: none;
+    border-radius: 10px;
+    background: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link:active {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--color-primary);
+  }
+
+  .mobile-nav-link.active {
+    background: rgba(245, 158, 11, 0.16);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  :global(html.light) .mobile-nav-link.active {
+    background: rgba(245, 158, 11, 0.2);
+    color: #92400e;
+  }
+
+  .mobile-drawer-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #0B0F17;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    letter-spacing: -0.2px;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 860px) {
     .nav-links-desktop {
       display: none !important;
+    }
+    .mobile-menu-btn {
+      display: flex !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .nav-container {
+      padding: 0 16px !important;
+      gap: 10px !important;
+    }
+    .nav-cta-desktop {
+      display: none !important;
+    }
+    .nav-logo-text {
+      font-size: 14.5px !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .nav-logo-text {
+      font-size: 13.5px !important;
     }
   }
 </style>

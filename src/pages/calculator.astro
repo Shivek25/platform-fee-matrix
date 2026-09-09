@@ -38,6 +38,7 @@ const schemaJson = {
 
   <!-- ─── Calculator Page Header ─────────────────────── -->
   <section
+    class="calc-page-header"
     style="
     position: relative;
     overflow: hidden;
@@ -91,6 +92,7 @@ const schemaJson = {
   <!-- ─── Educational Context & Calculation Methodology ─ -->
   <section
     id="calc-methodology"
+    class="calc-methodology-section"
     style="
     padding: 40px 24px 80px;
     background: transparent;
@@ -219,8 +221,21 @@ const schemaJson = {
     </div>
   </section>
 
-  <!-- Platform Modal Backdrop System -->
   <PlatformModal />
 
   <Footer />
 </Layout>
+
+<style>
+  @media (max-width: 768px) {
+    .calc-page-header {
+      padding: 50px 16px 20px !important;
+    }
+    .calc-methodology-section {
+      padding: 20px 16px 60px !important;
+    }
+    .calc-methodology-section > div {
+      padding: 24px 18px !important;
+    }
+  }
+</style>

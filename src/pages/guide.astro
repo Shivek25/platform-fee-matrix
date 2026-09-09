@@ -33,6 +33,7 @@ const schemaJson = {
 
   <!-- ─── Guide Header ───────────────────────────────── -->
   <section
+    class="guide-header-section"
     style="
     position: relative;
     padding: 70px 24px 30px;
@@ -80,6 +81,7 @@ const schemaJson = {
 
   <!-- ─── Editorial Guide Body ────────────────────────── -->
   <section
+    class="guide-body-section"
     style="
     padding: 20px 24px 80px;
     max-width: 860px;
@@ -191,6 +193,7 @@ const schemaJson = {
 
       <!-- CTA Box -->
       <div
+        class="guide-cta-card"
         style="
         background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.05));
         border: 1px solid rgba(245, 158, 11, 0.3);
@@ -232,3 +235,27 @@ const schemaJson = {
   <PlatformModal />
   <Footer />
 </Layout>
+
+<style>
+  .guide-article p,
+  .guide-article li {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .guide-cta-card p {
+    text-align: center !important;
+  }
+
+  @media (max-width: 768px) {
+    .guide-header-section {
+      padding: 50px 16px 20px !important;
+    }
+    .guide-body-section {
+      padding: 16px 16px 60px !important;
+    }
+    .guide-body-section > div {
+      padding: 20px 16px !important;
+    }
+  }
+</style>
