@@ -29,6 +29,7 @@ const schemaJson = {
 
   <!-- ─── Hero Section ─────────────────────────────── -->
   <section
+    class="hero-section"
     style="
     position: relative;
     overflow: hidden;
@@ -331,6 +332,7 @@ const schemaJson = {
 
   <!-- ─── Stats Row ─────────────────────────────────── -->
   <section
+    class="stats-section"
     style="
     background: transparent;
     padding: 0 24px;
@@ -395,10 +397,13 @@ const schemaJson = {
   <GuideSection />
 
   <!-- ─── Bottom CTA Band (Dark Glassmorphic Hero Card) ─ -->
-  <section style="
+  <section
+    class="bottom-cta-section"
+    style="
     padding: 24px 24px 80px;
     background: transparent;
-  ">
+  "
+  >
     <div
       class="hero-cta-glow bottom-cta-card"
     >
@@ -598,34 +603,50 @@ const schemaJson = {
   }
 
   @media (max-width: 768px) {
+    .hero-section {
+      padding: 64px 16px 44px !important;
+    }
+    .hero-eyebrow {
+      font-size: 12px !important;
+      padding: 5px 12px 5px 8px !important;
+      gap: 8px !important;
+    }
     .hero-pills-desktop {
       display: none !important;
     }
     .hero-pills-mobile {
       display: flex !important;
-      gap: 12px !important;
-      margin-top: 36px !important;
+      gap: 10px !important;
+      margin-top: 32px !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     .hero-pills-mobile .hero-pills-row {
-      gap: 7px !important;
-      flex-wrap: nowrap !important;
+      gap: 8px 6px !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     .hero-pills-mobile .hero-platform-pill {
       font-size: 13px !important;
-      padding: 8px 14px !important;
-      gap: 7px !important;
+      padding: 7px 12px !important;
+      gap: 6px !important;
       white-space: nowrap !important;
     }
   }
 
   @media (max-width: 440px) {
+    .hero-section {
+      padding: 52px 14px 36px !important;
+    }
     .hero-pills-mobile .hero-platform-pill {
       font-size: 12px !important;
-      padding: 7px 11px !important;
-      gap: 6px !important;
+      padding: 6px 10px !important;
+      gap: 5px !important;
     }
     .hero-pills-mobile .hero-pills-row {
-      gap: 5px !important;
+      gap: 6px 4px !important;
     }
   }
 
@@ -705,6 +726,9 @@ const schemaJson = {
   }
 
   @media (max-width: 768px) {
+    .stats-section {
+      padding: 0 16px !important;
+    }
     .stats-grid {
       grid-template-columns: repeat(2, 1fr) !important;
     }
@@ -713,6 +737,13 @@ const schemaJson = {
     }
     .stat-item {
       border-bottom: 1px solid var(--border-hairline);
+      padding: 20px 14px !important;
+    }
+    .bottom-cta-section {
+      padding: 20px 16px 60px !important;
+    }
+    .bottom-cta-card {
+      padding: 40px 20px !important;
     }
   }
   @media (max-width: 480px) {
@@ -721,6 +752,10 @@ const schemaJson = {
     }
     .stat-item {
       border-right: none !important;
+      padding: 16px 12px !important;
+    }
+    .stat-item:last-child {
+      border-bottom: none !important;
     }
   }
 </style>

@@ -5,6 +5,7 @@
 
 <section
   id="calculator"
+  class="calc-section"
   style="padding: 80px 24px; background: var(--bg-page);"
 >
   <div style="max-width: 1200px; margin: 0 auto;">
@@ -2952,50 +2953,93 @@
     box-shadow: 0 12px 36px -4px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.1);
   }
 
-  @media (max-width: 900px) {
-    .preset-grid {
+  @media (max-width: 960px) {
+    .platforms-grid {
       grid-template-columns: repeat(2, 1fr) !important;
     }
   }
 
   @media (max-width: 768px) {
+    .calc-section {
+      padding: 40px 16px 60px !important;
+    }
     .sticky-controls-card {
       position: relative;
       top: 0;
       z-index: 1;
+      padding: 20px 16px !important;
+      margin-bottom: 24px !important;
+      border-radius: var(--radius-lg) !important;
     }
-  }
-
-  @media (max-width: 960px) {
-    .platforms-grid {
+    .controls-grid {
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+      margin-bottom: 24px !important;
+    }
+    .preset-grid {
       grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .preset-btn {
+      padding: 8px 10px !important;
     }
     .matrix-toolbar {
       flex-direction: column !important;
       align-items: center !important;
       text-align: center !important;
-      gap: 16px !important;
-      padding: 16px !important;
+      gap: 14px !important;
+      padding: 14px 12px !important;
     }
     .matrix-filter-tabs {
       justify-content: center !important;
       width: 100% !important;
+      gap: 6px !important;
+    }
+    .filter-tab {
+      font-size: 12px !important;
+      padding: 6px 12px !important;
     }
     .matrix-sort-group {
       justify-content: center !important;
       width: 100% !important;
     }
+    .toggles-row {
+      flex-direction: column !important;
+      gap: 14px !important;
+      align-items: flex-start !important;
+    }
   }
+
   @media (max-width: 640px) {
     .platforms-grid {
       grid-template-columns: 1fr !important;
+      gap: 14px !important;
     }
-    .controls-grid {
-      grid-template-columns: 1fr !important;
+    .platform-card {
+      padding: 18px 16px !important;
     }
-    .toggles-row {
-      flex-direction: column !important;
-      gap: 16px !important;
+  }
+
+  @media (max-width: 520px) {
+    .currency-selector-box {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      border-radius: 16px !important;
+      max-width: 100% !important;
+    }
+    .curr-btn {
+      font-size: 11.5px !important;
+      padding: 4px 10px !important;
+    }
+    .preset-btn {
+      padding: 7px 6px !important;
+    }
+    .preset-title {
+      font-size: 12px !important;
+    }
+    .preset-meta {
+      font-size: 10px !important;
     }
   }
 </style>

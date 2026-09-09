@@ -4,6 +4,7 @@
 
 <section
   id="guide"
+  class="guide-section"
   style="
   padding: 80px 24px 32px;
   background: transparent;
@@ -262,3 +263,20 @@
     </div>
   </div>
 </section>
+
+<style>
+  .guide-content p,
+  .guide-content li {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  @media (max-width: 768px) {
+    .guide-section {
+      padding: 48px 16px 24px !important;
+    }
+    .guide-section .card-base {
+      padding: 16px !important;
+    }
+  }
+</style>

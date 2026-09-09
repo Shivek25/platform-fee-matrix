@@ -406,6 +406,7 @@ const schemaJson = {
 
   <!-- ─── Platforms Grid ─────────────────────────────── -->
   <section
+    class="platforms-directory-section"
     style="
     padding: 20px 24px 80px;
     max-width: 1200px;
@@ -415,8 +416,8 @@ const schemaJson = {
     <div
       style="
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 20px;
     "
     >
       {
@@ -528,3 +529,14 @@ const schemaJson = {
   <PlatformModal />
   <Footer />
 </Layout>
+
+<style>
+  @media (max-width: 768px) {
+    .platforms-directory-section {
+      padding: 16px 16px 60px !important;
+    }
+    .platforms-directory-section article {
+      padding: 20px 16px !important;
+    }
+  }
+</style>

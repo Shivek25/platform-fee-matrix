@@ -10,7 +10,7 @@ import Footer from "../components/Footer.astro";
 >
   <Nav />
 
-  <section style="position: relative; padding: 70px 24px 80px; max-width: 800px; margin: 0 auto;">
+  <section class="privacy-section" style="position: relative; padding: 70px 24px 80px; max-width: 800px; margin: 0 auto;">
     <h1 style="font-size: clamp(28px, 4.5vw, 38px); font-weight: 700; color: var(--text-ink); margin-bottom: 24px; letter-spacing: -0.8px;">
       Privacy Policy
     </h1>
@@ -49,3 +49,14 @@ import Footer from "../components/Footer.astro";
 
   <Footer />
 </Layout>
+
+<style>
+  @media (max-width: 768px) {
+    .privacy-section {
+      padding: 50px 16px 60px !important;
+    }
+    .privacy-section .card-base {
+      padding: 24px 18px !important;
+    }
+  }
+</style>

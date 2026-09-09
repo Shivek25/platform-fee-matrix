@@ -66,6 +66,8 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
       dockEl.classList.remove('dock-visible');
       return;
     }
+    const calcEl = calcSection;
+    const platformsEl = platformsGrid;
 
     const methodologySection = document.getElementById('calc-methodology');
     const guideSection = document.getElementById('guide');
@@ -100,10 +102,10 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
     // Toggle Dock visibility: show strictly within platform cards area, hide above calculator & before methodology/guide
     let ticking = false;
     function checkScroll() {
-      if (!dockEl) return;
+      if (!dockEl || !calcEl || !platformsEl) return;
 
-      const calcRect = calcSection.getBoundingClientRect();
-      const platformsRect = platformsGrid.getBoundingClientRect();
+      const calcRect = calcEl.getBoundingClientRect();
+      const platformsRect = platformsEl.getBoundingClientRect();
 
       // Top threshold: User has scrolled into the calculator section
       const isPastCalcTop = calcRect.top <= 250;
@@ -153,8 +155,8 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
 
       // Constrain Top Edge: Keep dock strictly within calculator section
       let minAllowedTop = 16;
-      if (calcSection) {
-        const calcRect = calcSection.getBoundingClientRect();
+      if (calcEl) {
+        const calcRect = calcEl.getBoundingClientRect();
         if (calcRect.top > 0) {
           minAllowedTop = Math.max(16, calcRect.top + 16);
         }
@@ -567,25 +569,41 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
   @media (max-width: 640px) {
     .floating-dock-container {
       bottom: 16px !important;
-      max-width: calc(100vw - 20px) !important;
+      max-width: calc(100vw - 24px) !important;
     }
     .dock-glass-content {
-      padding: 8px 14px !important;
-      gap: 10px !important;
+      padding: 8px 12px !important;
+      gap: 8px !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
     }
     .dock-badge-wrapper {
-      padding-right: 10px !important;
+      padding-right: 8px !important;
       font-size: 11.5px !important;
+      gap: 6px !important;
     }
     .dock-winner-text {
+      font-size: 11px !important;
+      max-width: 155px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      display: inline-block !important;
+    }
+    .dock-chip-btn {
+      padding: 4px 10px !important;
       font-size: 11.5px !important;
-      max-width: 190px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: inline-block;
     }
     .dock-link-hide-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .dock-winner-text {
+      max-width: 115px !important;
+    }
+    .dock-sub-val {
       display: none !important;
     }
   }
