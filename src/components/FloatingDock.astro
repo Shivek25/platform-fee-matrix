@@ -281,9 +281,12 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
     // Listen for custom winner-updated event from Calculator component
     window.addEventListener('matrix-winner-updated', ((e: CustomEvent) => {
       if (winnerText && e.detail && dockEl) {
-        const { name, netFormatted, netCompact, activeFilter } = e.detail;
+        const { name, netFormatted, netCompact, activeFilter, isReverse, reqPriceFormatted, grossFormatted } = e.detail;
         const compactClean = netCompact ? netCompact.replace(/[\(\)]/g, '').replace(/^≈\s*/, '') : '';
-        const filterBadgeText = FILTER_LABELS[activeFilter || 'all'] || 'Best';
+        const filterBadgeText = isReverse
+          ? (activeFilter === "mor" ? "Lowest Price (MoR)" : activeFilter === "direct" ? "Lowest Price (Gateway)" : activeFilter === "monthly" ? "Lowest Price (Monthly)" : "Lowest Price to Charge")
+          : (FILTER_LABELS[activeFilter || 'all'] || 'Best');
+        const icon = isReverse ? "🎯" : "⚡";
 
         // Trigger Dock Scale Pulse Animation on inner capsule
         const glassContent = dockEl.querySelector('.dock-glass-content') as HTMLElement;
@@ -298,7 +301,11 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
           textWrap.style.opacity = '0';
           textWrap.style.transform = 'translateY(-4px)';
           setTimeout(() => {
-            winnerText.innerHTML = `<span class="dock-label">⚡ ${filterBadgeText}:</span> <strong class="dock-winner-name">${name}</strong> <span class="dock-net-val">${compactClean ? compactClean + ' net' : netFormatted}</span> <span class="dock-sub-val">(${netFormatted})</span>`;
+            if (isReverse) {
+              winnerText.innerHTML = `<span class="dock-label">${icon} ${filterBadgeText}:</span> <strong class="dock-winner-name">${name}</strong> <span class="dock-net-val">Charge ${reqPriceFormatted}</span> <span class="dock-sub-val">(Gross ${grossFormatted})</span>`;
+            } else {
+              winnerText.innerHTML = `<span class="dock-label">${icon} ${filterBadgeText}:</span> <strong class="dock-winner-name">${name}</strong> <span class="dock-net-val">${compactClean ? compactClean + ' net' : netFormatted}</span> <span class="dock-sub-val">(${netFormatted})</span>`;
+            }
             textWrap.style.opacity = '1';
             textWrap.style.transform = 'translateY(0)';
           }, 150);

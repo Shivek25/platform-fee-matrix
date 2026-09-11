@@ -1,0 +1,417 @@
+---
+// src/pages/embed.astro: Standalone iframe-embeddable calculator widget
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
+    <title>Platform Fee Matrix Calculator Widget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style is:inline>
+      :root {
+        --bg-page: #0B0F17;
+        --bg-card: #111827;
+        --bg-card-soft: rgba(255, 255, 255, 0.03);
+        --bg-input: #1F2937;
+        --border-hairline: rgba(255, 255, 255, 0.08);
+        --border-hairline-strong: rgba(255, 255, 255, 0.16);
+        --text-ink: #F9FAFB;
+        --text-body: #9CA3AF;
+        --text-mute: #6B7280;
+        --color-primary: #F59E0B;
+        --color-profit: #10B981;
+        --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        --font-mono: 'Geist Mono', monospace;
+      }
+
+      html.light {
+        --bg-page: #F8FAFC;
+        --bg-card: #FFFFFF;
+        --bg-card-soft: rgba(0, 0, 0, 0.02);
+        --bg-input: #F1F5F9;
+        --border-hairline: rgba(0, 0, 0, 0.08);
+        --border-hairline-strong: rgba(0, 0, 0, 0.14);
+        --text-ink: #0F172A;
+        --text-body: #475569;
+        --text-mute: #64748B;
+        --color-primary: #D97706;
+        --color-profit: #059669;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg-page);
+        color: var(--text-body);
+        padding: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .widget-container {
+        max-width: 540px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        border: 1px solid var(--border-hairline-strong);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .widget-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-hairline);
+      }
+
+      .widget-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: var(--text-ink);
+      }
+
+      .widget-title {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+      }
+
+      .widget-badge {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--color-primary);
+        background: rgba(245, 158, 11, 0.1);
+        padding: 2px 8px;
+        border-radius: 100px;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+      }
+
+      .controls-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 16px;
+        background: var(--bg-card-soft);
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border-hairline);
+      }
+
+      .control-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-ink);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+      }
+
+      .control-input {
+        width: 100%;
+        height: 32px;
+        padding: 0 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text-ink);
+        background: var(--bg-input);
+        border: 1px solid var(--border-hairline);
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        outline: none;
+      }
+
+      .control-slider {
+        width: 100%;
+        margin-top: 6px;
+        accent-color: var(--color-primary);
+        cursor: pointer;
+      }
+
+      .leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .platform-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: var(--bg-card-soft);
+        border: 1px solid var(--border-hairline);
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+
+      .platform-row.winner {
+        border-color: var(--color-profit);
+        background: rgba(16, 185, 129, 0.08);
+      }
+
+      .platform-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .platform-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+      }
+
+      .platform-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-ink);
+      }
+
+      .platform-tag {
+        font-size: 10px;
+        font-family: var(--font-mono);
+        color: var(--text-mute);
+      }
+
+      .platform-right {
+        text-align: right;
+      }
+
+      .platform-net {
+        font-size: 14px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        color: var(--color-profit);
+      }
+
+      .platform-fees {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--text-mute);
+      }
+
+      .winner-tag {
+        background: var(--color-profit);
+        color: #0B0F17;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 4px;
+        margin-left: 6px;
+        text-transform: uppercase;
+      }
+
+      .widget-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-hairline);
+        font-size: 11.5px;
+      }
+
+      .footer-brand-link {
+        color: var(--text-mute);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 500;
+      }
+
+      .footer-brand-link strong {
+        color: var(--color-primary);
+      }
+
+      .footer-calc-link {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      @media (max-width: 440px) {
+        .controls-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="widget-container">
+      <!-- Header -->
+      <div class="widget-header">
+        <a href="https://platformfeematrix.com" target="_blank" rel="noopener" class="widget-brand">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="14" width="4" height="8" rx="1" fill="#F59E0B" opacity="0.5"></rect>
+            <rect x="8" y="9" width="4" height="13" rx="1" fill="#F59E0B" opacity="0.75"></rect>
+            <rect x="14" y="4" width="4" height="18" rx="1" fill="#10B981" opacity="0.9"></rect>
+            <rect x="20" y="1" width="2" height="21" rx="1" fill="#F59E0B"></rect>
+          </svg>
+          <span class="widget-title">Platform Fee Matrix</span>
+        </a>
+        <span class="widget-badge" id="gross-badge">Gross: $1,250</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-grid">
+        <div>
+          <div class="control-label">
+            <span>Product Price</span>
+            <span id="price-val" style="font-family: var(--font-mono);">$25.00</span>
+          </div>
+          <input type="range" id="price-slider" min="1" max="1000" value="25" class="control-slider" />
+        </div>
+        <div>
+          <div class="control-label">
+            <span>Monthly Sales</span>
+            <span id="volume-val" style="font-family: var(--font-mono);">50 units</span>
+          </div>
+          <input type="range" id="volume-slider" min="1" max="1000" value="50" class="control-slider" />
+        </div>
+      </div>
+
+      <!-- Live Mini Matrix Leaderboard -->
+      <div class="leaderboard-list" id="platform-list">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Footer / Referral Attribution -->
+      <div class="widget-footer">
+        <a href="https://platformfeematrix.com" target="_blank" rel="noopener" class="footer-brand-link">
+          <span>Powered by</span>
+          <strong>PlatformFeeMatrix.com</strong>
+        </a>
+        <a href="https://platformfeematrix.com/calculator" target="_blank" rel="noopener" class="footer-calc-link">
+          Full 14 Platforms Matrix →
+        </a>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialPrice = parseFloat(urlParams.get("price")) || 25;
+        const initialVolume = parseInt(urlParams.get("volume")) || 50;
+        const theme = urlParams.get("theme");
+
+        if (theme === "light") {
+          document.documentElement.classList.add("light");
+        } else if (theme === "dark") {
+          document.documentElement.classList.remove("light");
+        }
+
+        const priceSlider = document.getElementById("price-slider");
+        const volumeSlider = document.getElementById("volume-slider");
+        const priceVal = document.getElementById("price-val");
+        const volumeVal = document.getElementById("volume-val");
+        const grossBadge = document.getElementById("gross-badge");
+        const platformList = document.getElementById("platform-list");
+
+        if (priceSlider) priceSlider.value = initialPrice;
+        if (volumeSlider) volumeSlider.value = initialVolume;
+
+        const platforms = [
+          { id: "stripe", name: "Stripe Direct", icon: "/icons/stripe.svg", type: "Gateway", calc: (p, v) => {
+            const fee = (p * 0.029 + 0.30) * v;
+            return { fee, net: (p * v) - fee };
+          }},
+          { id: "lemonsqueezy", name: "Lemon Squeezy", icon: "/icons/lemonsqueezy.svg", type: "MoR (Auto-Tax)", calc: (p, v) => {
+            const fee = (p * 0.05 + 0.50) * v;
+            return { fee, net: (p * v) - fee };
+          }},
+          { id: "paddle", name: "Paddle", icon: "/icons/paddle.svg", type: "MoR (Auto-Tax)", calc: (p, v) => {
+            const fee = (p * 0.05 + 0.50) * v;
+            return { fee, net: (p * v) - fee };
+          }},
+          { id: "payhip", name: "Payhip", icon: "/icons/payhip.svg", type: "Storefront", calc: (p, v) => {
+            const gross = p * v;
+            const freeCut = (p * 0.05 + p * 0.029 + 0.30) * v;
+            const plusCut = 29 + (p * 0.02 + p * 0.029 + 0.30) * v;
+            const proCut = 99 + (p * 0.029 + 0.30) * v;
+            const fee = Math.min(freeCut, plusCut, proCut);
+            return { fee, net: gross - fee };
+          }},
+          { id: "gumroad", name: "Gumroad", icon: "/icons/gumroad.svg", type: "Direct Store", calc: (p, v) => {
+            const fee = (p * 0.10 + 0.50 + p * 0.029 + 0.30) * v;
+            return { fee, net: (p * v) - fee };
+          }},
+          { id: "whop", name: "Whop", icon: "/icons/whop.svg", type: "Storefront", calc: (p, v) => {
+            const fee = (p * 0.03 + p * 0.029 + 0.30) * v;
+            return { fee, net: (p * v) - fee };
+          }}
+        ];
+
+        function fmt(n) {
+          return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function render() {
+          const p = parseFloat(priceSlider.value) || 0;
+          const v = parseInt(volumeSlider.value) || 0;
+          const gross = p * v;
+
+          priceVal.textContent = fmt(p);
+          volumeVal.textContent = v + " units";
+          grossBadge.textContent = "Gross: " + fmt(gross);
+
+          const results = platforms.map(plat => {
+            const res = plat.calc(p, v);
+            return {
+              ...plat,
+              fee: res.fee,
+              net: res.net,
+              rate: gross > 0 ? (res.fee / gross) * 100 : 0
+            };
+          }).sort((a, b) => b.net - a.net);
+
+          const topNet = results[0].net;
+
+          platformList.innerHTML = results.map((item, idx) => {
+            const isWinner = idx === 0;
+            return `
+              <div class="platform-row ${isWinner ? 'winner' : ''}">
+                <div class="platform-left">
+                  <img src="${item.icon}" alt="${item.name}" class="platform-icon" />
+                  <div>
+                    <div style="display: flex; align-items: center;">
+                      <span class="platform-name">${item.name}</span>
+                      ${isWinner ? '<span class="winner-tag">Winner</span>' : ''}
+                    </div>
+                    <span class="platform-tag">${item.type}</span>
+                  </div>
+                </div>
+                <div class="platform-right">
+                  <div class="platform-net">${fmt(item.net)}</div>
+                  <div class="platform-fees">Fee: -${fmt(item.fee)} (${item.rate.toFixed(1)}%)</div>
+                </div>
+              </div>
+            `;
+          }).join("");
+        }
+
+        priceSlider.addEventListener("input", render);
+        volumeSlider.addEventListener("input", render);
+        render();
+      })();
+    </script>
+  </body>
+</html>

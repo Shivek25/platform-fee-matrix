@@ -1,0 +1,418 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import { COMPARISONS_DATA } from "../../data/comparisons";
+import { PLATFORMS_DATA } from "../../data/platforms";
+
+const comparisons = Object.values(COMPARISONS_DATA).map((c) => {
+  const p1 = PLATFORMS_DATA[c.p1Id];
+  const p2 = PLATFORMS_DATA[c.p2Id];
+  return {
+    ...c,
+    p1Name: p1?.name || c.p1Id,
+    p2Name: p2?.name || c.p2Id,
+    p1Icon: p1?.icon || "/icons/stripe.svg",
+    p2Icon: p2?.icon || "/icons/stripe.svg",
+    p1Category: p1?.categoryName || "Platform",
+    p2Category: p2?.categoryName || "Platform",
+  };
+});
+
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Platform Fee Comparisons & Head-to-Head Matchups",
+  "url": "https://platformfeematrix.com/compare",
+  "description": "Compare fees, tax compliance, and take-home profit margins side-by-side across top creator storefronts, payment gateways, and freelance marketplaces.",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": comparisons.map((c, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": c.title,
+      "url": `https://platformfeematrix.com/compare/${c.slug}`
+    }))
+  }
+};
+---
+
+<Layout
+  title="Platform Fee Comparisons: Side-by-Side Profit & Tax Matchups"
+  description="Compare creator fees, merchant of record taxes, and take-home earnings across Gumroad, Lemon Squeezy, Stripe, Paddle, Fiverr, Upwork, and more."
+  schemaJson={schemaJson}
+>
+  <Nav />
+
+  <main style="min-height: 80vh;">
+    <!-- ─── Hero Section ─────────────────────────────── -->
+    <section
+      class="compare-hero-section"
+      style="
+        padding: 56px 24px 32px;
+        text-align: center;
+        max-width: 960px;
+        margin: 0 auto;
+      "
+    >
+      <div
+        class="reveal-on-scroll stagger-1"
+        style="
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(245, 158, 11, 0.08);
+          border: 1px solid rgba(245, 158, 11, 0.25);
+          padding: 6px 14px;
+          border-radius: 100px;
+          font-size: 12px;
+          color: var(--color-primary);
+          margin-bottom: 20px;
+          letter-spacing: 0.04em;
+        "
+      >
+        <span
+          style="
+            background: var(--color-primary);
+            color: #0B0F17;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 100px;
+            font-size: 11px;
+            margin-right: 4px;
+            flex-shrink: 0;
+          "
+        >
+          HEAD-TO-HEAD
+        </span>
+        <span>12 In-Depth Fee & Profit Comparisons</span>
+      </div>
+
+      <h1
+        class="reveal-on-scroll stagger-2 hero-headline"
+        style="font-size: clamp(28px, 4.5vw, 44px); margin-bottom: 16px; line-height: 1.15;"
+      >
+        Platform Fee Comparisons
+      </h1>
+
+      <p
+        class="reveal-on-scroll stagger-3"
+        style="
+          font-size: 17px;
+          color: var(--text-body);
+          line-height: 1.65;
+          max-width: 680px;
+          margin: 0 auto 32px;
+        "
+      >
+        Real-world side-by-side breakdowns of fee structures, global tax handling, hidden processor surcharges, and actual creator take-home pay.
+      </p>
+
+      <!-- Quick Filter Chips -->
+      <div
+        class="filter-chips-container"
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          justify-content: center;
+          margin-bottom: 16px;
+        "
+      >
+        <button class="filter-chip active" data-filter="all">All Matchups (12)</button>
+        <button class="filter-chip" data-filter="mor">Merchant of Record</button>
+        <button class="filter-chip" data-filter="storefront">Creator Storefronts</button>
+        <button class="filter-chip" data-filter="marketplace">Marketplaces</button>
+        <button class="filter-chip" data-filter="course">Courses & Memberships</button>
+      </div>
+    </section>
+
+    <!-- ─── Comparisons Grid ─────────────────────────── -->
+    <section
+      style="
+        padding: 0 24px 80px;
+        max-width: 1200px;
+        margin: 0 auto;
+      "
+    >
+      <div
+        id="matchups-grid"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+          gap: 24px;
+        "
+      >
+        {
+          comparisons.map((c) => {
+            // Tag for client-side filtering
+            let tag = "storefront";
+            if (c.slug.includes("fiverr") || c.slug.includes("upwork") || c.slug.includes("etsy")) {
+              tag = "marketplace";
+            } else if (c.slug.includes("paddle") || c.slug.includes("lemon")) {
+              tag = "mor";
+            } else if (c.slug.includes("podia") || c.slug.includes("teachable")) {
+              tag = "course";
+            }
+
+            return (
+              <article
+                class="card-base matchup-card"
+                data-category={tag}
+                style="
+                  padding: 24px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                  transition: transform 0.2s ease, border-color 0.2s ease;
+                  position: relative;
+                "
+              >
+                <div>
+                  <!-- Head-to-Head Logos Header -->
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      margin-bottom: 18px;
+                    "
+                  >
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <img
+                        src={c.p1Icon}
+                        width="34"
+                        height="34"
+                        alt={c.p1Name}
+                        style="border-radius: 8px; border: 1px solid var(--border-hairline);"
+                      />
+                      <span
+                        style="
+                          font-family: var(--font-mono);
+                          font-size: 13px;
+                          font-weight: 700;
+                          color: var(--color-primary);
+                          background: rgba(245, 158, 11, 0.1);
+                          padding: 2px 8px;
+                          border-radius: 6px;
+                        "
+                      >
+                        VS
+                      </span>
+                      <img
+                        src={c.p2Icon}
+                        width="34"
+                        height="34"
+                        alt={c.p2Name}
+                        style="border-radius: 8px; border: 1px solid var(--border-hairline);"
+                      />
+                    </div>
+
+                    <span
+                      class="badge"
+                      style="
+                        background: rgba(255, 255, 255, 0.05);
+                        color: var(--text-mute);
+                        border: 1px solid var(--border-hairline);
+                        font-size: 11px;
+                        text-transform: capitalize;
+                      "
+                    >
+                      {tag === "mor" ? "Tax & MoR" : tag === "marketplace" ? "Marketplace" : tag === "course" ? "Courses" : "Storefront"}
+                    </span>
+                  </div>
+
+                  <!-- Title & Headline -->
+                  <h2
+                    style="
+                      font-size: 18px;
+                      font-weight: 700;
+                      color: var(--text-ink);
+                      margin: 0 0 8px;
+                      line-height: 1.35;
+                    "
+                  >
+                    <a
+                      href={`/compare/${c.slug}`}
+                      style="text-decoration: none; color: inherit;"
+                    >
+                      {c.p1Name} vs {c.p2Name}
+                    </a>
+                  </h2>
+
+                  <p
+                    style="
+                      font-size: 13.5px;
+                      color: var(--text-body);
+                      line-height: 1.55;
+                      margin: 0 0 16px;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 3;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {c.verdictSummary}
+                  </p>
+
+                  <!-- Advantages Preview -->
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid var(--border-hairline);
+                      border-radius: 8px;
+                      padding: 10px 12px;
+                      margin-bottom: 18px;
+                      font-size: 12px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 6px;
+                    "
+                  >
+                    <div style="color: var(--text-ink);">
+                      <strong style="color: var(--color-profit);">{c.p1Name}:</strong> {c.p1Advantage}
+                    </div>
+                    <div style="color: var(--text-ink);">
+                      <strong style="color: var(--color-primary);">{c.p2Name}:</strong> {c.p2Advantage}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer Action -->
+                <div
+                  style="
+                    border-top: 1px solid var(--border-hairline);
+                    padding-top: 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <span style="font-size: 12px; color: var(--text-mute);">
+                    Interactive Delta Calc
+                  </span>
+                  <a
+                    href={`/compare/${c.slug}`}
+                    style="
+                      display: inline-flex;
+                      align-items: center;
+                      gap: 4px;
+                      background: rgba(245, 158, 11, 0.12);
+                      border: 1px solid rgba(245, 158, 11, 0.3);
+                      color: var(--color-primary);
+                      padding: 6px 14px;
+                      border-radius: 100px;
+                      font-size: 12.5px;
+                      font-weight: 600;
+                      text-decoration: none;
+                      transition: all 0.15s ease;
+                    "
+                    onmouseover="this.style.background='var(--color-primary)';this.style.color='#0B0F17';"
+                    onmouseout="this.style.background='rgba(245, 158, 11, 0.12)';this.style.color='var(--color-primary)';"
+                  >
+                    Compare Fees →
+                  </a>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- ─── Bottom CTA ───────────────────────────────── -->
+    <section
+      style="
+        padding: 40px 24px 80px;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      "
+    >
+      <div
+        class="card-base"
+        style="
+          padding: 36px 28px;
+          background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+          border: 1px solid rgba(245, 158, 11, 0.2);
+        "
+      >
+        <h2 style="font-size: 22px; font-weight: 700; color: var(--text-ink); margin: 0 0 10px;">
+          Need a Custom Multi-Platform Simulation?
+        </h2>
+        <p style="font-size: 15px; color: var(--text-body); max-width: 580px; margin: 0 auto 20px; line-height: 1.6;">
+          Use our full interactive calculator with reverse-target pricing, COGS, shipping deduction, and tiered breakdown support across all 14 platforms simultaneously.
+        </p>
+        <a
+          href="/calculator"
+          class="btn-primary"
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 100px;
+            text-decoration: none;
+          "
+        >
+          Open 14-Platform Matrix Calculator →
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .filter-chip {
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--bg-card);
+    border: 1px solid var(--border-hairline);
+    color: var(--text-mute);
+    transition: all 0.15s ease;
+  }
+  .filter-chip:hover {
+    color: var(--text-ink);
+    border-color: var(--border-subtle);
+  }
+  .filter-chip.active {
+    background: var(--color-primary);
+    color: #0B0F17;
+    border-color: var(--color-primary);
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+  }
+  .matchup-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+  }
+</style>
+
+<script>
+  // Client-side filtering
+  const chips = document.querySelectorAll<HTMLButtonElement>(".filter-chip");
+  const cards = document.querySelectorAll<HTMLElement>(".matchup-card");
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+
+      const filter = chip.getAttribute("data-filter");
+      cards.forEach((card) => {
+        if (filter === "all" || card.getAttribute("data-category") === filter) {
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  });
+</script>

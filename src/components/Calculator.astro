@@ -69,29 +69,51 @@
 
     <!-- ─── Controls Panel ─────────────────────────── -->
     <div class="card-base sticky-controls-card" style="padding: 28px 32px; margin-bottom: 32px;">
+      <!-- Mode Switcher Row -->
+      <div class="mode-switcher-container">
+        <div class="mode-switcher-info">
+          <span class="mode-switcher-title">
+            🎯 Calculation Mode
+          </span>
+          <span class="mode-switcher-subtitle" id="mode-switcher-desc">
+            Calculate take-home profit from selling price
+          </span>
+        </div>
+        <div class="calc-mode-switcher" id="calc-mode-switcher" role="tablist" aria-label="Calculation Mode">
+          <button type="button" class="mode-btn active" data-mode="standard" role="tab" aria-selected="true" id="mode-btn-standard">
+            <span class="mode-btn-icon">⚡</span>
+            <span>Calculate Take-Home</span>
+          </button>
+          <button type="button" class="mode-btn" data-mode="reverse" role="tab" aria-selected="false" id="mode-btn-reverse">
+            <span class="mode-btn-icon">🎯</span>
+            <span>Target Take-Home (Reverse)</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Quick Presets Row -->
       <div style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border-hairline);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 13px; font-weight: 600; color: var(--text-ink); text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-mono);">
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-ink); text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-mono);" id="preset-header-title">
             ⚡ 1-Click Quick Presets
           </span>
-          <span style="font-size: 12px; color: var(--text-mute);">Select a creator model to auto-fill</span>
+          <span style="font-size: 12px; color: var(--text-mute);" id="preset-header-subtitle">Select a creator model to auto-fill</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;" id="preset-buttons" class="preset-grid">
-          <button type="button" class="preset-btn" data-price="5" data-volume="100">
-            <span class="preset-title">Micro-Template</span>
+          <button type="button" class="preset-btn" data-price="5" data-volume="100" id="preset-btn-1">
+            <span class="preset-title" id="preset-title-1">Micro-Template</span>
             <span class="preset-meta" id="preset-meta-1">$5.00 × 100 sales</span>
           </button>
-          <button type="button" class="preset-btn" data-price="29" data-volume="50">
-            <span class="preset-title">Ebook</span>
+          <button type="button" class="preset-btn" data-price="29" data-volume="50" id="preset-btn-2">
+            <span class="preset-title" id="preset-title-2">Ebook</span>
             <span class="preset-meta" id="preset-meta-2">$29.00 × 50 sales</span>
           </button>
-          <button type="button" class="preset-btn" data-price="149" data-volume="20">
-            <span class="preset-title">Course</span>
+          <button type="button" class="preset-btn" data-price="149" data-volume="20" id="preset-btn-3">
+            <span class="preset-title" id="preset-title-3">Course</span>
             <span class="preset-meta" id="preset-meta-3">$149.00 × 20 sales</span>
           </button>
-          <button type="button" class="preset-btn" data-price="49" data-volume="30">
-            <span class="preset-title">SaaS</span>
+          <button type="button" class="preset-btn" data-price="49" data-volume="30" id="preset-btn-4">
+            <span class="preset-title" id="preset-title-4">SaaS</span>
             <span class="preset-meta" id="preset-meta-4">$49.00 × 30 sales</span>
           </button>
         </div>
@@ -115,6 +137,7 @@
           >
             <label
               for="price-slider"
+              id="price-slider-title"
               class="slider-label"
               style="font-size: 14px; font-weight: 500; color: var(--text-ink); white-space: nowrap;"
             >
@@ -302,6 +325,133 @@
             >
           </span>
         </label>
+
+        <!-- Physical & E-Commerce Mode -->
+        <label
+          style="display: flex; align-items: center; gap: 12px; cursor: pointer;"
+        >
+          <span class="toggle-switch">
+            <input
+              type="checkbox"
+              id="toggle-physical"
+              role="switch"
+              aria-label="Physical and E-Commerce products mode toggle"
+            />
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 2px;">
+            <span
+              style="font-size: 13px; font-weight: 500; color: var(--text-ink);"
+              >📦 Physical & E-Commerce</span
+            >
+            <span style="font-size: 12px; color: var(--text-mute);" id="physical-toggle-desc"
+              >Factor in COGS & carrier shipping deductions</span
+            >
+          </span>
+        </label>
+      </div>
+
+      <!-- ─── COGS & Shipping Expandable Panel ──────── -->
+      <div
+        id="cogs-shipping-panel"
+        class="cogs-shipping-panel"
+        style="display: none;"
+      >
+        <div class="cogs-panel-header">
+          <div class="cogs-panel-title-wrap">
+            <span class="cogs-badge">📦 Physical Commerce</span>
+            <h4 class="cogs-panel-title">Product Direct Costs & Shipping Logistics</h4>
+          </div>
+          <span class="cogs-panel-subtitle">
+            Marketplaces & processors calculate fees on total buyer payment. COGS and carrier costs are deducted from net profit.
+          </span>
+        </div>
+
+        <div class="cogs-inputs-grid">
+          <!-- 1. Item Cost (COGS) -->
+          <div class="cogs-input-card">
+            <div class="cogs-input-header">
+              <label for="input-cogs" class="cogs-label">Item Unit Cost (COGS)</label>
+              <span class="cogs-hint">Manufacturing / Wholesale</span>
+            </div>
+            <div class="cogs-input-wrap">
+              <span class="cogs-curr-sym" id="cogs-symbol">$</span>
+              <input
+                type="number"
+                id="input-cogs"
+                min="0"
+                value="0"
+                step="any"
+                class="cogs-num-input"
+                placeholder="0.00"
+                aria-label="Item manufacturing unit cost"
+              />
+            </div>
+          </div>
+
+          <!-- 2. Shipping Charged to Buyer -->
+          <div class="cogs-input-card">
+            <div class="cogs-input-header">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <label for="input-shipping-charge" class="cogs-label">Shipping Charged to Buyer</label>
+                <button type="button" id="btn-free-shipping" class="free-ship-btn">Free Shipping ($0)</button>
+              </div>
+            </div>
+            <div class="cogs-input-wrap">
+              <span class="cogs-curr-sym" id="ship-charge-symbol">$</span>
+              <input
+                type="number"
+                id="input-shipping-charge"
+                min="0"
+                value="0"
+                step="any"
+                class="cogs-num-input"
+                placeholder="0.00"
+                aria-label="Shipping fee charged to customer"
+              />
+            </div>
+          </div>
+
+          <!-- 3. Actual Shipping Cost (Carrier) -->
+          <div class="cogs-input-card">
+            <div class="cogs-input-header">
+              <label for="input-shipping-cost" class="cogs-label">Actual Shipping Cost (Carrier)</label>
+              <span class="cogs-hint">Postage, label & packaging</span>
+            </div>
+            <div class="cogs-input-wrap">
+              <span class="cogs-curr-sym" id="ship-cost-symbol">$</span>
+              <input
+                type="number"
+                id="input-shipping-cost"
+                min="0"
+                value="0"
+                step="any"
+                class="cogs-num-input"
+                placeholder="0.00"
+                aria-label="Actual shipping carrier cost"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Summary Strip -->
+        <div class="cogs-summary-strip">
+          <div class="cogs-strip-item">
+            <span class="cogs-strip-label">Buyer Pays (Gross Base):</span>
+            <span class="cogs-strip-val" id="cogs-strip-buyer-paid">$25.00</span>
+          </div>
+          <div class="cogs-strip-divider"></div>
+          <div class="cogs-strip-item">
+            <span class="cogs-strip-label">Unit Direct Costs:</span>
+            <span class="cogs-strip-val cogs-strip-warn" id="cogs-strip-direct-cost">−$0.00 / unit</span>
+          </div>
+          <div class="cogs-strip-divider"></div>
+          <div class="cogs-strip-item">
+            <span class="cogs-strip-label">Total Monthly Direct Costs:</span>
+            <span class="cogs-strip-val cogs-strip-warn" id="cogs-strip-total-costs">−$0.00 (50 units)</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -330,28 +480,61 @@
         <button type="button" class="filter-tab" data-filter="marketplace">Marketplace & Freelance</button>
       </div>
 
-      <!-- Sorting Selector -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 8px;" class="matrix-sort-group">
-        <label for="sort-select" style="font-size: 13px; color: var(--text-mute); font-weight: 500;">Sort By:</label>
-        <select
-          id="sort-select"
-          style="
-            background: var(--bg-input);
-            color: var(--text-ink);
-            border: 1px solid var(--border-hairline);
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            outline: none;
-            font-family: var(--font-sans);
-          "
+      <!-- Sorting Selector & Action Buttons -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;" class="matrix-sort-group">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <label for="sort-select" style="font-size: 13px; color: var(--text-mute); font-weight: 500;">Sort By:</label>
+          <select
+            id="sort-select"
+            style="
+              background: var(--bg-input);
+              color: var(--text-ink);
+              border: 1px solid var(--border-hairline);
+              border-radius: 8px;
+              padding: 6px 12px;
+              font-size: 13px;
+              font-weight: 500;
+              cursor: pointer;
+              outline: none;
+              font-family: var(--font-sans);
+            "
+          >
+            <option value="net-desc">Highest Take-Home</option>
+            <option value="rate-asc">Lowest Effective Fee %</option>
+            <option value="name-asc">Alphabetical</option>
+          </select>
+        </div>
+
+        <!-- 1-Click CSV Export Button -->
+        <button
+          type="button"
+          id="btn-export-csv"
+          class="toolbar-action-btn"
+          title="Download live calculation matrix as a CSV spreadsheet"
+          aria-label="Export comparison matrix as CSV"
         >
-          <option value="net-desc">Highest Take-Home</option>
-          <option value="rate-asc">Lowest Effective Fee %</option>
-          <option value="name-asc">Alphabetical</option>
-        </select>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span id="export-csv-text">Export CSV</span>
+        </button>
+
+        <!-- Embed Widget Button -->
+        <button
+          type="button"
+          id="btn-open-embed"
+          class="toolbar-action-btn"
+          title="Embed interactive calculator widget or badge on your website"
+          aria-label="Embed widget on website"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <span>Embed Widget</span>
+        </button>
       </div>
     </div>
 
@@ -407,9 +590,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="gumroad-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -428,14 +609,22 @@
               >−$235.00</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="gumroad-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="gumroad-net"
@@ -461,6 +650,27 @@
               >18.8%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="gumroad-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Gumroad" title="Report a fee change or discrepancy for Gumroad">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -504,9 +714,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="ls-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -525,14 +733,22 @@
               >−$87.50</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="ls-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="ls-net"
@@ -558,6 +774,27 @@
               >7.0%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="ls-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Lemon Squeezy" title="Report a fee change or discrepancy for Lemon Squeezy">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -601,9 +838,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="paddle-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -622,14 +857,22 @@
               >−$87.50</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="paddle-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="paddle-net"
@@ -655,6 +898,27 @@
               >7.0%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="paddle-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Paddle" title="Report a fee change or discrepancy for Paddle">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -817,6 +1081,38 @@
         >
           ↑ <strong style="color: var(--text-body);">Free Plan</strong> is best at this volume
         </p>
+        <div
+          class="card-row-costs"
+          style="display: none; justify-content: space-between; align-items: baseline; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-hairline);"
+        >
+          <span style="font-size: 12px; color: var(--text-mute);">COGS & Shipping</span>
+          <span
+            id="payhip-costs"
+            style="font-size: 12px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+            >−$0.00</span
+          >
+        </div>
+        <div
+          class="card-row-margin"
+          style="display: none; justify-content: space-between; align-items: center; margin-top: 4px;"
+        >
+          <span style="font-size: 12px; color: var(--text-mute);">Best Tier Margin</span>
+          <span
+            id="payhip-margin"
+            style="font-size: 12px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+            >0.0%</span
+          >
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Payhip" title="Report a fee change or discrepancy for Payhip">
+            Report Change ↗
+          </button>
+        </div>
       </div>
 
       <!-- ─── STRIPE ─── -->
@@ -859,9 +1155,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="stripe-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -880,14 +1174,22 @@
               >−$51.25</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="stripe-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="stripe-net"
@@ -913,6 +1215,27 @@
               >4.1%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="stripe-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Stripe Direct" title="Report a fee change or discrepancy for Stripe Direct">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -956,9 +1279,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="whop-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -977,14 +1298,22 @@
               >−$88.75</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="whop-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="whop-net"
@@ -1010,6 +1339,27 @@
               >7.1%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="whop-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Whop" title="Report a fee change or discrepancy for Whop">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1053,9 +1403,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="sellfy-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1074,14 +1422,22 @@
               >−$80.25</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="sellfy-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="sellfy-net"
@@ -1107,6 +1463,27 @@
               >6.4%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="sellfy-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Sellfy" title="Report a fee change or discrepancy for Sellfy">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1150,9 +1527,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="podia-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1171,14 +1546,22 @@
               >−$90.25</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="podia-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="podia-net"
@@ -1204,6 +1587,27 @@
               >7.2%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="podia-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Podia" title="Report a fee change or discrepancy for Podia">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1247,9 +1651,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="stan-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1268,14 +1670,22 @@
               >−$80.25</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="stan-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="stan-net"
@@ -1301,6 +1711,27 @@
               >6.4%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="stan-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Stan Store" title="Report a fee change or discrepancy for Stan Store">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1427,6 +1858,38 @@
         >
           ↑ <strong style="color: var(--text-body);">Basic Plan</strong> is best at this volume
         </p>
+        <div
+          class="card-row-costs"
+          style="display: none; justify-content: space-between; align-items: baseline; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-hairline);"
+        >
+          <span style="font-size: 12px; color: var(--text-mute);">COGS & Shipping</span>
+          <span
+            id="teachable-costs"
+            style="font-size: 12px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+            >−$0.00</span
+          >
+        </div>
+        <div
+          class="card-row-margin"
+          style="display: none; justify-content: space-between; align-items: center; margin-top: 4px;"
+        >
+          <span style="font-size: 12px; color: var(--text-mute);">Best Tier Margin</span>
+          <span
+            id="teachable-margin"
+            style="font-size: 12px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+            >0.0%</span
+          >
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Teachable" title="Report a fee change or discrepancy for Teachable">
+            Report Change ↗
+          </button>
+        </div>
       </div>
 
       <!-- ─── FIVERR ─── -->
@@ -1469,9 +1932,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="fiverr-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1490,14 +1951,22 @@
               >−$250.00</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="fiverr-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="fiverr-net"
@@ -1523,6 +1992,27 @@
               >20.0%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="fiverr-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Fiverr" title="Report a fee change or discrepancy for Fiverr">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1566,9 +2056,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="etsy-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1587,14 +2075,22 @@
               >−$141.25</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="etsy-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="etsy-net"
@@ -1620,6 +2116,27 @@
               >11.3%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="etsy-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Etsy" title="Report a fee change or discrepancy for Etsy">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1663,9 +2180,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="kdp-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1684,14 +2199,22 @@
               >−$382.50</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="kdp-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="kdp-net"
@@ -1717,6 +2240,27 @@
               >30.6%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="kdp-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Amazon KDP" title="Report a fee change or discrepancy for Amazon KDP">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1760,9 +2304,7 @@
           <div
             style="display: flex; justify-content: space-between; align-items: baseline;"
           >
-            <span style="font-size: 13px; color: var(--text-mute);"
-              >Gross Revenue</span
-            >
+            <span style="font-size: 13px; color: var(--text-mute);" class="card-row-lbl-gross">Gross Revenue</span>
             <span
               id="upwork-gross"
               style="font-size: 13px; font-weight: 500; color: var(--text-ink); font-family: var(--font-mono);"
@@ -1781,14 +2323,22 @@
               >−$125.00</span
             >
           </div>
+          <div
+            class="card-row-costs"
+            style="display: none; justify-content: space-between; align-items: baseline;"
+          >
+            <span style="font-size: 13px; color: var(--text-mute);">COGS & Shipping</span>
+            <span
+              id="upwork-costs"
+              style="font-size: 13px; font-weight: 500; color: #f59e0b; font-family: var(--font-mono);"
+              >−$0.00</span
+            >
+          </div>
           <div style="height: 1px; background: var(--border-hairline);"></div>
           <div
             style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--color-profit-bg);"
           >
-            <span
-              style="font-size: 14px; font-weight: 600; color: var(--color-profit);"
-              >Net Profit</span
-            >
+            <span style="font-size: 14px; font-weight: 600; color: var(--color-profit);" class="card-row-lbl-net">Net Profit</span>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <span
                 id="upwork-net"
@@ -1814,6 +2364,27 @@
               >10.0%</span
             >
           </div>
+          <div
+            class="card-row-margin"
+            style="display: none; justify-content: space-between; align-items: center;"
+          >
+            <span style="font-size: 12px; color: var(--text-mute);">Net Margin</span>
+            <span
+              id="upwork-margin"
+              style="font-size: 13px; font-weight: 600; color: var(--color-profit); font-family: var(--font-mono);"
+              >0.0%</span
+            >
+          </div>
+        </div>
+      
+        <!-- Trust Badge & Rate Reporter Row -->
+        <div class="card-trust-row">
+          <span class="trust-badge" title="Audited against official pricing schedule in September 2026">
+            <span class="trust-dot">●</span> Verified: Sep 2026
+          </span>
+          <button type="button" class="btn-report-rate" data-platform="Upwork" title="Report a fee change or discrepancy for Upwork">
+            Report Change ↗
+          </button>
         </div>
       </div>
 
@@ -1837,7 +2408,7 @@
         </p>
 
         <div style="margin-bottom: 16px;">
-          <p style="font-size: 13px; color: var(--text-mute); margin: 0 0 6px;">
+          <p id="winner-metric-label" style="font-size: 13px; color: var(--text-mute); margin: 0 0 6px;">
             Best net profit
           </p>
           <p
@@ -1859,6 +2430,19 @@
             >
               (≈ $1K)
             </span>
+          </div>
+        </div>
+        <div
+          id="winner-physical-summary"
+          style="display: none; padding: 10px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); margin: 14px 0; font-size: 11.5px;"
+        >
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="color: var(--text-mute);">Direct Costs (COGS+Ship):</span>
+            <span id="winner-total-cogs-ship" style="font-family: var(--font-mono); font-weight: 600; color: #f59e0b;">−$0.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-mute);">Winner Net Margin:</span>
+            <span id="winner-net-margin" style="font-family: var(--font-mono); font-weight: 700; color: var(--color-profit);">0.0%</span>
           </div>
         </div>
 
@@ -1991,36 +2575,34 @@
     const sign = n < 0 ? "−" : "";
 
     if (selectedCurrency === "INR") {
-      // Indian Numbering System: Crore (Cr), Lakh (L), Thousand (K)
-      if (absVal >= 10000000) { // 1 Crore = 10^7
+      if (absVal >= 10000000) {
         const val = absVal / 10000000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted} Cr)`;
       }
-      if (absVal >= 100000) { // 1 Lakh = 10^5
+      if (absVal >= 100000) {
         const val = absVal / 100000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted} L)`;
       }
-      if (absVal >= 1000) { // 1 Thousand
+      if (absVal >= 1000) {
         const val = absVal / 1000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1).replace(/\.0$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted} K)`;
       }
       return `(≈ ${sign}${cfg.symbol}${absVal.toFixed(0)})`;
     } else {
-      // Western System: Billion (B), Million (M), Thousand (K)
-      if (absVal >= 1000000000) { // 1 Billion
+      if (absVal >= 1000000000) {
         const val = absVal / 1000000000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted}B)`;
       }
-      if (absVal >= 1000000) { // 1 Million
+      if (absVal >= 1000000) {
         const val = absVal / 1000000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(2).replace(/\.00$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted}M)`;
       }
-      if (absVal >= 1000) { // 1 Thousand
+      if (absVal >= 1000) {
         const val = absVal / 1000;
         const formatted = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1).replace(/\.0$/, "");
         return `(≈ ${sign}${cfg.symbol}${formatted}K)`;
@@ -2041,13 +2623,64 @@
   }
 
   // ── State (Base USD values) ──────────────────────────────────
-  let price = 25; // Base price in USD
+  let price = 25; // Base price or Target Net in USD
   let volume = 50;
   let intl = false;
   let paypal = false;
   let gumroadDiscover = false;
+  let isPhysical = false;
+  let cogs = 0; // Base USD
+  let shippingCharge = 0; // Base USD
+  let shippingCost = 0; // Base USD
   let activeFilter = "all";
   let activeSort = "net-desc";
+  let calcMode: "standard" | "reverse" = "standard";
+  let lastSnapshot: any = null;
+
+  interface PresetItem {
+    title: string;
+    price: number;
+    volume: number;
+    cogs?: number;
+    shippingCharge?: number;
+    shippingCost?: number;
+  }
+
+  const PRESETS: Record<"standard" | "reverse", { digital: PresetItem[]; physical: PresetItem[] }> = {
+    standard: {
+      digital: [
+        { title: "Micro-Template", price: 5, volume: 100 },
+        { title: "Ebook", price: 29, volume: 50 },
+        { title: "Course", price: 149, volume: 20 },
+        { title: "SaaS", price: 49, volume: 30 },
+      ],
+      physical: [
+        { title: "Handmade Craft", price: 35, volume: 40, cogs: 8, shippingCharge: 5, shippingCost: 4.5 },
+        { title: "Apparel / Merch", price: 28, volume: 80, cogs: 9, shippingCharge: 4.99, shippingCost: 4.5 },
+        { title: "Hardware / Tech", price: 120, volume: 25, cogs: 42, shippingCharge: 9.99, shippingCost: 9 },
+        { title: "Print-on-Demand", price: 24, volume: 60, cogs: 12, shippingCharge: 0, shippingCost: 4.5 },
+      ],
+    },
+    reverse: {
+      digital: [
+        { title: "Micro Target", price: 3, volume: 100 },
+        { title: "Ebook Target", price: 25, volume: 50 },
+        { title: "Course Target", price: 120, volume: 20 },
+        { title: "High Ticket", price: 250, volume: 10 },
+      ],
+      physical: [
+        { title: "Craft ($15 Net)", price: 15, volume: 40, cogs: 8, shippingCharge: 5, shippingCost: 4.5 },
+        { title: "Merch ($12 Net)", price: 12, volume: 80, cogs: 9, shippingCharge: 4.99, shippingCost: 4.5 },
+        { title: "Tech ($50 Net)", price: 50, volume: 25, cogs: 42, shippingCharge: 9.99, shippingCost: 9 },
+        { title: "POD ($8 Net)", price: 8, volume: 60, cogs: 12, shippingCharge: 0, shippingCost: 4.5 },
+      ],
+    },
+  };
+
+  function solvePrice(targetNet: number, feePercent: number, fixedFeePerUnit: number, unitCost: number = 0): number {
+    if (feePercent >= 1) return targetNet + unitCost;
+    return (targetNet + fixedFeePerUnit + unitCost) / (1 - feePercent);
+  }
 
   // ── Fee Formulas ───────────────────────────────────────────────
   function calcGumroad(p: number, intl: boolean, pp: boolean, discover: boolean, rate: number) {
@@ -2190,7 +2823,69 @@
     const curr = CURRENCIES[selectedCurrency] || CURRENCIES.USD;
     const rate = curr.rate;
     const convPrice = price * rate;
-    const gross = convPrice * volume;
+    const isReverse = calcMode === "reverse";
+
+    const convCogs = isPhysical ? cogs * rate : 0;
+    const convShipCharge = isPhysical ? shippingCharge * rate : 0;
+    const convShipCost = isPhysical ? shippingCost * rate : 0;
+    const unitDirectCost = convCogs + convShipCost;
+    const totalDirectCosts = unitDirectCost * volume;
+
+    // Standard mode transaction price per unit paid by buyer
+    const buyerPaidPerUnit = isPhysical ? (convPrice + convShipCharge) : convPrice;
+    const standardGross = buyerPaidPerUnit * volume;
+
+    const targetNetPerUnit = convPrice;
+    const totalTargetNet = targetNetPerUnit * volume;
+
+    // Show/hide COGS & shipping panel
+    const cogsPanel = el("cogs-shipping-panel");
+    if (cogsPanel) {
+      cogsPanel.style.display = isPhysical ? "block" : "none";
+    }
+
+    // Show/hide card rows for direct costs and margin
+    document.querySelectorAll(".card-row-costs").forEach((elem) => {
+      (elem as HTMLElement).style.display = isPhysical ? "flex" : "none";
+    });
+    document.querySelectorAll(".card-row-margin").forEach((elem) => {
+      (elem as HTMLElement).style.display = isPhysical ? "flex" : "none";
+    });
+
+    // Update input values and currency symbols in COGS panel
+    setText("cogs-symbol", curr.symbol);
+    setText("ship-charge-symbol", curr.symbol);
+    setText("ship-cost-symbol", curr.symbol);
+
+    const cInput = el("input-cogs") as HTMLInputElement | null;
+    if (cInput && document.activeElement !== cInput) {
+      cInput.value = (cogs * rate).toFixed(2).replace(/\.00$/, "");
+    }
+    const scInput = el("input-shipping-charge") as HTMLInputElement | null;
+    if (scInput && document.activeElement !== scInput) {
+      scInput.value = (shippingCharge * rate).toFixed(2).replace(/\.00$/, "");
+    }
+    const sCostInput = el("input-shipping-cost") as HTMLInputElement | null;
+    if (sCostInput && document.activeElement !== sCostInput) {
+      sCostInput.value = (shippingCost * rate).toFixed(2).replace(/\.00$/, "");
+    }
+
+    // Update COGS live summary strip
+    if (isReverse) {
+      setText("cogs-strip-buyer-paid", `Target: ${fmt(targetNetPerUnit)}/unit net`);
+    } else {
+      setText("cogs-strip-buyer-paid", `${fmt(buyerPaidPerUnit)} (${fmt(convPrice)} + ${fmt(convShipCharge)} ship)`);
+    }
+    setText("cogs-strip-direct-cost", `−${fmt(unitDirectCost)} / unit`);
+    setText("cogs-strip-total-costs", `−${fmt(totalDirectCosts)} (${volume} units)`);
+
+    // Update Card Row Labels
+    document.querySelectorAll(".card-row-lbl-gross").forEach((el) => {
+      el.textContent = isReverse ? "Target Net (Total)" : "Gross Revenue";
+    });
+    document.querySelectorAll(".card-row-lbl-net").forEach((el) => {
+      el.textContent = isReverse ? "Required Price" : "Net Profit";
+    });
 
     // Update Live Exchange Rate Badge
     const rateBadge = el("exchange-rate-badge");
@@ -2219,219 +2914,702 @@
     setText("paypal-toggle-desc", `3.49% + ${fmt(0.49 * rate)} per transaction`);
     setText("gumroad-toggle-desc", `Switch to marketplace (30% cut) vs. Direct (10% + ${fmt(0.50 * rate)})`);
 
-    // Update Presets Meta Text
-    setText("preset-meta-1", `${fmt(5 * rate)} × 100 sales`);
-    setText("preset-meta-2", `${fmt(29 * rate)} × 50 sales`);
-    setText("preset-meta-3", `${fmt(149 * rate)} × 20 sales`);
-    setText("preset-meta-4", `${fmt(49 * rate)} × 30 sales`);
+    // Update Presets Meta Text & Data attributes
+    const presetType = isPhysical ? "physical" : "digital";
+    const currentPresets = PRESETS[calcMode][presetType];
+    currentPresets.forEach((p, idx) => {
+      setText(`preset-title-${idx + 1}`, p.title);
+      if (isPhysical) {
+        setText(`preset-meta-${idx + 1}`, `${fmt(p.price * rate)} · COGS ${fmt((p.cogs || 0) * rate)}`);
+      } else {
+        setText(`preset-meta-${idx + 1}`, `${fmt(p.price * rate)} × ${p.volume} sales`);
+      }
+      const btn = el(`preset-btn-${idx + 1}`);
+      if (btn) {
+        btn.setAttribute("data-price", String(p.price));
+        btn.setAttribute("data-volume", String(p.volume));
+        btn.setAttribute("data-cogs", String(p.cogs ?? 0));
+        btn.setAttribute("data-ship-charge", String(p.shippingCharge ?? 0));
+        btn.setAttribute("data-ship-cost", String(p.shippingCost ?? 0));
+      }
+    });
 
-    // 1. Gumroad
-    const gu = calcGumroad(convPrice, intl, paypal, gumroadDiscover, rate);
-    const guTotalNet = gu.net * volume;
-    const guTotalFees = gu.fees * volume;
-    const guRate = gu.fees / convPrice;
-    setText(
-      "gumroad-mode-label",
-      gumroadDiscover
-        ? "Discover: 30% marketplace cut"
-        : `Direct: 10% + ${fmt(0.50 * rate)} per sale`,
-    );
-    setText("gumroad-gross", fmt(gross));
-    setText("gumroad-fees", fmt(-guTotalFees));
-    setText("gumroad-net", fmt(guTotalNet));
-    setText("gumroad-net-compact", fmtCompact(guTotalNet));
-    setText("gumroad-rate", pct(guRate));
-
-    // 2. Lemon Squeezy
-    const ls = calcLemonSqueezy(convPrice, intl, paypal, rate);
-    const lsTotalNet = ls.net * volume;
-    const lsTotalFees = ls.fees * volume;
-    const lsRate = ls.fees / convPrice;
-    setText("ls-subtitle", `5% + ${fmt(0.50 * rate)} per sale`);
-    setText("ls-gross", fmt(gross));
-    setText("ls-fees", fmt(-lsTotalFees));
-    setText("ls-net", fmt(lsTotalNet));
-    setText("ls-net-compact", fmtCompact(lsTotalNet));
-    setText("ls-rate", pct(lsRate));
-
-    // 3. Paddle
-    const pd = calcPaddle(convPrice, intl, rate);
-    const pdTotalNet = pd.net * volume;
-    const pdTotalFees = pd.fees * volume;
-    const pdRate = pd.fees / convPrice;
-    setText("paddle-subtitle", `5% + ${fmt(0.50 * rate)} per sale · Auto VAT`);
-    setText("paddle-gross", fmt(gross));
-    setText("paddle-fees", fmt(-pdTotalFees));
-    setText("paddle-net", fmt(pdTotalNet));
-    setText("paddle-net-compact", fmtCompact(pdTotalNet));
-    setText("paddle-rate", pct(pdRate));
-
-    // 4. Payhip
-    const ph = calcPayhip(convPrice, volume, intl, paypal, rate);
     const highlightTier = (id: string, active: boolean) => {
       const row = el(id);
       if (!row) return;
       row.style.background = active ? "var(--color-profit-bg)" : "";
       row.style.borderColor = active ? "var(--color-profit)" : "var(--border-hairline)";
     };
-    const phNets = [ph.free.totalNet, ph.plus.totalNet, ph.pro.totalNet];
-    const phBestIdx = phNets.indexOf(Math.max(...phNets));
+
+    // Helper to format net subtext in reverse mode
+    const formatReverseSubtext = (gross: number, reqTotalPaid: number) => {
+      if (isPhysical) {
+        if (convShipCharge > 0) {
+          return `(Gross ${fmtCompact(gross)} · +${fmt(convShipCharge)} ship)`;
+        }
+        return `(Gross ${fmtCompact(gross)} · Free ship)`;
+      }
+      return `(Gross ${fmtCompact(gross)})`;
+    };
+
+    // 1. Gumroad
+    let guTotalNet: number, guTotalFees: number, guRate: number, guMargin: number, guGross: number, guReqPrice: number;
+    if (isReverse) {
+      if (gumroadDiscover) {
+        const reqTotalPaid = solvePrice(targetNetPerUnit, 0.30, 0, unitDirectCost);
+        guReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+        guGross = reqTotalPaid * volume;
+      } else {
+        const procRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+        const procFixed = (paypal ? 0.49 : 0.30) * rate;
+        const reqTotalPaid = solvePrice(targetNetPerUnit, 0.10 + procRate, 0.50 * rate + procFixed, unitDirectCost);
+        guReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+        guGross = reqTotalPaid * volume;
+      }
+      guTotalFees = guGross - totalTargetNet - totalDirectCosts;
+      guTotalNet = totalTargetNet;
+      guRate = guGross > 0 ? (guTotalFees / guGross) : 0;
+      guMargin = guGross > 0 ? (guTotalNet / guGross) : 0;
+
+      setText(
+        "gumroad-mode-label",
+        gumroadDiscover
+          ? "Discover: 30% marketplace cut"
+          : `Direct: 10% + ${fmt(0.50 * rate)} per sale`,
+      );
+      setText("gumroad-gross", fmt(totalTargetNet));
+      setText("gumroad-fees", fmt(-guTotalFees));
+      setText("gumroad-costs", fmt(-totalDirectCosts));
+      setText("gumroad-net", `Charge ${fmt(guReqPrice)}`);
+      setText("gumroad-net-compact", formatReverseSubtext(guGross, guReqPrice + convShipCharge));
+      setText("gumroad-rate", pct(guRate));
+      setText("gumroad-margin", pct(guMargin));
+    } else {
+      const gu = calcGumroad(buyerPaidPerUnit, intl, paypal, gumroadDiscover, rate);
+      guTotalFees = gu.fees * volume;
+      guTotalNet = (gu.net - unitDirectCost) * volume;
+      guRate = buyerPaidPerUnit > 0 ? (gu.fees / buyerPaidPerUnit) : 0;
+      guGross = standardGross;
+      guMargin = guGross > 0 ? (guTotalNet / guGross) : 0;
+      guReqPrice = convPrice;
+
+      setText(
+        "gumroad-mode-label",
+        gumroadDiscover
+          ? "Discover: 30% marketplace cut"
+          : `Direct: 10% + ${fmt(0.50 * rate)} per sale`,
+      );
+      setText("gumroad-gross", fmt(guGross));
+      setText("gumroad-fees", fmt(-guTotalFees));
+      setText("gumroad-costs", fmt(-totalDirectCosts));
+      setText("gumroad-net", fmt(guTotalNet));
+      setText("gumroad-net-compact", fmtCompact(guTotalNet));
+      setText("gumroad-rate", pct(guRate));
+      setText("gumroad-margin", pct(guMargin));
+    }
+
+    // 2. Lemon Squeezy
+    let lsTotalNet: number, lsTotalFees: number, lsRate: number, lsMargin: number, lsGross: number, lsReqPrice: number;
+    if (isReverse) {
+      const lsFeePct = 0.05 + (intl ? 0.015 : 0) + (paypal ? 0.015 : 0);
+      const reqTotalPaid = solvePrice(targetNetPerUnit, lsFeePct, 0.50 * rate, unitDirectCost);
+      lsReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      lsGross = reqTotalPaid * volume;
+      lsTotalFees = lsGross - totalTargetNet - totalDirectCosts;
+      lsTotalNet = totalTargetNet;
+      lsRate = lsGross > 0 ? (lsTotalFees / lsGross) : 0;
+      lsMargin = lsGross > 0 ? (lsTotalNet / lsGross) : 0;
+
+      setText("ls-subtitle", `5% + ${fmt(0.50 * rate)} per sale`);
+      setText("ls-gross", fmt(totalTargetNet));
+      setText("ls-fees", fmt(-lsTotalFees));
+      setText("ls-costs", fmt(-totalDirectCosts));
+      setText("ls-net", `Charge ${fmt(lsReqPrice)}`);
+      setText("ls-net-compact", formatReverseSubtext(lsGross, reqTotalPaid));
+      setText("ls-rate", pct(lsRate));
+      setText("ls-margin", pct(lsMargin));
+    } else {
+      const ls = calcLemonSqueezy(buyerPaidPerUnit, intl, paypal, rate);
+      lsTotalFees = ls.fees * volume;
+      lsTotalNet = (ls.net - unitDirectCost) * volume;
+      lsRate = buyerPaidPerUnit > 0 ? (ls.fees / buyerPaidPerUnit) : 0;
+      lsGross = standardGross;
+      lsMargin = lsGross > 0 ? (lsTotalNet / lsGross) : 0;
+      lsReqPrice = convPrice;
+
+      setText("ls-subtitle", `5% + ${fmt(0.50 * rate)} per sale`);
+      setText("ls-gross", fmt(lsGross));
+      setText("ls-fees", fmt(-lsTotalFees));
+      setText("ls-costs", fmt(-totalDirectCosts));
+      setText("ls-net", fmt(lsTotalNet));
+      setText("ls-net-compact", fmtCompact(lsTotalNet));
+      setText("ls-rate", pct(lsRate));
+      setText("ls-margin", pct(lsMargin));
+    }
+
+    // 3. Paddle
+    let pdTotalNet: number, pdTotalFees: number, pdRate: number, pdMargin: number, pdGross: number, pdReqPrice: number;
+    if (isReverse) {
+      const pdFeePct = 0.05 + (intl ? 0.015 : 0);
+      const reqTotalPaid = solvePrice(targetNetPerUnit, pdFeePct, 0.50 * rate, unitDirectCost);
+      pdReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      pdGross = reqTotalPaid * volume;
+      pdTotalFees = pdGross - totalTargetNet - totalDirectCosts;
+      pdTotalNet = totalTargetNet;
+      pdRate = pdGross > 0 ? (pdTotalFees / pdGross) : 0;
+      pdMargin = pdGross > 0 ? (pdTotalNet / pdGross) : 0;
+
+      setText("paddle-subtitle", `5% + ${fmt(0.50 * rate)} per sale · Auto VAT`);
+      setText("paddle-gross", fmt(totalTargetNet));
+      setText("paddle-fees", fmt(-pdTotalFees));
+      setText("paddle-costs", fmt(-totalDirectCosts));
+      setText("paddle-net", `Charge ${fmt(pdReqPrice)}`);
+      setText("paddle-net-compact", formatReverseSubtext(pdGross, reqTotalPaid));
+      setText("paddle-rate", pct(pdRate));
+      setText("paddle-margin", pct(pdMargin));
+    } else {
+      const pd = calcPaddle(buyerPaidPerUnit, intl, rate);
+      pdTotalFees = pd.fees * volume;
+      pdTotalNet = (pd.net - unitDirectCost) * volume;
+      pdRate = buyerPaidPerUnit > 0 ? (pd.fees / buyerPaidPerUnit) : 0;
+      pdGross = standardGross;
+      pdMargin = pdGross > 0 ? (pdTotalNet / pdGross) : 0;
+      pdReqPrice = convPrice;
+
+      setText("paddle-subtitle", `5% + ${fmt(0.50 * rate)} per sale · Auto VAT`);
+      setText("paddle-gross", fmt(pdGross));
+      setText("paddle-fees", fmt(-pdTotalFees));
+      setText("paddle-costs", fmt(-totalDirectCosts));
+      setText("paddle-net", fmt(pdTotalNet));
+      setText("paddle-net-compact", fmtCompact(pdTotalNet));
+      setText("paddle-rate", pct(pdRate));
+      setText("paddle-margin", pct(pdMargin));
+    }
+
+    // 4. Payhip
+    let phBestNet: number, phBestRate: number, phBestMargin: number, phBestGross: number, phBestReqPrice: number, phBestIdx: number;
     const phBestLabels = ["Free Plan", "Plus Plan", "Pro Plan"];
-    const phBestNet = phNets[phBestIdx];
-    const phBestRate = [ph.free.fees / convPrice, ph.plus.fees / convPrice, ph.pro.fees / convPrice][phBestIdx];
+    if (isReverse) {
+      const phProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const phProcFixed = (paypal ? 0.49 : 0.30) * rate;
 
-    highlightTier("payhip-free-row", phBestIdx === 0);
-    highlightTier("payhip-plus-row", phBestIdx === 1);
-    highlightTier("payhip-pro-row", phBestIdx === 2);
+      const phFreeReqTotal = solvePrice(targetNetPerUnit, 0.05 + phProcRate, phProcFixed, unitDirectCost);
+      const phFreeReqPrice = Math.max(0, phFreeReqTotal - convShipCharge);
+      const phFreeGross = phFreeReqTotal * volume;
+      const phFreeFees = phFreeGross - totalTargetNet - totalDirectCosts;
+      const phFreeRate = phFreeGross > 0 ? (phFreeFees / phFreeGross) : 0;
 
-    setText("payhip-subtitle", `Free 5% · Plus ${fmt(29 * rate)}/mo · Pro ${fmt(99 * rate)}/mo`);
-    setText("payhip-plus-label", `Plus Plan (${fmt(29 * rate)}/mo + 2%)`);
-    setText("payhip-pro-label", `Pro Plan (${fmt(99 * rate)}/mo + 0%)`);
-    setText("payhip-free-net", fmt(ph.free.totalNet));
-    setText("payhip-free-net-compact", fmtCompact(ph.free.totalNet));
-    setText("payhip-free-fees", fmt(ph.free.totalFees));
-    setText("payhip-free-rate", pct(ph.free.fees / convPrice));
-    setText("payhip-plus-net", fmt(ph.plus.totalNet));
-    setText("payhip-plus-net-compact", fmtCompact(ph.plus.totalNet));
-    setText("payhip-plus-fees", fmt(ph.plus.totalFees));
-    setText("payhip-plus-rate", pct(ph.plus.fees / convPrice));
-    setText("payhip-pro-net", fmt(ph.pro.totalNet));
-    setText("payhip-pro-net-compact", fmtCompact(ph.pro.totalNet));
-    setText("payhip-pro-fees", fmt(ph.pro.totalFees));
-    setText("payhip-pro-rate", pct(ph.pro.fees / convPrice));
-    setText("payhip-best-label", `↑ ${phBestLabels[phBestIdx]} is best at this volume`);
+      const phPlusReqTotal = solvePrice(targetNetPerUnit, 0.02 + phProcRate, phProcFixed + (29 * rate) / volume, unitDirectCost);
+      const phPlusReqPrice = Math.max(0, phPlusReqTotal - convShipCharge);
+      const phPlusGross = phPlusReqTotal * volume;
+      const phPlusFees = phPlusGross - totalTargetNet - totalDirectCosts;
+      const phPlusRate = phPlusGross > 0 ? (phPlusFees / phPlusGross) : 0;
+
+      const phProReqTotal = solvePrice(targetNetPerUnit, phProcRate, phProcFixed + (99 * rate) / volume, unitDirectCost);
+      const phProReqPrice = Math.max(0, phProReqTotal - convShipCharge);
+      const phProGross = phProReqTotal * volume;
+      const phProFees = phProGross - totalTargetNet - totalDirectCosts;
+      const phProRate = phProGross > 0 ? (phProFees / phProGross) : 0;
+
+      const phReqPrices = [phFreeReqPrice, phPlusReqPrice, phProReqPrice];
+      phBestIdx = phReqPrices.indexOf(Math.min(...phReqPrices));
+      phBestReqPrice = phReqPrices[phBestIdx];
+      const phGrosses = [phFreeGross, phPlusGross, phProGross];
+      phBestGross = phGrosses[phBestIdx];
+      phBestNet = totalTargetNet;
+      phBestRate = [phFreeRate, phPlusRate, phProRate][phBestIdx];
+      phBestMargin = phBestGross > 0 ? (phBestNet / phBestGross) : 0;
+
+      highlightTier("payhip-free-row", phBestIdx === 0);
+      highlightTier("payhip-plus-row", phBestIdx === 1);
+      highlightTier("payhip-pro-row", phBestIdx === 2);
+
+      setText("payhip-subtitle", `Free 5% · Plus ${fmt(29 * rate)}/mo · Pro ${fmt(99 * rate)}/mo`);
+      setText("payhip-plus-label", `Plus Plan (${fmt(29 * rate)}/mo + 2%)`);
+      setText("payhip-pro-label", `Pro Plan (${fmt(99 * rate)}/mo + 0%)`);
+      setText("payhip-free-net", `Charge ${fmt(phFreeReqPrice)}`);
+      setText("payhip-free-net-compact", formatReverseSubtext(phFreeGross, phFreeReqTotal));
+      setText("payhip-free-fees", fmt(phFreeFees));
+      setText("payhip-free-rate", pct(phFreeRate));
+      setText("payhip-plus-net", `Charge ${fmt(phPlusReqPrice)}`);
+      setText("payhip-plus-net-compact", formatReverseSubtext(phPlusGross, phPlusReqTotal));
+      setText("payhip-plus-fees", fmt(phPlusFees));
+      setText("payhip-plus-rate", pct(phPlusRate));
+      setText("payhip-pro-net", `Charge ${fmt(phProReqPrice)}`);
+      setText("payhip-pro-net-compact", formatReverseSubtext(phProGross, phProReqTotal));
+      setText("payhip-pro-fees", fmt(phProFees));
+      setText("payhip-pro-rate", pct(phProRate));
+      setText("payhip-costs", fmt(-totalDirectCosts));
+      setText("payhip-margin", pct(phBestMargin));
+      setText("payhip-best-label", `↑ ${phBestLabels[phBestIdx]} lets you charge the lowest price`);
+    } else {
+      const ph = calcPayhip(buyerPaidPerUnit, volume, intl, paypal, rate);
+      const phFreeNet = (ph.free.net - unitDirectCost) * volume;
+      const phPlusNet = (ph.plus.net - unitDirectCost) * volume;
+      const phProNet = (ph.pro.net - unitDirectCost) * volume;
+      const phNets = [phFreeNet, phPlusNet, phProNet];
+
+      phBestIdx = phNets.indexOf(Math.max(...phNets));
+      phBestNet = phNets[phBestIdx];
+      phBestRate = [ph.free.fees / buyerPaidPerUnit, ph.plus.fees / buyerPaidPerUnit, ph.pro.fees / buyerPaidPerUnit][phBestIdx];
+      phBestGross = standardGross;
+      phBestMargin = phBestGross > 0 ? (phBestNet / phBestGross) : 0;
+      phBestReqPrice = convPrice;
+
+      highlightTier("payhip-free-row", phBestIdx === 0);
+      highlightTier("payhip-plus-row", phBestIdx === 1);
+      highlightTier("payhip-pro-row", phBestIdx === 2);
+
+      setText("payhip-subtitle", `Free 5% · Plus ${fmt(29 * rate)}/mo · Pro ${fmt(99 * rate)}/mo`);
+      setText("payhip-plus-label", `Plus Plan (${fmt(29 * rate)}/mo + 2%)`);
+      setText("payhip-pro-label", `Pro Plan (${fmt(99 * rate)}/mo + 0%)`);
+      setText("payhip-free-net", fmt(phFreeNet));
+      setText("payhip-free-net-compact", fmtCompact(phFreeNet));
+      setText("payhip-free-fees", fmt(ph.free.totalFees));
+      setText("payhip-free-rate", pct(ph.free.fees / buyerPaidPerUnit));
+      setText("payhip-plus-net", fmt(phPlusNet));
+      setText("payhip-plus-net-compact", fmtCompact(phPlusNet));
+      setText("payhip-plus-fees", fmt(ph.plus.totalFees));
+      setText("payhip-plus-rate", pct(ph.plus.fees / buyerPaidPerUnit));
+      setText("payhip-pro-net", fmt(phProNet));
+      setText("payhip-pro-net-compact", fmtCompact(phProNet));
+      setText("payhip-pro-fees", fmt(ph.pro.totalFees));
+      setText("payhip-pro-rate", pct(ph.pro.fees / buyerPaidPerUnit));
+      setText("payhip-costs", fmt(-totalDirectCosts));
+      setText("payhip-margin", pct(phBestMargin));
+      setText("payhip-best-label", `↑ ${phBestLabels[phBestIdx]} is best at this volume`);
+    }
 
     // 5. Stripe
-    const st = calcStripe(convPrice, intl, paypal, rate);
-    const stTotalNet = st.net * volume;
-    const stTotalFees = st.fees * volume;
-    const stRate = st.fees / convPrice;
-    setText("stripe-subtitle", `2.9% + ${fmt(0.30 * rate)} · No platform fee`);
-    setText("stripe-gross", fmt(gross));
-    setText("stripe-fees", fmt(-stTotalFees));
-    setText("stripe-net", fmt(stTotalNet));
-    setText("stripe-net-compact", fmtCompact(stTotalNet));
-    setText("stripe-rate", pct(stRate));
+    let stTotalNet: number, stTotalFees: number, stRate: number, stMargin: number, stGross: number, stReqPrice: number;
+    if (isReverse) {
+      const stProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const stProcFixed = (paypal ? 0.49 : 0.30) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, stProcRate, stProcFixed, unitDirectCost);
+      stReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      stGross = reqTotalPaid * volume;
+      stTotalFees = stGross - totalTargetNet - totalDirectCosts;
+      stTotalNet = totalTargetNet;
+      stRate = stGross > 0 ? (stTotalFees / stGross) : 0;
+      stMargin = stGross > 0 ? (stTotalNet / stGross) : 0;
+
+      setText("stripe-subtitle", `2.9% + ${fmt(0.30 * rate)} · No platform fee`);
+      setText("stripe-gross", fmt(totalTargetNet));
+      setText("stripe-fees", fmt(-stTotalFees));
+      setText("stripe-costs", fmt(-totalDirectCosts));
+      setText("stripe-net", `Charge ${fmt(stReqPrice)}`);
+      setText("stripe-net-compact", formatReverseSubtext(stGross, reqTotalPaid));
+      setText("stripe-rate", pct(stRate));
+      setText("stripe-margin", pct(stMargin));
+    } else {
+      const st = calcStripe(buyerPaidPerUnit, intl, paypal, rate);
+      stTotalFees = st.fees * volume;
+      stTotalNet = (st.net - unitDirectCost) * volume;
+      stRate = buyerPaidPerUnit > 0 ? (st.fees / buyerPaidPerUnit) : 0;
+      stGross = standardGross;
+      stMargin = stGross > 0 ? (stTotalNet / stGross) : 0;
+      stReqPrice = convPrice;
+
+      setText("stripe-subtitle", `2.9% + ${fmt(0.30 * rate)} · No platform fee`);
+      setText("stripe-gross", fmt(stGross));
+      setText("stripe-fees", fmt(-stTotalFees));
+      setText("stripe-costs", fmt(-totalDirectCosts));
+      setText("stripe-net", fmt(stTotalNet));
+      setText("stripe-net-compact", fmtCompact(stTotalNet));
+      setText("stripe-rate", pct(stRate));
+      setText("stripe-margin", pct(stMargin));
+    }
 
     // 6. Whop
-    const wh = calcWhop(convPrice, intl, paypal, rate);
-    const whTotalNet = wh.net * volume;
-    const whTotalFees = wh.fees * volume;
-    const whRate = wh.fees / convPrice;
-    setText("whop-subtitle", `3% flat + 2.9% + ${fmt(0.30 * rate)} card fee`);
-    setText("whop-gross", fmt(gross));
-    setText("whop-fees", fmt(-whTotalFees));
-    setText("whop-net", fmt(whTotalNet));
-    setText("whop-net-compact", fmtCompact(whTotalNet));
-    setText("whop-rate", pct(whRate));
+    let whTotalNet: number, whTotalFees: number, whRate: number, whMargin: number, whGross: number, whReqPrice: number;
+    if (isReverse) {
+      const whProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const whProcFixed = (paypal ? 0.49 : 0.30) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, 0.03 + whProcRate, whProcFixed, unitDirectCost);
+      whReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      whGross = reqTotalPaid * volume;
+      whTotalFees = whGross - totalTargetNet - totalDirectCosts;
+      whTotalNet = totalTargetNet;
+      whRate = whGross > 0 ? (whTotalFees / whGross) : 0;
+      whMargin = whGross > 0 ? (whTotalNet / whGross) : 0;
+
+      setText("whop-subtitle", `3% flat + 2.9% + ${fmt(0.30 * rate)} card fee`);
+      setText("whop-gross", fmt(totalTargetNet));
+      setText("whop-fees", fmt(-whTotalFees));
+      setText("whop-costs", fmt(-totalDirectCosts));
+      setText("whop-net", `Charge ${fmt(whReqPrice)}`);
+      setText("whop-net-compact", formatReverseSubtext(whGross, reqTotalPaid));
+      setText("whop-rate", pct(whRate));
+      setText("whop-margin", pct(whMargin));
+    } else {
+      const wh = calcWhop(buyerPaidPerUnit, intl, paypal, rate);
+      whTotalFees = wh.fees * volume;
+      whTotalNet = (wh.net - unitDirectCost) * volume;
+      whRate = buyerPaidPerUnit > 0 ? (wh.fees / buyerPaidPerUnit) : 0;
+      whGross = standardGross;
+      whMargin = whGross > 0 ? (whTotalNet / whGross) : 0;
+      whReqPrice = convPrice;
+
+      setText("whop-subtitle", `3% flat + 2.9% + ${fmt(0.30 * rate)} card fee`);
+      setText("whop-gross", fmt(whGross));
+      setText("whop-fees", fmt(-whTotalFees));
+      setText("whop-costs", fmt(-totalDirectCosts));
+      setText("whop-net", fmt(whTotalNet));
+      setText("whop-net-compact", fmtCompact(whTotalNet));
+      setText("whop-rate", pct(whRate));
+      setText("whop-margin", pct(whMargin));
+    }
 
     // 7. Sellfy
-    const sf = calcSellfy(convPrice, volume, intl, paypal, rate);
-    const sfTotalNet = sf.net * volume;
-    const sfTotalFees = sf.fees * volume;
-    const sfRate = sf.fees / convPrice;
-    setText("sellfy-subtitle", `${fmt(29 * rate)}/mo Starter · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
-    setText("sellfy-gross", fmt(gross));
-    setText("sellfy-fees", fmt(-sfTotalFees));
-    setText("sellfy-net", fmt(sfTotalNet));
-    setText("sellfy-net-compact", fmtCompact(sfTotalNet));
-    setText("sellfy-rate", pct(sfRate));
+    let sfTotalNet: number, sfTotalFees: number, sfRate: number, sfMargin: number, sfGross: number, sfReqPrice: number;
+    if (isReverse) {
+      const sfProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const sfProcFixed = (paypal ? 0.49 : 0.30) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, sfProcRate, sfProcFixed + (29 * rate) / volume, unitDirectCost);
+      sfReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      sfGross = reqTotalPaid * volume;
+      sfTotalFees = sfGross - totalTargetNet - totalDirectCosts;
+      sfTotalNet = totalTargetNet;
+      sfRate = sfGross > 0 ? (sfTotalFees / sfGross) : 0;
+      sfMargin = sfGross > 0 ? (sfTotalNet / sfGross) : 0;
+
+      setText("sellfy-subtitle", `${fmt(29 * rate)}/mo Starter · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("sellfy-gross", fmt(totalTargetNet));
+      setText("sellfy-fees", fmt(-sfTotalFees));
+      setText("sellfy-costs", fmt(-totalDirectCosts));
+      setText("sellfy-net", `Charge ${fmt(sfReqPrice)}`);
+      setText("sellfy-net-compact", formatReverseSubtext(sfGross, reqTotalPaid));
+      setText("sellfy-rate", pct(sfRate));
+      setText("sellfy-margin", pct(sfMargin));
+    } else {
+      const sf = calcSellfy(buyerPaidPerUnit, volume, intl, paypal, rate);
+      sfTotalFees = sf.fees * volume;
+      sfTotalNet = (sf.net - unitDirectCost) * volume;
+      sfRate = buyerPaidPerUnit > 0 ? (sf.fees / buyerPaidPerUnit) : 0;
+      sfGross = standardGross;
+      sfMargin = sfGross > 0 ? (sfTotalNet / sfGross) : 0;
+      sfReqPrice = convPrice;
+
+      setText("sellfy-subtitle", `${fmt(29 * rate)}/mo Starter · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("sellfy-gross", fmt(sfGross));
+      setText("sellfy-fees", fmt(-sfTotalFees));
+      setText("sellfy-costs", fmt(-totalDirectCosts));
+      setText("sellfy-net", fmt(sfTotalNet));
+      setText("sellfy-net-compact", fmtCompact(sfTotalNet));
+      setText("sellfy-rate", pct(sfRate));
+      setText("sellfy-margin", pct(sfMargin));
+    }
 
     // 8. Podia
-    const po = calcPodia(convPrice, volume, intl, paypal, rate);
-    const poTotalNet = po.net * volume;
-    const poTotalFees = po.fees * volume;
-    const poRate = po.fees / convPrice;
-    setText("podia-subtitle", `${fmt(39 * rate)}/mo Mover · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
-    setText("podia-gross", fmt(gross));
-    setText("podia-fees", fmt(-poTotalFees));
-    setText("podia-net", fmt(poTotalNet));
-    setText("podia-net-compact", fmtCompact(poTotalNet));
-    setText("podia-rate", pct(poRate));
+    let poTotalNet: number, poTotalFees: number, poRate: number, poMargin: number, poGross: number, poReqPrice: number;
+    if (isReverse) {
+      const poProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const poProcFixed = (paypal ? 0.49 : 0.30) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, poProcRate, poProcFixed + (39 * rate) / volume, unitDirectCost);
+      poReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      poGross = reqTotalPaid * volume;
+      poTotalFees = poGross - totalTargetNet - totalDirectCosts;
+      poTotalNet = totalTargetNet;
+      poRate = poGross > 0 ? (poTotalFees / poGross) : 0;
+      poMargin = poGross > 0 ? (poTotalNet / poGross) : 0;
+
+      setText("podia-subtitle", `${fmt(39 * rate)}/mo Mover · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("podia-gross", fmt(totalTargetNet));
+      setText("podia-fees", fmt(-poTotalFees));
+      setText("podia-costs", fmt(-totalDirectCosts));
+      setText("podia-net", `Charge ${fmt(poReqPrice)}`);
+      setText("podia-net-compact", formatReverseSubtext(poGross, reqTotalPaid));
+      setText("podia-rate", pct(poRate));
+      setText("podia-margin", pct(poMargin));
+    } else {
+      const po = calcPodia(buyerPaidPerUnit, volume, intl, paypal, rate);
+      poTotalFees = po.fees * volume;
+      poTotalNet = (po.net - unitDirectCost) * volume;
+      poRate = buyerPaidPerUnit > 0 ? (po.fees / buyerPaidPerUnit) : 0;
+      poGross = standardGross;
+      poMargin = poGross > 0 ? (poTotalNet / poGross) : 0;
+      poReqPrice = convPrice;
+
+      setText("podia-subtitle", `${fmt(39 * rate)}/mo Mover · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("podia-gross", fmt(poGross));
+      setText("podia-fees", fmt(-poTotalFees));
+      setText("podia-costs", fmt(-totalDirectCosts));
+      setText("podia-net", fmt(poTotalNet));
+      setText("podia-net-compact", fmtCompact(poTotalNet));
+      setText("podia-rate", pct(poRate));
+      setText("podia-margin", pct(poMargin));
+    }
 
     // 9. Stan Store
-    const sn = calcStan(convPrice, volume, intl, paypal, rate);
-    const snTotalNet = sn.net * volume;
-    const snTotalFees = sn.fees * volume;
-    const snRate = sn.fees / convPrice;
-    setText("stan-subtitle", `${fmt(29 * rate)}/mo Plan · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
-    setText("stan-gross", fmt(gross));
-    setText("stan-fees", fmt(-snTotalFees));
-    setText("stan-net", fmt(snTotalNet));
-    setText("stan-net-compact", fmtCompact(snTotalNet));
-    setText("stan-rate", pct(snRate));
+    let snTotalNet: number, snTotalFees: number, snRate: number, snMargin: number, snGross: number, snReqPrice: number;
+    if (isReverse) {
+      const snProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const snProcFixed = (paypal ? 0.49 : 0.30) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, snProcRate, snProcFixed + (29 * rate) / volume, unitDirectCost);
+      snReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      snGross = reqTotalPaid * volume;
+      snTotalFees = snGross - totalTargetNet - totalDirectCosts;
+      snTotalNet = totalTargetNet;
+      snRate = snGross > 0 ? (snTotalFees / snGross) : 0;
+      snMargin = snGross > 0 ? (snTotalNet / snGross) : 0;
+
+      setText("stan-subtitle", `${fmt(29 * rate)}/mo Creator · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("stan-gross", fmt(totalTargetNet));
+      setText("stan-fees", fmt(-snTotalFees));
+      setText("stan-costs", fmt(-totalDirectCosts));
+      setText("stan-net", `Charge ${fmt(snReqPrice)}`);
+      setText("stan-net-compact", formatReverseSubtext(snGross, reqTotalPaid));
+      setText("stan-rate", pct(snRate));
+      setText("stan-margin", pct(snMargin));
+    } else {
+      const sn = calcStan(buyerPaidPerUnit, volume, intl, paypal, rate);
+      snTotalFees = sn.fees * volume;
+      snTotalNet = (sn.net - unitDirectCost) * volume;
+      snRate = buyerPaidPerUnit > 0 ? (sn.fees / buyerPaidPerUnit) : 0;
+      snGross = standardGross;
+      snMargin = snGross > 0 ? (snTotalNet / snGross) : 0;
+      snReqPrice = convPrice;
+
+      setText("stan-subtitle", `${fmt(29 * rate)}/mo Creator · 0% fee + 2.9% + ${fmt(0.30 * rate)}`);
+      setText("stan-gross", fmt(snGross));
+      setText("stan-fees", fmt(-snTotalFees));
+      setText("stan-costs", fmt(-totalDirectCosts));
+      setText("stan-net", fmt(snTotalNet));
+      setText("stan-net-compact", fmtCompact(snTotalNet));
+      setText("stan-rate", pct(snRate));
+      setText("stan-margin", pct(snMargin));
+    }
 
     // 10. Teachable
-    const tc = calcTeachable(convPrice, volume, intl, paypal, rate);
-    const tcNets = [tc.basic.totalNet, tc.pro.totalNet];
-    const tcBestIdx = tcNets.indexOf(Math.max(...tcNets));
+    let tcBestNet: number, tcBestRate: number, tcBestMargin: number, tcBestGross: number, tcBestReqPrice: number, tcBestIdx: number;
     const tcBestLabels = ["Basic Plan", "Pro Plan"];
-    const tcBestNet = tcNets[tcBestIdx];
-    const tcBestRate = [tc.basic.fees / convPrice, tc.pro.fees / convPrice][tcBestIdx];
+    if (isReverse) {
+      const tcProcRate = paypal ? 0.0349 : (0.029 + (intl ? 0.015 : 0));
+      const tcProcFixed = (paypal ? 0.49 : 0.30) * rate;
 
-    highlightTier("teachable-basic-row", tcBestIdx === 0);
-    highlightTier("teachable-pro-row", tcBestIdx === 1);
+      const tcBasicReqTotal = solvePrice(targetNetPerUnit, 0.05 + tcProcRate, tcProcFixed + (39 * rate) / volume, unitDirectCost);
+      const tcBasicReqPrice = Math.max(0, tcBasicReqTotal - convShipCharge);
+      const tcBasicGross = tcBasicReqTotal * volume;
+      const tcBasicFees = tcBasicGross - totalTargetNet - totalDirectCosts;
+      const tcBasicRate = tcBasicGross > 0 ? (tcBasicFees / tcBasicGross) : 0;
 
-    setText("teachable-subtitle", `Basic ${fmt(39 * rate)}/mo + 5% · Pro ${fmt(119 * rate)}/mo + 0%`);
-    setText("teachable-basic-label", `Basic (${fmt(39 * rate)}/mo + 5%)`);
-    setText("teachable-pro-label", `Pro (${fmt(119 * rate)}/mo + 0%)`);
-    setText("teachable-basic-net", fmt(tc.basic.totalNet));
-    setText("teachable-basic-net-compact", fmtCompact(tc.basic.totalNet));
-    setText("teachable-basic-fees", fmt(tc.basic.totalFees));
-    setText("teachable-basic-rate", pct(tc.basic.fees / convPrice));
-    setText("teachable-pro-net", fmt(tc.pro.totalNet));
-    setText("teachable-pro-net-compact", fmtCompact(tc.pro.totalNet));
-    setText("teachable-pro-fees", fmt(tc.pro.totalFees));
-    setText("teachable-pro-rate", pct(tc.pro.fees / convPrice));
-    setText("teachable-best-label", `↑ ${tcBestLabels[tcBestIdx]} is best at this volume`);
+      const tcProReqTotal = solvePrice(targetNetPerUnit, tcProcRate, tcProcFixed + (119 * rate) / volume, unitDirectCost);
+      const tcProReqPrice = Math.max(0, tcProReqTotal - convShipCharge);
+      const tcProGross = tcProReqTotal * volume;
+      const tcProFees = tcProGross - totalTargetNet - totalDirectCosts;
+      const tcProRate = tcProGross > 0 ? (tcProFees / tcProGross) : 0;
+
+      const tcReqPrices = [tcBasicReqPrice, tcProReqPrice];
+      tcBestIdx = tcReqPrices.indexOf(Math.min(...tcReqPrices));
+      tcBestReqPrice = tcReqPrices[tcBestIdx];
+      const tcGrosses = [tcBasicGross, tcProGross];
+      tcBestGross = tcGrosses[tcBestIdx];
+      tcBestNet = totalTargetNet;
+      tcBestRate = [tcBasicRate, tcProRate][tcBestIdx];
+      tcBestMargin = tcBestGross > 0 ? (tcBestNet / tcBestGross) : 0;
+
+      highlightTier("teachable-basic-row", tcBestIdx === 0);
+      highlightTier("teachable-pro-row", tcBestIdx === 1);
+
+      setText("teachable-subtitle", `Basic ${fmt(39 * rate)}/mo + 5% · Pro ${fmt(119 * rate)}/mo + 0%`);
+      setText("teachable-basic-label", `Basic (${fmt(39 * rate)}/mo + 5%)`);
+      setText("teachable-pro-label", `Pro (${fmt(119 * rate)}/mo + 0%)`);
+      setText("teachable-basic-net", `Charge ${fmt(tcBasicReqPrice)}`);
+      setText("teachable-basic-net-compact", formatReverseSubtext(tcBasicGross, tcBasicReqTotal));
+      setText("teachable-basic-fees", fmt(tcBasicFees));
+      setText("teachable-basic-rate", pct(tcBasicRate));
+      setText("teachable-pro-net", `Charge ${fmt(tcProReqPrice)}`);
+      setText("teachable-pro-net-compact", formatReverseSubtext(tcProGross, tcProReqTotal));
+      setText("teachable-pro-fees", fmt(tcProFees));
+      setText("teachable-pro-rate", pct(tcProRate));
+      setText("teachable-costs", fmt(-totalDirectCosts));
+      setText("teachable-margin", pct(tcBestMargin));
+      setText("teachable-best-label", `↑ ${tcBestLabels[tcBestIdx]} lets you charge the lowest price`);
+    } else {
+      const tc = calcTeachable(buyerPaidPerUnit, volume, intl, paypal, rate);
+      const tcBasicNet = (tc.basic.net - unitDirectCost) * volume;
+      const tcProNet = (tc.pro.net - unitDirectCost) * volume;
+      const tcNets = [tcBasicNet, tcProNet];
+
+      tcBestIdx = tcNets.indexOf(Math.max(...tcNets));
+      tcBestNet = tcNets[tcBestIdx];
+      tcBestRate = [tc.basic.fees / buyerPaidPerUnit, tc.pro.fees / buyerPaidPerUnit][tcBestIdx];
+      tcBestGross = standardGross;
+      tcBestMargin = tcBestGross > 0 ? (tcBestNet / tcBestGross) : 0;
+      tcBestReqPrice = convPrice;
+
+      highlightTier("teachable-basic-row", tcBestIdx === 0);
+      highlightTier("teachable-pro-row", tcBestIdx === 1);
+
+      setText("teachable-subtitle", `Basic ${fmt(39 * rate)}/mo + 5% · Pro ${fmt(119 * rate)}/mo + 0%`);
+      setText("teachable-basic-label", `Basic (${fmt(39 * rate)}/mo + 5%)`);
+      setText("teachable-pro-label", `Pro (${fmt(119 * rate)}/mo + 0%)`);
+      setText("teachable-basic-net", fmt(tcBasicNet));
+      setText("teachable-basic-net-compact", fmtCompact(tcBasicNet));
+      setText("teachable-basic-fees", fmt(tc.basic.totalFees));
+      setText("teachable-basic-rate", pct(tc.basic.fees / buyerPaidPerUnit));
+      setText("teachable-pro-net", fmt(tcProNet));
+      setText("teachable-pro-net-compact", fmtCompact(tcProNet));
+      setText("teachable-pro-fees", fmt(tc.pro.totalFees));
+      setText("teachable-pro-rate", pct(tc.pro.fees / buyerPaidPerUnit));
+      setText("teachable-costs", fmt(-totalDirectCosts));
+      setText("teachable-margin", pct(tcBestMargin));
+      setText("teachable-best-label", `↑ ${tcBestLabels[tcBestIdx]} is best at this volume`);
+    }
 
     // 11. Fiverr
-    const fv = calcFiverr(convPrice);
-    const fvTotalNet = fv.net * volume;
-    const fvTotalFees = fv.fees * volume;
-    const fvRate = fv.fees / convPrice;
-    setText("fiverr-subtitle", `20% seller commission · Buyer pays processing fee`);
-    setText("fiverr-gross", fmt(gross));
-    setText("fiverr-fees", fmt(-fvTotalFees));
-    setText("fiverr-net", fmt(fvTotalNet));
-    setText("fiverr-net-compact", fmtCompact(fvTotalNet));
-    setText("fiverr-rate", pct(fvRate));
+    let fvTotalNet: number, fvTotalFees: number, fvRate: number, fvMargin: number, fvGross: number, fvReqPrice: number;
+    if (isReverse) {
+      const reqTotalPaid = solvePrice(targetNetPerUnit, 0.20, 0, unitDirectCost);
+      fvReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      fvGross = reqTotalPaid * volume;
+      fvTotalFees = fvGross - totalTargetNet - totalDirectCosts;
+      fvTotalNet = totalTargetNet;
+      fvRate = fvGross > 0 ? (fvTotalFees / fvGross) : 0;
+      fvMargin = fvGross > 0 ? (fvTotalNet / fvGross) : 0;
+
+      setText("fiverr-subtitle", "20% flat seller fee · Buyer pays gateway fees");
+      setText("fiverr-gross", fmt(totalTargetNet));
+      setText("fiverr-fees", fmt(-fvTotalFees));
+      setText("fiverr-costs", fmt(-totalDirectCosts));
+      setText("fiverr-net", `Charge ${fmt(fvReqPrice)}`);
+      setText("fiverr-net-compact", formatReverseSubtext(fvGross, reqTotalPaid));
+      setText("fiverr-rate", pct(fvRate));
+      setText("fiverr-margin", pct(fvMargin));
+    } else {
+      const fv = calcFiverr(buyerPaidPerUnit);
+      fvTotalFees = fv.fees * volume;
+      fvTotalNet = (fv.net - unitDirectCost) * volume;
+      fvRate = buyerPaidPerUnit > 0 ? (fv.fees / buyerPaidPerUnit) : 0;
+      fvGross = standardGross;
+      fvMargin = fvGross > 0 ? (fvTotalNet / fvGross) : 0;
+      fvReqPrice = convPrice;
+
+      setText("fiverr-subtitle", "20% flat seller fee · Buyer pays gateway fees");
+      setText("fiverr-gross", fmt(fvGross));
+      setText("fiverr-fees", fmt(-fvTotalFees));
+      setText("fiverr-costs", fmt(-totalDirectCosts));
+      setText("fiverr-net", fmt(fvTotalNet));
+      setText("fiverr-net-compact", fmtCompact(fvTotalNet));
+      setText("fiverr-rate", pct(fvRate));
+      setText("fiverr-margin", pct(fvMargin));
+    }
 
     // 12. Etsy
-    const et = calcEtsy(convPrice, intl, rate);
-    const etTotalNet = et.net * volume;
-    const etTotalFees = et.fees * volume;
-    const etRate = et.fees / convPrice;
-    setText("etsy-subtitle", `${fmt(0.20 * rate)} listing + 6.5% + 3% + ${fmt(0.25 * rate)} card`);
-    setText("etsy-gross", fmt(gross));
-    setText("etsy-fees", fmt(-etTotalFees));
-    setText("etsy-net", fmt(etTotalNet));
-    setText("etsy-net-compact", fmtCompact(etTotalNet));
-    setText("etsy-rate", pct(etRate));
+    let etTotalNet: number, etTotalFees: number, etRate: number, etMargin: number, etGross: number, etReqPrice: number;
+    if (isReverse) {
+      const etFeePct = 0.065 + 0.03 + (intl ? 0.025 : 0);
+      const etFixed = (0.20 + 0.25) * rate;
+      const reqTotalPaid = solvePrice(targetNetPerUnit, etFeePct, etFixed, unitDirectCost);
+      etReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      etGross = reqTotalPaid * volume;
+      etTotalFees = etGross - totalTargetNet - totalDirectCosts;
+      etTotalNet = totalTargetNet;
+      etRate = etGross > 0 ? (etTotalFees / etGross) : 0;
+      etMargin = etGross > 0 ? (etTotalNet / etGross) : 0;
+
+      setText("etsy-subtitle", `${fmt(0.20 * rate)} listing + 6.5% + 3% + ${fmt(0.25 * rate)} card`);
+      setText("etsy-gross", fmt(totalTargetNet));
+      setText("etsy-fees", fmt(-etTotalFees));
+      setText("etsy-costs", fmt(-totalDirectCosts));
+      setText("etsy-net", `Charge ${fmt(etReqPrice)}`);
+      setText("etsy-net-compact", formatReverseSubtext(etGross, reqTotalPaid));
+      setText("etsy-rate", pct(etRate));
+      setText("etsy-margin", pct(etMargin));
+    } else {
+      const et = calcEtsy(buyerPaidPerUnit, intl, rate);
+      etTotalFees = et.fees * volume;
+      etTotalNet = (et.net - unitDirectCost) * volume;
+      etRate = buyerPaidPerUnit > 0 ? (et.fees / buyerPaidPerUnit) : 0;
+      etGross = standardGross;
+      etMargin = etGross > 0 ? (etTotalNet / etGross) : 0;
+      etReqPrice = convPrice;
+
+      setText("etsy-subtitle", `${fmt(0.20 * rate)} listing + 6.5% + 3% + ${fmt(0.25 * rate)} card`);
+      setText("etsy-gross", fmt(etGross));
+      setText("etsy-fees", fmt(-etTotalFees));
+      setText("etsy-costs", fmt(-totalDirectCosts));
+      setText("etsy-net", fmt(etTotalNet));
+      setText("etsy-net-compact", fmtCompact(etTotalNet));
+      setText("etsy-rate", pct(etRate));
+      setText("etsy-margin", pct(etMargin));
+    }
 
     // 13. Amazon KDP
-    const kd = calcKDP(convPrice, rate);
-    const kdTotalNet = kd.net * volume;
-    const kdTotalFees = kd.fees * volume;
-    const kdRate = kd.fees / convPrice;
-    setText("kdp-subtitle", `30% fee (70% royalty) + ${fmt(0.15 * rate)}/MB · Amazon handles card fees`);
-    setText("kdp-gross", fmt(gross));
-    setText("kdp-fees", fmt(-kdTotalFees));
-    setText("kdp-net", fmt(kdTotalNet));
-    setText("kdp-net-compact", fmtCompact(kdTotalNet));
-    setText("kdp-rate", pct(kdRate));
+    let kdTotalNet: number, kdTotalFees: number, kdRate: number, kdMargin: number, kdGross: number, kdReqPrice: number;
+    if (isReverse) {
+      const reqTotalPaid = solvePrice(targetNetPerUnit, 0.30, 0.15 * rate, unitDirectCost);
+      kdReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      kdGross = reqTotalPaid * volume;
+      kdTotalFees = kdGross - totalTargetNet - totalDirectCosts;
+      kdTotalNet = totalTargetNet;
+      kdRate = kdGross > 0 ? (kdTotalFees / kdGross) : 0;
+      kdMargin = kdGross > 0 ? (kdTotalNet / kdGross) : 0;
+
+      setText("kdp-subtitle", `30% fee (70% royalty) + ${fmt(0.15 * rate)}/MB · Amazon handles card fees`);
+      setText("kdp-gross", fmt(totalTargetNet));
+      setText("kdp-fees", fmt(-kdTotalFees));
+      setText("kdp-costs", fmt(-totalDirectCosts));
+      setText("kdp-net", `Charge ${fmt(kdReqPrice)}`);
+      setText("kdp-net-compact", formatReverseSubtext(kdGross, reqTotalPaid));
+      setText("kdp-rate", pct(kdRate));
+      setText("kdp-margin", pct(kdMargin));
+    } else {
+      const kd = calcKDP(buyerPaidPerUnit, rate);
+      kdTotalFees = kd.fees * volume;
+      kdTotalNet = (kd.net - unitDirectCost) * volume;
+      kdRate = buyerPaidPerUnit > 0 ? (kd.fees / buyerPaidPerUnit) : 0;
+      kdGross = standardGross;
+      kdMargin = kdGross > 0 ? (kdTotalNet / kdGross) : 0;
+      kdReqPrice = convPrice;
+
+      setText("kdp-subtitle", `30% fee (70% royalty) + ${fmt(0.15 * rate)}/MB · Amazon handles card fees`);
+      setText("kdp-gross", fmt(kdGross));
+      setText("kdp-fees", fmt(-kdTotalFees));
+      setText("kdp-costs", fmt(-totalDirectCosts));
+      setText("kdp-net", fmt(kdTotalNet));
+      setText("kdp-net-compact", fmtCompact(kdTotalNet));
+      setText("kdp-rate", pct(kdRate));
+      setText("kdp-margin", pct(kdMargin));
+    }
 
     // 14. Upwork
-    const uw = calcUpwork(convPrice);
-    const uwTotalNet = uw.net * volume;
-    const uwTotalFees = uw.fees * volume;
-    const uwRate = uw.fees / convPrice;
-    setText("upwork-subtitle", `10% freelancer fee · Buyer pays gateway fees`);
-    setText("upwork-gross", fmt(gross));
-    setText("upwork-fees", fmt(-uwTotalFees));
-    setText("upwork-net", fmt(uwTotalNet));
-    setText("upwork-net-compact", fmtCompact(uwTotalNet));
-    setText("upwork-rate", pct(uwRate));
+    let uwTotalNet: number, uwTotalFees: number, uwRate: number, uwMargin: number, uwGross: number, uwReqPrice: number;
+    if (isReverse) {
+      const reqTotalPaid = solvePrice(targetNetPerUnit, 0.10, 0, unitDirectCost);
+      uwReqPrice = Math.max(0, reqTotalPaid - convShipCharge);
+      uwGross = reqTotalPaid * volume;
+      uwTotalFees = uwGross - totalTargetNet - totalDirectCosts;
+      uwTotalNet = totalTargetNet;
+      uwRate = 0.10;
+      uwMargin = uwGross > 0 ? (uwTotalNet / uwGross) : 0;
+
+      setText("upwork-subtitle", "10% freelancer fee · Buyer pays gateway fees");
+      setText("upwork-gross", fmt(totalTargetNet));
+      setText("upwork-fees", fmt(-uwTotalFees));
+      setText("upwork-costs", fmt(-totalDirectCosts));
+      setText("upwork-net", `Charge ${fmt(uwReqPrice)}`);
+      setText("upwork-net-compact", formatReverseSubtext(uwGross, reqTotalPaid));
+      setText("upwork-rate", pct(uwRate));
+      setText("upwork-margin", pct(uwMargin));
+    } else {
+      const uw = calcUpwork(buyerPaidPerUnit);
+      uwTotalFees = uw.fees * volume;
+      uwTotalNet = (uw.net - unitDirectCost) * volume;
+      uwRate = buyerPaidPerUnit > 0 ? (uw.fees / buyerPaidPerUnit) : 0;
+      uwGross = standardGross;
+      uwMargin = uwGross > 0 ? (uwTotalNet / uwGross) : 0;
+      uwReqPrice = convPrice;
+
+      setText("upwork-subtitle", "10% freelancer fee · Buyer pays gateway fees");
+      setText("upwork-gross", fmt(uwGross));
+      setText("upwork-fees", fmt(-uwTotalFees));
+      setText("upwork-costs", fmt(-totalDirectCosts));
+      setText("upwork-net", fmt(uwTotalNet));
+      setText("upwork-net-compact", fmtCompact(uwTotalNet));
+      setText("upwork-rate", pct(uwRate));
+      setText("upwork-margin", pct(uwMargin));
+    }
 
     // ── Collect Platform Dataset ─────────────────────────────
     interface PlatformData {
@@ -2439,26 +3617,29 @@
       cardId: string;
       name: string;
       net: number;
+      gross: number;
+      reqPrice: number;
       rate: number;
+      margin: number;
       isMoR: boolean;
       categories: string[];
     }
 
     const platforms: PlatformData[] = [
-      { id: "gumroad", cardId: "card-gumroad", name: "Gumroad", net: guTotalNet, rate: guRate, isMoR: false, categories: ["direct"] },
-      { id: "lemonsqueezy", cardId: "card-lemonsqueezy", name: "Lemon Squeezy", net: lsTotalNet, rate: lsRate, isMoR: true, categories: ["mor"] },
-      { id: "paddle", cardId: "card-paddle", name: "Paddle", net: pdTotalNet, rate: pdRate, isMoR: true, categories: ["mor"] },
-      { id: "payhip", cardId: "card-payhip", name: `Payhip (${phBestLabels[phBestIdx]})`, net: phBestNet, rate: phBestRate, isMoR: false, categories: ["direct", "monthly"] },
-      { id: "stripe", cardId: "card-stripe", name: "Stripe Direct", net: stTotalNet, rate: stRate, isMoR: false, categories: ["direct"] },
-      { id: "whop", cardId: "card-whop", name: "Whop", net: whTotalNet, rate: whRate, isMoR: false, categories: ["direct"] },
-      { id: "sellfy", cardId: "card-sellfy", name: "Sellfy", net: sfTotalNet, rate: sfRate, isMoR: false, categories: ["direct", "monthly"] },
-      { id: "podia", cardId: "card-podia", name: "Podia", net: poTotalNet, rate: poRate, isMoR: false, categories: ["direct", "monthly"] },
-      { id: "stan", cardId: "card-stan", name: "Stan Store", net: snTotalNet, rate: snRate, isMoR: false, categories: ["direct", "monthly"] },
-      { id: "teachable", cardId: "card-teachable", name: `Teachable (${tcBestLabels[tcBestIdx]})`, net: tcBestNet, rate: tcBestRate, isMoR: false, categories: ["direct", "monthly"] },
-      { id: "fiverr", cardId: "card-fiverr", name: "Fiverr", net: fvTotalNet, rate: fvRate, isMoR: false, categories: ["marketplace"] },
-      { id: "etsy", cardId: "card-etsy", name: "Etsy", net: etTotalNet, rate: etRate, isMoR: false, categories: ["marketplace"] },
-      { id: "kdp", cardId: "card-kdp", name: "Amazon KDP", net: kdTotalNet, rate: kdRate, isMoR: false, categories: ["marketplace"] },
-      { id: "upwork", cardId: "card-upwork", name: "Upwork", net: uwTotalNet, rate: uwRate, isMoR: false, categories: ["marketplace"] },
+      { id: "gumroad", cardId: "card-gumroad", name: "Gumroad", net: isReverse ? totalTargetNet : guTotalNet, gross: isReverse ? guGross : guGross, reqPrice: isReverse ? guReqPrice : convPrice, rate: guRate, margin: guMargin, isMoR: false, categories: ["direct"] },
+      { id: "lemonsqueezy", cardId: "card-lemonsqueezy", name: "Lemon Squeezy", net: isReverse ? totalTargetNet : lsTotalNet, gross: isReverse ? lsGross : lsGross, reqPrice: isReverse ? lsReqPrice : convPrice, rate: lsRate, margin: lsMargin, isMoR: true, categories: ["mor"] },
+      { id: "paddle", cardId: "card-paddle", name: "Paddle", net: isReverse ? totalTargetNet : pdTotalNet, gross: isReverse ? pdGross : pdGross, reqPrice: isReverse ? pdReqPrice : convPrice, rate: pdRate, margin: pdMargin, isMoR: true, categories: ["mor"] },
+      { id: "payhip", cardId: "card-payhip", name: `Payhip (${phBestLabels[phBestIdx]})`, net: isReverse ? totalTargetNet : phBestNet, gross: isReverse ? phBestGross : phBestGross, reqPrice: isReverse ? phBestReqPrice : convPrice, rate: phBestRate, margin: phBestMargin, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "stripe", cardId: "card-stripe", name: "Stripe Direct", net: isReverse ? totalTargetNet : stTotalNet, gross: isReverse ? stGross : stGross, reqPrice: isReverse ? stReqPrice : convPrice, rate: stRate, margin: stMargin, isMoR: false, categories: ["direct"] },
+      { id: "whop", cardId: "card-whop", name: "Whop", net: isReverse ? totalTargetNet : whTotalNet, gross: isReverse ? whGross : whGross, reqPrice: isReverse ? whReqPrice : convPrice, rate: whRate, margin: whMargin, isMoR: false, categories: ["direct"] },
+      { id: "sellfy", cardId: "card-sellfy", name: "Sellfy", net: isReverse ? totalTargetNet : sfTotalNet, gross: isReverse ? sfGross : sfGross, reqPrice: isReverse ? sfReqPrice : convPrice, rate: sfRate, margin: sfMargin, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "podia", cardId: "card-podia", name: "Podia", net: isReverse ? totalTargetNet : poTotalNet, gross: isReverse ? poGross : poGross, reqPrice: isReverse ? poReqPrice : convPrice, rate: poRate, margin: poMargin, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "stan", cardId: "card-stan", name: "Stan Store", net: isReverse ? totalTargetNet : snTotalNet, gross: isReverse ? snGross : snGross, reqPrice: isReverse ? snReqPrice : convPrice, rate: snRate, margin: snMargin, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "teachable", cardId: "card-teachable", name: `Teachable (${tcBestLabels[tcBestIdx]})`, net: isReverse ? totalTargetNet : tcBestNet, gross: isReverse ? tcBestGross : tcBestGross, reqPrice: isReverse ? tcBestReqPrice : convPrice, rate: tcBestRate, margin: tcBestMargin, isMoR: false, categories: ["direct", "monthly"] },
+      { id: "fiverr", cardId: "card-fiverr", name: "Fiverr", net: isReverse ? totalTargetNet : fvTotalNet, gross: isReverse ? fvGross : fvGross, reqPrice: isReverse ? fvReqPrice : convPrice, rate: fvRate, margin: fvMargin, isMoR: false, categories: ["marketplace"] },
+      { id: "etsy", cardId: "card-etsy", name: "Etsy", net: isReverse ? totalTargetNet : etTotalNet, gross: isReverse ? etGross : etGross, reqPrice: isReverse ? etReqPrice : convPrice, rate: etRate, margin: etMargin, isMoR: false, categories: ["marketplace"] },
+      { id: "kdp", cardId: "card-kdp", name: "Amazon KDP", net: isReverse ? totalTargetNet : kdTotalNet, gross: isReverse ? kdGross : kdGross, reqPrice: isReverse ? kdReqPrice : convPrice, rate: kdRate, margin: kdMargin, isMoR: false, categories: ["marketplace"] },
+      { id: "upwork", cardId: "card-upwork", name: "Upwork", net: isReverse ? totalTargetNet : uwTotalNet, gross: isReverse ? uwGross : uwGross, reqPrice: isReverse ? uwReqPrice : convPrice, rate: uwRate, margin: uwMargin, isMoR: false, categories: ["marketplace"] },
     ];
 
     // Filter platforms based on activeFilter
@@ -2467,11 +3648,29 @@
     );
 
     // Find Winner within active filter category
-    const activeWinner = [...filteredPlatforms].sort((a, b) => b.net - a.net)[0] || platforms[0];
+    const activeWinner = isReverse
+      ? [...filteredPlatforms].sort((a, b) => a.reqPrice - b.reqPrice)[0] || platforms[0]
+      : [...filteredPlatforms].sort((a, b) => b.net - a.net)[0] || platforms[0];
 
-    setText("winner-name", activeWinner.name);
-    setText("winner-net", `${fmt(activeWinner.net)} net`);
-    setText("winner-net-compact", fmtCompact(activeWinner.net));
+    if (isReverse) {
+      setText("winner-metric-label", "Lowest customer price to charge");
+      setText("winner-name", activeWinner.name);
+      setText("winner-net", `Charge ${fmt(activeWinner.reqPrice)}`);
+      setText("winner-net-compact", formatReverseSubtext(activeWinner.gross, activeWinner.reqPrice + convShipCharge));
+    } else {
+      setText("winner-metric-label", "Best net profit");
+      setText("winner-name", activeWinner.name);
+      setText("winner-net", `${fmt(activeWinner.net)} net`);
+      setText("winner-net-compact", fmtCompact(activeWinner.net));
+    }
+
+    // Update Winner Physical Summary
+    const winnerPhysicalSummary = el("winner-physical-summary");
+    if (winnerPhysicalSummary) {
+      winnerPhysicalSummary.style.display = isPhysical ? "block" : "none";
+      setText("winner-total-cogs-ship", `−${fmt(totalDirectCosts)}`);
+      setText("winner-net-margin", pct(activeWinner.margin));
+    }
 
     // Dispatch floating dock notification for active filter winner
     if (typeof window !== "undefined") {
@@ -2482,34 +3681,38 @@
             netFormatted: `${fmt(activeWinner.net)} net`,
             netCompact: fmtCompact(activeWinner.net),
             activeFilter: activeFilter,
+            isReverse: isReverse,
+            reqPriceFormatted: fmt(activeWinner.reqPrice),
+            grossFormatted: fmtCompact(activeWinner.gross),
           },
         })
       );
     }
 
-    // Deltas vs Active Winner (filtered by activeFilter, hide self-comparison, format ties)
+    // Deltas vs Active Winner
     interface DeltaConfig {
       id: string;
       cardId: string;
       net: number;
+      reqPrice: number;
       categories: string[];
     }
 
     const deltasConfig: DeltaConfig[] = [
-      { id: "delta-stripe", cardId: "card-stripe", net: stTotalNet, categories: ["direct"] },
-      { id: "delta-gumroad", cardId: "card-gumroad", net: guTotalNet, categories: ["direct"] },
-      { id: "delta-ls", cardId: "card-lemonsqueezy", net: lsTotalNet, categories: ["mor"] },
-      { id: "delta-paddle", cardId: "card-paddle", net: pdTotalNet, categories: ["mor"] },
-      { id: "delta-payhip", cardId: "card-payhip", net: phBestNet, categories: ["direct", "monthly"] },
-      { id: "delta-whop", cardId: "card-whop", net: whTotalNet, categories: ["direct"] },
-      { id: "delta-sellfy", cardId: "card-sellfy", net: sfTotalNet, categories: ["direct", "monthly"] },
-      { id: "delta-podia", cardId: "card-podia", net: poTotalNet, categories: ["direct", "monthly"] },
-      { id: "delta-stan", cardId: "card-stan", net: snTotalNet, categories: ["direct", "monthly"] },
-      { id: "delta-teachable", cardId: "card-teachable", net: tcBestNet, categories: ["direct", "monthly"] },
-      { id: "delta-fiverr", cardId: "card-fiverr", net: fvTotalNet, categories: ["marketplace"] },
-      { id: "delta-etsy", cardId: "card-etsy", net: etTotalNet, categories: ["marketplace"] },
-      { id: "delta-kdp", cardId: "card-kdp", net: kdTotalNet, categories: ["marketplace"] },
-      { id: "delta-upwork", cardId: "card-upwork", net: uwTotalNet, categories: ["marketplace"] },
+      { id: "delta-stripe", cardId: "card-stripe", net: isReverse ? totalTargetNet : stTotalNet, reqPrice: isReverse ? stReqPrice : convPrice, categories: ["direct"] },
+      { id: "delta-gumroad", cardId: "card-gumroad", net: isReverse ? totalTargetNet : guTotalNet, reqPrice: isReverse ? guReqPrice : convPrice, categories: ["direct"] },
+      { id: "delta-ls", cardId: "card-lemonsqueezy", net: isReverse ? totalTargetNet : lsTotalNet, reqPrice: isReverse ? lsReqPrice : convPrice, categories: ["mor"] },
+      { id: "delta-paddle", cardId: "card-paddle", net: isReverse ? totalTargetNet : pdTotalNet, reqPrice: isReverse ? pdReqPrice : convPrice, categories: ["mor"] },
+      { id: "delta-payhip", cardId: "card-payhip", net: isReverse ? totalTargetNet : phBestNet, reqPrice: isReverse ? phBestReqPrice : convPrice, categories: ["direct", "monthly"] },
+      { id: "delta-whop", cardId: "card-whop", net: isReverse ? totalTargetNet : whTotalNet, reqPrice: isReverse ? whReqPrice : convPrice, categories: ["direct"] },
+      { id: "delta-sellfy", cardId: "card-sellfy", net: isReverse ? totalTargetNet : sfTotalNet, reqPrice: isReverse ? sfReqPrice : convPrice, categories: ["direct", "monthly"] },
+      { id: "delta-podia", cardId: "card-podia", net: isReverse ? totalTargetNet : poTotalNet, reqPrice: isReverse ? poReqPrice : convPrice, categories: ["direct", "monthly"] },
+      { id: "delta-stan", cardId: "card-stan", net: isReverse ? totalTargetNet : snTotalNet, reqPrice: isReverse ? snReqPrice : convPrice, categories: ["direct", "monthly"] },
+      { id: "delta-teachable", cardId: "card-teachable", net: isReverse ? totalTargetNet : tcBestNet, reqPrice: isReverse ? tcBestReqPrice : convPrice, categories: ["direct", "monthly"] },
+      { id: "delta-fiverr", cardId: "card-fiverr", net: isReverse ? totalTargetNet : fvTotalNet, reqPrice: isReverse ? fvReqPrice : convPrice, categories: ["marketplace"] },
+      { id: "delta-etsy", cardId: "card-etsy", net: isReverse ? totalTargetNet : etTotalNet, reqPrice: isReverse ? etReqPrice : convPrice, categories: ["marketplace"] },
+      { id: "delta-kdp", cardId: "card-kdp", net: isReverse ? totalTargetNet : kdTotalNet, reqPrice: isReverse ? kdReqPrice : convPrice, categories: ["marketplace"] },
+      { id: "delta-upwork", cardId: "card-upwork", net: isReverse ? totalTargetNet : uwTotalNet, reqPrice: isReverse ? uwReqPrice : convPrice, categories: ["marketplace"] },
     ];
 
     for (const item of deltasConfig) {
@@ -2518,7 +3721,6 @@
       const row = (e.closest(".delta-row") as HTMLElement | null) || e.parentElement;
       const isWinnerCard = item.cardId === activeWinner.cardId;
       const isCategoryMatch = activeFilter === "all" || item.categories.includes(activeFilter);
-      // Hide self-comparison row and non-category matching rows
       const isVisible = isCategoryMatch && !isWinnerCard;
 
       if (row) {
@@ -2526,25 +3728,50 @@
       }
 
       if (isVisible) {
-        const delta = activeWinner.net - item.net;
-        if (Math.abs(delta) < 0.01) {
-          e.textContent = `${fmt(0)} (Tied)`;
-          e.style.color = "var(--text-body)";
+        if (isReverse) {
+          const delta = item.reqPrice - activeWinner.reqPrice;
+          if (Math.abs(delta) < 0.01) {
+            e.textContent = `${fmt(0)} (Tied)`;
+            e.style.color = "var(--text-body)";
+          } else {
+            e.textContent = `+${fmt(delta)} / sale`;
+            e.style.color = "var(--color-error)";
+          }
         } else {
-          e.textContent = fmt(-delta);
-          e.style.color = "var(--text-mute)";
+          const delta = activeWinner.net - item.net;
+          if (Math.abs(delta) < 0.01) {
+            e.textContent = `${fmt(0)} (Tied)`;
+            e.style.color = "var(--text-body)";
+          } else {
+            e.textContent = fmt(-delta);
+            e.style.color = "var(--text-mute)";
+          }
         }
       }
     }
 
     // Pro Tip
     let tip = "";
-    if (activeFilter === "mor") {
-      tip = "Lemon Squeezy and Paddle both charge 5% + $0.50 as Merchants of Record, auto-filing global VAT/GST taxes.";
-    } else if (activeWinner.isMoR) {
-      tip = `${activeWinner.name} handles all VAT/GST globally: no tax headaches.`;
+    if (isReverse) {
+      if (isPhysical) {
+        tip = `In Physical Mode, ${activeWinner.name} lets you charge the lowest item price (${fmt(activeWinner.reqPrice)}) to cover ${fmt(unitDirectCost)}/unit COGS & shipping while keeping 100% of your target net.`;
+      } else if (activeFilter === "mor") {
+        tip = "Lemon Squeezy and Paddle let you charge lower customer prices while automatically remitting global sales tax/VAT.";
+      } else if (activeWinner.isMoR) {
+        tip = `${activeWinner.name} lets you charge the lowest customer price while handling global taxes automatically.`;
+      } else {
+        tip = `${activeWinner.name} lets you charge the lowest price to customers (${fmt(activeWinner.reqPrice)}) while keeping 100% of your target profit.`;
+      }
     } else {
-      tip = `${activeWinner.name} gives maximum profit in this view. Consider Lemon Squeezy or Paddle for automatic global tax compliance.`;
+      if (isPhysical) {
+        tip = `Factoring in COGS & shipping, ${activeWinner.name} delivers ${fmt(activeWinner.net)} true net profit (${pct(activeWinner.margin)} margin). Consider Auto-Tax platforms if shipping cross-border.`;
+      } else if (activeFilter === "mor") {
+        tip = "Lemon Squeezy and Paddle both charge 5% + $0.50 as Merchants of Record, auto-filing global VAT/GST taxes.";
+      } else if (activeWinner.isMoR) {
+        tip = `${activeWinner.name} handles all VAT/GST globally: no tax headaches.`;
+      } else {
+        tip = `${activeWinner.name} gives maximum profit in this view. Consider Lemon Squeezy or Paddle for automatic global tax compliance.`;
+      }
     }
     setText("pro-tip-text", tip);
 
@@ -2561,7 +3788,6 @@
     const grid = el("platforms");
     if (!grid) return;
 
-    // Filter cards
     platforms.forEach((p) => {
       const card = el(p.cardId);
       if (!card) return;
@@ -2572,10 +3798,13 @@
       }
     });
 
-    // Sort visible cards via CSS order property
     const sortedPlatforms = [...platforms];
     if (activeSort === "net-desc") {
-      sortedPlatforms.sort((a, b) => b.net - a.net);
+      if (isReverse) {
+        sortedPlatforms.sort((a, b) => a.reqPrice - b.reqPrice);
+      } else {
+        sortedPlatforms.sort((a, b) => b.net - a.net);
+      }
     } else if (activeSort === "rate-asc") {
       sortedPlatforms.sort((a, b) => a.rate - b.rate);
     } else if (activeSort === "name-asc") {
@@ -2589,22 +3818,60 @@
       }
     });
 
-    // Keep Summary Card at order 999
     const summaryCard = el("card-winner");
     if (summaryCard) {
       summaryCard.style.order = "999";
     }
 
-    // Highlight active preset button if price/volume match
+    // Highlight active preset button if match
     document.querySelectorAll(".preset-btn").forEach((btn) => {
       const pAttr = Number(btn.getAttribute("data-price"));
       const vAttr = Number(btn.getAttribute("data-volume"));
-      if (pAttr === price && vAttr === volume) {
+      const cAttr = Number(btn.getAttribute("data-cogs") || 0);
+      const scAttr = Number(btn.getAttribute("data-ship-charge") || 0);
+      const scCostAttr = Number(btn.getAttribute("data-ship-cost") || 0);
+
+      const matches = pAttr === price && vAttr === volume &&
+        (!isPhysical || (Math.abs(cAttr - cogs) < 0.01 && Math.abs(scAttr - shippingCharge) < 0.01 && Math.abs(scCostAttr - shippingCost) < 0.01));
+
+      if (matches) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
       }
     });
+
+    // Populate simulation snapshot for CSV export
+    lastSnapshot = {
+      currency: selectedCurrency,
+      currencySymbol: curr.symbol,
+      rate,
+      calcMode,
+      unitPrice: convPrice,
+      salesVolume: volume,
+      grossRevenue: isReverse ? totalTargetNet : standardGross,
+      isPhysical,
+      cogs: convCogs,
+      shippingCharge: convShipCharge,
+      shippingCost: convShipCost,
+      intl,
+      paypal,
+      discover: gumroadDiscover,
+      platforms: platforms.map((p) => ({
+        id: p.id,
+        name: p.name,
+        category: p.categories.join(", "),
+        isMoR: p.isMoR,
+        gross: p.gross,
+        fees: Math.max(0, p.gross - p.net - (isPhysical ? totalDirectCosts : 0)),
+        directCosts: isPhysical ? totalDirectCosts : 0,
+        net: p.net,
+        rate: p.rate,
+        margin: p.margin,
+        reqPrice: p.reqPrice,
+        isWinner: p.id === activeWinner.id,
+      })),
+    };
   }
 
   // ── Event Wiring ───────────────────────────────────────────────
@@ -2694,6 +3961,96 @@
   wireToggle("toggle-intl", (b) => { intl = b; });
   wireToggle("toggle-paypal", (b) => { paypal = b; });
   wireToggle("toggle-gumroad-mode", (b) => { gumroadDiscover = b; });
+  wireToggle("toggle-physical", (b) => {
+    isPhysical = b;
+    // If enabling physical mode for the first time with 0 COGS, set reasonable default
+    if (isPhysical && cogs === 0 && shippingCharge === 0 && shippingCost === 0) {
+      cogs = 8;
+      shippingCharge = 4.99;
+      shippingCost = 4.50;
+    }
+    update();
+  });
+
+  // Wire COGS & Shipping Panel Inputs
+  function wireCogsInput(id: string, setter: (val: number) => void) {
+    const input = el(id) as HTMLInputElement | null;
+    if (!input) return;
+    input.addEventListener("input", () => {
+      const v = Number(input.value);
+      const rate = CURRENCIES[selectedCurrency]?.rate || 1;
+      if (!isNaN(v) && v >= 0) {
+        setter(v / rate);
+      } else {
+        setter(0);
+      }
+      update();
+    });
+  }
+
+  wireCogsInput("input-cogs", (val) => { cogs = val; });
+  wireCogsInput("input-shipping-charge", (val) => { shippingCharge = val; });
+  wireCogsInput("input-shipping-cost", (val) => { shippingCost = val; });
+
+  // Wire Free Shipping Quick Pill Button
+  const freeShipBtn = el("btn-free-shipping");
+  if (freeShipBtn) {
+    freeShipBtn.addEventListener("click", () => {
+      shippingCharge = 0;
+      const scInput = el("input-shipping-charge") as HTMLInputElement | null;
+      if (scInput) scInput.value = "0";
+      update();
+    });
+  }
+
+  // Mode Switcher Buttons
+  document.querySelectorAll(".mode-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetMode = btn.getAttribute("data-mode") as "standard" | "reverse";
+      if (!targetMode || targetMode === calcMode) return;
+
+      document.querySelectorAll(".mode-btn").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+
+      calcMode = targetMode;
+      const isReverse = calcMode === "reverse";
+
+      setText(
+        "mode-switcher-desc",
+        isReverse
+          ? "Calculate required selling price to pocket your target profit"
+          : "Calculate take-home profit from selling price"
+      );
+
+      setText(
+        "price-slider-title",
+        isReverse ? "Target Net Profit (per unit)" : "Product Price"
+      );
+
+      setText(
+        "preset-header-title",
+        isReverse ? "🎯 Target Profit Presets" : "⚡ 1-Click Quick Presets"
+      );
+
+      setText(
+        "preset-header-subtitle",
+        isReverse ? "Select a take-home goal to solve required pricing" : "Select a creator model to auto-fill"
+      );
+
+      const sSelect = el("sort-select") as HTMLSelectElement | null;
+      if (sSelect && sSelect.options.length > 0) {
+        sSelect.options[0].textContent = isReverse
+          ? "Lowest Price to Charge (Best)"
+          : "Highest Take-Home (Best)";
+      }
+
+      update();
+    });
+  });
 
   // Currency Selector Buttons
   document.querySelectorAll(".curr-btn").forEach((btn) => {
@@ -2713,9 +4070,19 @@
     btn.addEventListener("click", () => {
       const pAttr = Number(btn.getAttribute("data-price"));
       const vAttr = Number(btn.getAttribute("data-volume"));
+      const cAttr = Number(btn.getAttribute("data-cogs") || 0);
+      const scAttr = Number(btn.getAttribute("data-ship-charge") || 0);
+      const scCostAttr = Number(btn.getAttribute("data-ship-cost") || 0);
+
       if (pAttr && vAttr) {
         price = pAttr;
         volume = vAttr;
+
+        if (isPhysical) {
+          cogs = cAttr;
+          shippingCharge = scAttr;
+          shippingCost = scCostAttr;
+        }
 
         const pSlider = el("price-slider") as HTMLInputElement | null;
         const vInput = el("volume-input") as HTMLInputElement | null;
@@ -2776,12 +4143,272 @@
     }
   }
 
+  // ── 1-Click CSV Export Engine ────────────────────────────────
+  function exportMatrixToCSV() {
+    if (!lastSnapshot) return;
+    const snap = lastSnapshot;
+    const dateStr = new Date().toISOString().split("T")[0];
+
+    const escapeCsv = (val: string | number) => {
+      const str = String(val);
+      if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const lines: string[] = [];
+    lines.push(`Platform Fee Matrix - Live Simulation Export`);
+    lines.push(`Export Date,${dateStr}`);
+    lines.push(`Calculation Mode,${snap.calcMode === "reverse" ? "Target Net Take-Home (Reverse)" : "Standard Selling Price"}`);
+    lines.push(`Currency,${snap.currency} (${snap.currencySymbol})`);
+    lines.push(`Unit Price / Target Net,${snap.currencySymbol}${snap.unitPrice.toFixed(2)}`);
+    lines.push(`Monthly Sales Volume,${snap.salesVolume} units`);
+    if (snap.isPhysical) {
+      lines.push(`Product COGS / unit,${snap.currencySymbol}${snap.cogs.toFixed(2)}`);
+      lines.push(`Shipping Charged to Buyer / unit,${snap.currencySymbol}${snap.shippingCharge.toFixed(2)}`);
+      lines.push(`Actual Carrier Cost / unit,${snap.currencySymbol}${snap.shippingCost.toFixed(2)}`);
+    }
+    lines.push(`Payment Options,International Cards: ${snap.intl ? "Yes (+1.5%)" : "No"} | PayPal: ${snap.paypal ? "Yes" : "No"}`);
+    lines.push(``); // blank separator line
+
+    // CSV Table Header
+    lines.push([
+      "Platform",
+      "Category",
+      "Merchant of Record (Auto-Tax)",
+      `Gross Revenue (${snap.currency})`,
+      `Total Platform Fees (${snap.currency})`,
+      ...(snap.isPhysical ? [`Direct COGS & Shipping (${snap.currency})`] : []),
+      `Net Take-Home (${snap.currency})`,
+      "Effective Fee Rate (%)",
+      "Profit Margin (%)",
+      ...(snap.calcMode === "reverse" ? [`Required Selling Price (${snap.currency})`] : []),
+      "Winner Status"
+    ].map(escapeCsv).join(","));
+
+    // Sort platforms by net profit descending (or reqPrice ascending if reverse)
+    const sorted = [...snap.platforms].sort((a, b) => {
+      if (snap.calcMode === "reverse") return a.reqPrice - b.reqPrice;
+      return b.net - a.net;
+    });
+
+    sorted.forEach((p) => {
+      lines.push([
+        p.name,
+        p.category,
+        p.isMoR ? "Yes (Full Global Remit)" : "No (Seller Responsible)",
+        p.gross.toFixed(2),
+        p.fees.toFixed(2),
+        ...(snap.isPhysical ? [p.directCosts.toFixed(2)] : []),
+        p.net.toFixed(2),
+        (p.rate * 100).toFixed(2) + "%",
+        (p.margin * 100).toFixed(2) + "%",
+        ...(snap.calcMode === "reverse" ? [p.reqPrice.toFixed(2)] : []),
+        p.isWinner ? "WINNER (Best Margin)" : ""
+      ].map(escapeCsv).join(","));
+    });
+
+    lines.push(``);
+    lines.push(`Exported from PlatformFeeMatrix.com - Real-time creator fee & tax intelligence.`);
+
+    const csvContent = lines.join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `platform-fee-matrix-${snap.calcMode}-${dateStr}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Visual button feedback
+    const btnText = document.getElementById("export-csv-text");
+    if (btnText) {
+      btnText.textContent = "✓ Downloaded!";
+      setTimeout(() => {
+        btnText.textContent = "Export CSV";
+      }, 2000);
+    }
+  }
+
+  const exportBtn = el("btn-export-csv");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", exportMatrixToCSV);
+  }
+
+  // ── Embed Widget Modal Trigger ──────────────────────────────
+  const embedBtn = el("btn-open-embed");
+  if (embedBtn) {
+    embedBtn.addEventListener("click", () => {
+      if (typeof (window as any).openEmbedModal === "function") {
+        (window as any).openEmbedModal();
+      }
+    });
+  }
+
   // Initial render & fetch live rates
   update();
   fetchLiveRates();
 </script>
 
 <style>
+  /* Trust Badge & Rate Reporter Row */
+  .card-trust-row {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-mute);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .trust-dot {
+    color: var(--color-profit);
+    font-size: 8px;
+  }
+
+  .btn-report-rate {
+    background: transparent;
+    border: none;
+    color: var(--text-mute);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .btn-report-rate:hover {
+    color: var(--color-primary);
+    background: rgba(245, 158, 11, 0.08);
+  }
+
+  /* Toolbar Action Buttons (CSV & Embed) */
+  .toolbar-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-hairline-strong);
+    color: var(--text-ink);
+    padding: 6px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .toolbar-action-btn:hover {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  /* Mode Switcher */
+  .mode-switcher-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+
+  .mode-switcher-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .mode-switcher-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-ink);
+    letter-spacing: -0.2px;
+  }
+
+  .mode-switcher-subtitle {
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+
+  .calc-mode-switcher {
+    display: inline-flex;
+    background: rgba(17, 23, 38, 0.85);
+    border: 1px solid var(--border-hairline);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 4px;
+  }
+  :global(html.light) .calc-mode-switcher {
+    background: rgba(241, 245, 249, 0.95);
+    border-color: rgba(15, 23, 42, 0.12);
+  }
+
+  .mode-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 18px;
+    min-height: 42px;
+    border-radius: 100px;
+    border: none;
+    background: transparent;
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .mode-btn:hover {
+    color: var(--text-ink);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  :global(html.light) .mode-btn:hover {
+    color: #0f172a;
+    background: rgba(15, 23, 42, 0.05);
+  }
+  .mode-btn.active {
+    background: var(--color-primary);
+    color: #0b0f17;
+    font-weight: 700;
+    box-shadow: 0 2px 14px rgba(245, 158, 11, 0.35);
+  }
+  :global(html.light) .mode-btn.active {
+    background: #d97706;
+    color: #ffffff;
+    box-shadow: 0 2px 14px rgba(217, 119, 6, 0.3);
+  }
+
+  .mode-btn-icon {
+    font-size: 14px;
+    line-height: 1;
+  }
+
   /* Currency Selector Wrapper */
   .currency-selector-box {
     display: inline-flex;
@@ -2871,6 +4498,189 @@
     font-size: 11px;
     color: var(--text-mute);
     font-family: var(--font-mono);
+  }
+
+  /* COGS & Shipping Panel Styles */
+  .cogs-shipping-panel {
+    margin-top: 20px;
+    padding: 18px 20px;
+    border-radius: var(--radius-lg);
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: cogsFadeIn 0.25s ease forwards;
+  }
+  :global(html.light) .cogs-shipping-panel {
+    background: rgba(254, 243, 199, 0.45);
+    border-color: rgba(217, 119, 6, 0.3);
+  }
+
+  .cogs-panel-header {
+    margin-bottom: 14px;
+  }
+  .cogs-panel-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .cogs-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+  :global(html.light) .cogs-badge {
+    background: #fef3c7;
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+  .cogs-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-ink);
+    margin: 0;
+    letter-spacing: -0.2px;
+  }
+  .cogs-panel-subtitle {
+    font-size: 12px;
+    color: var(--text-mute);
+    line-height: 1.4;
+    display: block;
+  }
+
+  .cogs-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .cogs-input-card {
+    background: rgba(13, 19, 32, 0.6);
+    border: 1px solid var(--border-hairline);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  :global(html.light) .cogs-input-card {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.12);
+  }
+
+  .cogs-input-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cogs-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-ink);
+  }
+  .cogs-hint {
+    font-size: 11px;
+    color: var(--text-mute);
+  }
+
+  .free-ship-btn {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 100px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--color-profit);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .free-ship-btn:hover {
+    background: rgba(16, 185, 129, 0.25);
+    transform: translateY(-1px);
+  }
+
+  .cogs-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-hairline);
+    border-radius: 6px;
+    padding: 0 8px;
+    transition: border-color 0.15s ease;
+  }
+  .cogs-input-wrap:focus-within {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  }
+
+  .cogs-curr-sym {
+    font-size: 13px;
+    color: var(--text-mute);
+    font-family: var(--font-mono);
+  }
+
+  .cogs-num-input {
+    width: 100%;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-ink);
+    text-align: right;
+    font-family: var(--font-mono);
+    outline: none;
+  }
+
+  .cogs-summary-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    font-size: 11.5px;
+  }
+  :global(html.light) .cogs-summary-strip {
+    background: rgba(15, 23, 42, 0.05);
+  }
+
+  .cogs-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cogs-strip-label {
+    color: var(--text-mute);
+  }
+  .cogs-strip-val {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-ink);
+  }
+  .cogs-strip-warn {
+    color: #f59e0b;
+  }
+  .cogs-strip-divider {
+    width: 1px;
+    height: 14px;
+    background: var(--border-hairline);
+  }
+
+  @keyframes cogsFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* Filter Tabs */
@@ -2976,12 +4786,43 @@
       gap: 24px !important;
       margin-bottom: 24px !important;
     }
+    .mode-switcher-container {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+    }
+    .calc-mode-switcher {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      width: 100% !important;
+      border-radius: 14px !important;
+    }
+    .mode-btn {
+      min-height: 44px !important;
+      border-radius: 10px !important;
+      font-size: 12px !important;
+      padding: 8px 10px !important;
+      text-align: center !important;
+      justify-content: center !important;
+    }
     .preset-grid {
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 8px !important;
     }
     .preset-btn {
       padding: 8px 10px !important;
+    }
+    .cogs-inputs-grid {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+    .cogs-summary-strip {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px !important;
+    }
+    .cogs-strip-divider {
+      display: none !important;
     }
     .matrix-toolbar {
       flex-direction: column !important;
@@ -3021,6 +4862,11 @@
   }
 
   @media (max-width: 520px) {
+    .mode-btn {
+      font-size: 11px !important;
+      padding: 6px 6px !important;
+      gap: 4px !important;
+    }
     .currency-selector-box {
       display: flex !important;
       flex-wrap: wrap !important;
