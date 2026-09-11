@@ -4,6 +4,8 @@ import Nav from "../components/Nav.astro";
 import Calculator from "../components/Calculator.astro";
 import Footer from "../components/Footer.astro";
 import PlatformModal from "../components/PlatformModal.astro";
+import EmbedModal from "../components/EmbedModal.astro";
+import RateReportModal from "../components/RateReportModal.astro";
 
 const schemaJson = {
   "@context": "https://schema.org",
@@ -204,6 +206,20 @@ const schemaJson = {
           Explore All 14 Platform Profiles →
         </a>
         <a
+          href="/compare"
+          style="
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--color-profit);
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+        "
+        >
+          Compare Head-to-Head Matchups →
+        </a>
+        <a
           href="/guide"
           style="
           display: inline-flex;
@@ -215,13 +231,15 @@ const schemaJson = {
           text-decoration: none;
         "
         >
-          Read the Creator Fee & Tax Guide →
+          Read Creator Fee Guide →
         </a>
       </div>
     </div>
   </section>
 
   <PlatformModal />
+  <EmbedModal />
+  <RateReportModal />
 
   <Footer />
 </Layout>

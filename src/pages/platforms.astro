@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import PlatformModal from "../components/PlatformModal.astro";
+import RateReportModal from "../components/RateReportModal.astro";
 
 interface PlatformDetail {
   id: string;
@@ -440,7 +441,9 @@ const schemaJson = {
                   <img src={p.icon} width="32" height="32" alt={p.name} style="border-radius: 6px;" />
                   <div>
                     <h2 style="font-size: 18px; font-weight: 700; color: var(--text-ink); margin: 0; letter-spacing: -0.3px;">
-                      {p.name}
+                      <a href={`/platforms/${p.id}`} style="color: inherit; text-decoration: none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--text-ink)'">
+                        {p.name}
+                      </a>
                     </h2>
                     <span style="font-size: 12px; color: var(--text-mute); font-family: var(--font-mono);">
                       {p.taxMode.split('(')[0]}
@@ -496,29 +499,52 @@ const schemaJson = {
             </div>
 
             <!-- Card Footer / Actions -->
-            <div style="border-top: 1px solid var(--border-hairline); padding-top: 16px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 12px; color: var(--text-mute);">
-                Best for: <strong style="color: var(--text-ink);">{p.bestFor.split(',')[0]}</strong>
-              </span>
+            <div style="border-top: 1px solid var(--border-hairline); padding-top: 14px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+              <a
+                href={`/platforms/${p.id}`}
+                style="
+                  font-size: 12.5px;
+                  font-weight: 600;
+                  color: var(--color-primary);
+                  text-decoration: none;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 4px;
+                  transition: gap 0.15s ease;
+                "
+                onmouseover="this.style.textDecoration='underline'"
+                onmouseout="this.style.textDecoration='none'"
+              >
+                Full Fee Guide & Breakdown →
+              </a>
               <a
                 href="/calculator"
                 style="
                 display: inline-flex;
                 align-items: center;
                 gap: 4px;
-                background: rgba(245, 158, 11, 0.12);
-                border: 1px solid rgba(245, 158, 11, 0.3);
-                color: var(--color-primary);
-                padding: 6px 12px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid var(--border-hairline);
+                color: var(--text-ink);
+                padding: 5px 12px;
                 border-radius: 100px;
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: 500;
                 text-decoration: none;
                 transition: all 0.15s ease;
               "
+                onmouseover="this.style.background='rgba(245, 158, 11, 0.1)';this.style.borderColor='var(--color-primary)';"
+                onmouseout="this.style.background='rgba(255, 255, 255, 0.04)';this.style.borderColor='var(--border-hairline)';"
               >
-                Simulate Fee →
+                Simulate Fee ↗
               </a>
+              <!-- Trust Badge & Report Row -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-hairline); font-size: 11px; color: var(--text-mute); font-family: var(--font-mono); width: 100%;">
+                <span><span style="color: var(--color-profit); font-size: 8px;">●</span> Verified: Sep 2026</span>
+                <button type="button" class="btn-report-rate" data-platform={p.name} style="background:none; border:none; color:var(--text-mute); font-size:11px; cursor:pointer;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--text-mute)'">
+                  Report Change ↗
+                </button>
+              </div>
             </div>
           </article>
         ))
@@ -527,6 +553,7 @@ const schemaJson = {
   </section>
 
   <PlatformModal />
+  <RateReportModal />
   <Footer />
 </Layout>
 

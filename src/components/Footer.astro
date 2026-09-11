@@ -108,25 +108,25 @@
           width: 100%;
         "
         >
-          Platforms (14 Compared)
+          Platforms (14 Fee Guides)
         </p>
         <div style="display: grid; grid-template-columns: auto auto; gap: 8px 36px; text-align: left;">
           {
             [
-              { label: "Stripe Direct", url: "/platforms#stripe" },
-              { label: "Lemon Squeezy", url: "/platforms#lemonsqueezy" },
-              { label: "Paddle", url: "/platforms#paddle" },
-              { label: "Gumroad", url: "/platforms#gumroad" },
-              { label: "Whop", url: "/platforms#whop" },
-              { label: "Sellfy", url: "/platforms#sellfy" },
-              { label: "Podia", url: "/platforms#podia" },
-              { label: "Stan Store", url: "/platforms#stan" },
-              { label: "Payhip", url: "/platforms#payhip" },
-              { label: "Teachable", url: "/platforms#teachable" },
-              { label: "Fiverr", url: "/platforms#fiverr" },
-              { label: "Etsy", url: "/platforms#etsy" },
-              { label: "Amazon KDP", url: "/platforms#kdp" },
-              { label: "Upwork", url: "/platforms#upwork" },
+              { label: "Stripe Direct", url: "/platforms/stripe" },
+              { label: "Lemon Squeezy", url: "/platforms/lemonsqueezy" },
+              { label: "Paddle", url: "/platforms/paddle" },
+              { label: "Gumroad", url: "/platforms/gumroad" },
+              { label: "Whop", url: "/platforms/whop" },
+              { label: "Sellfy", url: "/platforms/sellfy" },
+              { label: "Podia", url: "/platforms/podia" },
+              { label: "Stan Store", url: "/platforms/stan" },
+              { label: "Payhip", url: "/platforms/payhip" },
+              { label: "Teachable", url: "/platforms/teachable" },
+              { label: "Fiverr", url: "/platforms/fiverr" },
+              { label: "Etsy", url: "/platforms/etsy" },
+              { label: "Amazon KDP", url: "/platforms/kdp" },
+              { label: "Upwork", url: "/platforms/upwork" },
             ].map(({ label, url }) => (
               <a
                 href={url}
@@ -138,6 +138,30 @@
               </a>
             ))
           }
+        </div>
+        <div style="margin-top: 16px; width: 100%; border-top: 1px solid var(--border-hairline); padding-top: 10px; text-align: left;">
+          <p
+            style="
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-mute);
+            margin: 0 0 6px;
+          "
+          >
+            Top Comparisons
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px;">
+            <a href="/compare/gumroad-vs-lemon-squeezy" style="color: var(--text-body); text-decoration: none;">Gumroad vs Lemon Squeezy</a>
+            <span style="color: var(--border-hairline);">·</span>
+            <a href="/compare/stripe-vs-paddle" style="color: var(--text-body); text-decoration: none;">Stripe vs Paddle</a>
+            <span style="color: var(--border-hairline);">·</span>
+            <a href="/compare/fiverr-vs-upwork" style="color: var(--text-body); text-decoration: none;">Fiverr vs Upwork</a>
+            <span style="color: var(--border-hairline);">·</span>
+            <a href="/compare" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">All 12 Comparisons →</a>
+          </div>
         </div>
       </div>
 
@@ -163,6 +187,7 @@
             [
               { label: "Fee Calculator", url: "/calculator" },
               { label: "Platforms Directory", url: "/platforms" },
+              { label: "Compare Platforms", url: "/compare" },
               { label: "Creator Fee Guide", url: "/guide" },
               { label: "FAQ & Methodology", url: "/faq" },
             ].map(({ label, url }) => (

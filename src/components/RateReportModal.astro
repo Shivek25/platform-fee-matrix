@@ -1,0 +1,412 @@
+---
+// RateReportModal.astro: Quick fee audit discrepancy reporter modal
+---
+
+<div id="rate-report-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card-container report-modal-container">
+    <!-- Close Cross Button -->
+    <button id="report-modal-close-btn" class="modal-close-chip" aria-label="Close modal">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Content: Form State -->
+    <div id="report-form-state">
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--color-profit); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 100px; font-weight: 600;">
+            FEE ACCURACY DESK
+          </span>
+        </div>
+        <h3 id="report-modal-title" style="font-size: 22px; font-weight: 700; color: var(--text-ink); margin: 0 0 6px; letter-spacing: -0.5px;">
+          Report Fee Discrepancy
+        </h3>
+        <p style="font-size: 14px; color: var(--text-body); margin: 0; line-height: 1.5;">
+          Notice a recent fee increase, pricing tier update, or hidden policy change? Help us keep Platform Fee Matrix 100% accurate for all creators.
+        </p>
+      </div>
+
+      <form id="rate-report-form" style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- Platform Target -->
+        <div>
+          <label for="report-platform-select" style="font-size: 12px; font-weight: 600; color: var(--text-ink); display: block; margin-bottom: 4px;">
+            Platform
+          </label>
+          <select id="report-platform-select" class="report-input-field" required>
+            <option value="Gumroad">Gumroad</option>
+            <option value="Lemon Squeezy">Lemon Squeezy</option>
+            <option value="Paddle">Paddle</option>
+            <option value="Stripe Direct">Stripe Direct</option>
+            <option value="Payhip">Payhip</option>
+            <option value="Whop">Whop</option>
+            <option value="Sellfy">Sellfy</option>
+            <option value="Podia">Podia</option>
+            <option value="Stan Store">Stan Store</option>
+            <option value="Teachable">Teachable</option>
+            <option value="Fiverr">Fiverr</option>
+            <option value="Etsy">Etsy</option>
+            <option value="Amazon KDP">Amazon KDP</option>
+            <option value="Upwork">Upwork</option>
+          </select>
+        </div>
+
+        <!-- Issue Category -->
+        <div>
+          <label for="report-issue-type" style="font-size: 12px; font-weight: 600; color: var(--text-ink); display: block; margin-bottom: 4px;">
+            Issue Type
+          </label>
+          <select id="report-issue-type" class="report-input-field" required>
+            <option value="rate_increase">Fee Cut or Commission Rate Increase</option>
+            <option value="gateway_surcharge">New Gateway / Payment Surcharge (PayPal, Intl)</option>
+            <option value="subscription_change">Monthly Subscription Tier Price Change</option>
+            <option value="tax_mor_policy">Sales Tax / Merchant of Record Policy Change</option>
+            <option value="payout_rules">Payout Delay or Minimum Withdrawal Threshold</option>
+            <option value="other">Other Discrepancy or Fine Print</option>
+          </select>
+        </div>
+
+        <!-- Source URL -->
+        <div>
+          <label for="report-source-url" style="font-size: 12px; font-weight: 600; color: var(--text-ink); display: block; margin-bottom: 4px;">
+            Official Source Link (Optional)
+          </label>
+          <input
+            type="url"
+            id="report-source-url"
+            class="report-input-field"
+            placeholder="https://platform.com/pricing or changelog link"
+          />
+        </div>
+
+        <!-- Explanation / Notes -->
+        <div>
+          <label for="report-details" style="font-size: 12px; font-weight: 600; color: var(--text-ink); display: block; margin-bottom: 4px;">
+            Details of the Change
+          </label>
+          <textarea
+            id="report-details"
+            class="report-input-field"
+            rows="3"
+            placeholder="Describe what changed (e.g. payout schedule changed from weekly to monthly, or fixed fee increased to $0.60)..."
+            required
+            style="resize: vertical; min-height: 70px;"
+          ></textarea>
+        </div>
+
+        <!-- Email (Optional) -->
+        <div>
+          <label for="report-email" style="font-size: 12px; font-weight: 600; color: var(--text-ink); display: block; margin-bottom: 4px;">
+            Your Email (Optional, to get notified when audited)
+          </label>
+          <input
+            type="email"
+            id="report-email"
+            class="report-input-field"
+            placeholder="creator@domain.com"
+          />
+        </div>
+
+        <!-- Actions Row -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
+          <button type="button" id="btn-cancel-report" class="report-btn-secondary">
+            Cancel
+          </button>
+          <button type="submit" id="btn-submit-report" class="report-btn-primary">
+            Submit Fee Report →
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Content: Success State -->
+    <div id="report-success-state" style="display: none; text-align: center; padding: 24px 12px 12px;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <h3 style="font-size: 20px; font-weight: 700; color: var(--text-ink); margin: 0 0 8px;">
+        Fee Report Received!
+      </h3>
+      <p style="font-size: 14.5px; color: var(--text-body); max-width: 440px; margin: 0 auto 24px; line-height: 1.6;">
+        Thank you for helping the creator community! Our research desk audits every reported change against verified pricing pages within 24 hours.
+      </p>
+
+      <button type="button" id="btn-close-success" class="report-btn-primary" style="margin: 0 auto;">
+        Done
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Glassmorphism Backdrop Overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(11, 15, 23, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .modal-overlay.modal-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Centered Modal Card Box */
+  .modal-card-container {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: rgba(17, 23, 38, 0.95);
+    border: 1px solid var(--border-hairline-strong);
+    border-radius: 20px;
+    padding: 30px 24px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.15);
+    transform: scale(0.92) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+
+  .modal-overlay.modal-open .modal-card-container {
+    transform: scale(1) translateY(0) !important;
+  }
+
+  :global(html.light) .modal-overlay {
+    background: rgba(15, 23, 42, 0.45);
+  }
+
+  :global(html.light) .modal-card-container {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 0 30px rgba(217, 119, 6, 0.1);
+  }
+
+  /* Close Chip Button */
+  .modal-close-chip {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close-chip:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-ink);
+    transform: rotate(90deg);
+  }
+  :global(html.light) .modal-close-chip {
+    background: rgba(15, 23, 42, 0.06);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: var(--text-mute);
+  }
+  :global(html.light) .modal-close-chip:hover {
+    background: rgba(15, 23, 42, 0.12);
+    color: var(--text-ink);
+  }
+
+  .report-modal-container {
+    max-width: 520px !important;
+  }
+
+  .report-input-field {
+    width: 100%;
+    background: var(--bg-input);
+    color: var(--text-ink);
+    border: 1px solid var(--border-hairline);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .report-input-field:focus {
+    border-color: var(--color-primary);
+  }
+
+  .report-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #0B0F17;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+  }
+
+  .report-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
+  }
+
+  .report-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-hairline);
+    color: var(--text-body);
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .report-btn-secondary:hover {
+    color: var(--text-ink);
+    background: rgba(255, 255, 255, 0.08);
+  }
+</style>
+
+<script>
+  function initRateReportModal() {
+    const overlay = document.getElementById("rate-report-modal-overlay");
+    const closeBtn = document.getElementById("report-modal-close-btn");
+    const cancelBtn = document.getElementById("btn-cancel-report");
+    const closeSuccessBtn = document.getElementById("btn-close-success");
+    const form = document.getElementById("rate-report-form") as HTMLFormElement | null;
+    const formState = document.getElementById("report-form-state");
+    const successState = document.getElementById("report-success-state");
+    const platformSelect = document.getElementById("report-platform-select") as HTMLSelectElement | null;
+    const modalTitle = document.getElementById("report-modal-title");
+
+    function closeModal() {
+      if (overlay) {
+        overlay.classList.remove("modal-open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+    if (closeSuccessBtn) closeSuccessBtn.addEventListener("click", closeModal);
+
+    if (overlay) {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay && overlay.classList.contains("modal-open")) {
+        closeModal();
+      }
+    });
+
+    // Handle Form Submit
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const platform = platformSelect ? platformSelect.value : "Unknown";
+        const issueType = (document.getElementById("report-issue-type") as HTMLSelectElement | null)?.value || "other";
+        const sourceUrl = (document.getElementById("report-source-url") as HTMLInputElement | null)?.value || "";
+        const details = (document.getElementById("report-details") as HTMLTextAreaElement | null)?.value || "";
+        const email = (document.getElementById("report-email") as HTMLInputElement | null)?.value || "";
+
+        const reportRecord = {
+          id: "report_" + Date.now(),
+          timestamp: new Date().toISOString(),
+          platform,
+          issueType,
+          sourceUrl,
+          details,
+          email,
+          status: "pending_review"
+        };
+
+        try {
+          const stored = JSON.parse(localStorage.getItem("pfm_rate_reports") || "[]");
+          stored.push(reportRecord);
+          localStorage.setItem("pfm_rate_reports", JSON.stringify(stored));
+        } catch (err) {
+          console.warn("Could not save to localStorage:", err);
+        }
+
+        console.log("Fee discrepancy report submitted:", reportRecord);
+
+        // Show success state
+        if (formState) formState.style.display = "none";
+        if (successState) successState.style.display = "block";
+      });
+    }
+
+    // Global hook to open Rate Report Modal with preselected platform
+    (window as any).openRateReportModal = (platformName?: string) => {
+      if (formState) formState.style.display = "block";
+      if (successState) successState.style.display = "none";
+      if (form) form.reset();
+
+      if (platformName && platformSelect) {
+        let found = false;
+        for (let i = 0; i < platformSelect.options.length; i++) {
+          if (platformSelect.options[i].text.toLowerCase().includes(platformName.toLowerCase()) ||
+              platformName.toLowerCase().includes(platformSelect.options[i].value.toLowerCase())) {
+            platformSelect.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (modalTitle) {
+          modalTitle.textContent = `Report Fee Change for ${platformName}`;
+        }
+      } else if (modalTitle) {
+        modalTitle.textContent = "Report Fee Discrepancy";
+      }
+
+      if (overlay) {
+        overlay.classList.add("modal-open");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+    };
+
+    // Delegated click handler on document for any .btn-report-rate
+    document.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement)?.closest(".btn-report-rate");
+      if (btn) {
+        e.preventDefault();
+        const pName = btn.getAttribute("data-platform") || undefined;
+        (window as any).openRateReportModal(pName);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRateReportModal);
+  } else {
+    initRateReportModal();
+  }
+  document.addEventListener("astro:page-load", initRateReportModal);
+</script>
