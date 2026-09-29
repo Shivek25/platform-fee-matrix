@@ -50,14 +50,15 @@ function calculateEstimatedNet(price: number, volume: number, p: PlatformSEOProf
 
 const pageTitle = `${platform.name} Fee Calculator & 2026 Pricing Breakdown | Platform Fee Matrix`;
 const pageDescription = `Complete fee breakdown and real-time take-home profit calculator for ${platform.name}. Learn hidden costs, refund policies, VAT remittance, and see exact net margins.`;
+const pageKeywords = `${platform.name.toLowerCase()} fee calculator, ${platform.name.toLowerCase()} fees, ${platform.name.toLowerCase()} pricing, platform fee, fee calculator, seller fees, fee comparison, net profit calculator`;
 
 // Schema.org Structured Data
 const schemaJson = [
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": platform.name,
-    "applicationCategory": "BusinessApplication",
+    "name": `${platform.name} Fee Calculator`,
+    "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web",
     "offers": {
       "@type": "Offer",
@@ -109,6 +110,7 @@ const schemaJson = [
 <Layout
   title={pageTitle}
   description={pageDescription}
+  keywords={pageKeywords}
   schemaJson={schemaJson}
 >
   <Nav />

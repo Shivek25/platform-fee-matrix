@@ -6,16 +6,20 @@ import FloatingDock from "../components/FloatingDock.astro";
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
   canonical?: string;
   ogType?: string;
+  ogImage?: string;
   schemaJson?: object | object[];
 }
 
 const {
-  title = "Platform Fee Matrix | Compare Digital Product Platform Fees",
-  description = "Compare net profit across Gumroad, Lemon Squeezy, Payhip, Stripe, and Whop with our real-time interactive fee calculator. Find the best platform for your digital products.",
-  canonical = `https://platformfeematrix.com${Astro.url.pathname}`,
+  title = "Fee Calculator | Compare PayPal, Stripe, Fiverr, Etsy & 14 Platform Fees",
+  description = "Free interactive fee calculator & platform fee comparison. Calculate exact take-home profit & seller fees across PayPal (goods & services), Stripe, Etsy, Fiverr, Gumroad, Whop, and 14+ platforms.",
+  keywords = "fee calculator, platform fee calculator, paypal fee calculator, paypal goods and services fee calculator, stripe fee calculator, etsy fee calculator, fiverr fee calculator, upwork fee calculator, gumroad fee calculator, lemon squeezy fee calculator, whop fee calculator, platform fee, fee comparison, creator fee calculator, seller fee calculator, payment processing fees",
+  canonical = `https://platformfeematrix.com${Astro.url.pathname.replace(/\/+$/, "") || "/"}`,
   ogType = "website",
+  ogImage = "https://platformfeematrix.com/og-image.jpg",
   schemaJson,
 } = Astro.props;
 ---
@@ -25,27 +29,40 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link id="app-favicon" rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon-dark.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO -->
+    <!-- SEO & Indexing -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Platform Fee Matrix" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Platform Fee Matrix - Fee Calculator & Platform Fee Comparison" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Platform Fee Matrix - Fee Calculator & Platform Fee Comparison" />
 
+    <!-- Structured Data (JSON-LD) -->
     {schemaJson && (
       <script
         type="application/ld+json"
@@ -62,14 +79,57 @@ const {
       rel="stylesheet"
     />
 
-    <!-- Dark mode initialization -->
+    <!-- Dark/Light mode & dynamic favicon initialization -->
     <script is:inline>
       (function () {
+        function updateFavicon(isLight) {
+          let favicon = document.getElementById("app-favicon");
+          const targetHref = isLight ? "/favicon-light.svg" : "/favicon-dark.svg";
+          if (!favicon) {
+            favicon = document.createElement("link");
+            favicon.id = "app-favicon";
+            favicon.rel = "icon";
+            favicon.type = "image/svg+xml";
+            document.head.appendChild(favicon);
+          }
+          favicon.setAttribute("href", targetHref);
+        }
+
         const stored = localStorage.getItem("theme");
-        if (stored === "light") {
+        const systemPrefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+        const isLight = stored === "light" || (!stored && systemPrefersLight);
+
+        if (isLight) {
           document.documentElement.classList.add("light");
+          document.documentElement.classList.remove("dark");
         } else {
           document.documentElement.classList.add("dark");
+          document.documentElement.classList.remove("light");
+        }
+        updateFavicon(isLight);
+
+        // Instant reactivity when user switches theme in-app
+        window.addEventListener("themechanged", function () {
+          const currentIsLight = document.documentElement.classList.contains("light");
+          updateFavicon(currentIsLight);
+        });
+
+        // Instant reactivity if OS theme changes without manual override
+        if (window.matchMedia) {
+          try {
+            window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (e) {
+              if (!localStorage.getItem("theme")) {
+                if (e.matches) {
+                  document.documentElement.classList.add("light");
+                  document.documentElement.classList.remove("dark");
+                } else {
+                  document.documentElement.classList.add("dark");
+                  document.documentElement.classList.remove("light");
+                }
+                updateFavicon(e.matches);
+              }
+            });
+          } catch (_) {}
         }
       })();
     </script>

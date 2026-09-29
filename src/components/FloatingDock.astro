@@ -270,6 +270,17 @@ const isCalcPage = pathname === "/" || pathname === "/calculator";
       });
     }
 
+    const calcLink = dockEl.querySelector('a.dock-chip-btn[href="/calculator"]');
+    if (calcLink) {
+      calcLink.addEventListener('click', (e) => {
+        const controls = document.querySelector('.sticky-controls-card') || calcEl;
+        if (controls) {
+          e.preventDefault();
+          controls.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
     // Filter label titles for display
     const FILTER_LABELS: Record<string, string> = {
       all: "Overall Best",

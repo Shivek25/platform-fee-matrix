@@ -1,5 +1,6 @@
 ---
 // src/pages/embed.astro: Standalone iframe-embeddable calculator widget
+import BrandLogo from "../components/BrandLogo.astro";
 ---
 
 <!doctype html>
@@ -9,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, follow" />
     <title>Platform Fee Matrix Calculator Widget</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -260,12 +262,7 @@
       <!-- Header -->
       <div class="widget-header">
         <a href="https://platformfeematrix.com" target="_blank" rel="noopener" class="widget-brand">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <rect x="2" y="14" width="4" height="8" rx="1" fill="#F59E0B" opacity="0.5"></rect>
-            <rect x="8" y="9" width="4" height="13" rx="1" fill="#F59E0B" opacity="0.75"></rect>
-            <rect x="14" y="4" width="4" height="18" rx="1" fill="#10B981" opacity="0.9"></rect>
-            <rect x="20" y="1" width="2" height="21" rx="1" fill="#F59E0B"></rect>
-          </svg>
+          <BrandLogo size={22} />
           <span class="widget-title">Platform Fee Matrix</span>
         </a>
         <span class="widget-badge" id="gross-badge">Gross: $1,250</span>
