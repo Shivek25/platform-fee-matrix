@@ -10,30 +10,33 @@ import RateReportModal from "../components/RateReportModal.astro";
 const schemaJson = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Platform Fee Matrix Calculator",
+  "name": "Fee Calculator - Platform Fee Matrix",
   "url": "https://platformfeematrix.com/calculator",
-  "applicationCategory": "BusinessApplication",
+  "applicationCategory": "FinanceApplication",
   "operatingSystem": "All",
-  "description": "Interactive real-time fee calculator comparing net take-home earnings across 14 digital product, creator, and freelance platforms including Gumroad, Lemon Squeezy, Stripe, Payhip, Whop, Paddle, Fiverr, Upwork, and Etsy.",
+  "description": "Interactive real-time fee calculator comparing net take-home earnings across 14 digital product, creator, and freelance platforms including PayPal, Stripe, Fiverr, Etsy, Gumroad, Lemon Squeezy, Payhip, Whop, and Upwork.",
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
   },
   "featureList": [
-    "Real-time profit simulation at exact product price and monthly volume",
-    "Multi-currency support (USD, EUR, GBP, INR) with live exchange rates",
-    "PayPal vs Stripe standard fee comparison",
-    "International credit card surcharge modeling (+1.5%)",
+    "Real-time fee calculator simulating profit at exact product price and monthly volume",
+    "PayPal Goods and Services fee calculator and standard processing comparison",
+    "Stripe domestic (2.9% + $0.30) and international card fee calculation",
+    "Fiverr (20%) and Upwork (10%) freelance platform fee calculator",
+    "Etsy marketplace listing and transaction fee breakdown",
+    "Multi-currency support (USD, EUR, GBP, INR, CAD, AUD) with live exchange rates",
     "Merchant of Record (MoR) global VAT/GST compliance analysis",
-    "Subscription tier optimization for Payhip and Teachable"
+    "Reverse target take-home pricing calculation mode"
   ]
 };
 ---
 
 <Layout
-  title="Interactive Creator & Digital Product Fee Calculator (14 Platforms) | Platform Fee Matrix"
-  description="Calculate your exact take-home profit across Gumroad, Lemon Squeezy, Stripe, Payhip, Whop, Paddle, Sellfy, Podia, Stan Store, Teachable, Fiverr, Etsy, Amazon KDP, and Upwork."
+  title="Fee Calculator – Calculate PayPal, Stripe, Fiverr, Etsy & 14 Platform Fees"
+  description="Free online fee calculator. Calculate exact seller cuts, payment processing fees (Stripe vs PayPal Goods and Services), and net profit across 14 platforms including Etsy, Fiverr, and Gumroad."
+  keywords="fee calculator, platform fee calculator, paypal fee calculator, paypal goods and services fee calculator, stripe fee calculator, etsy fee calculator, fiverr fee calculator, upwork fee calculator, gumroad fee calculator, platform fee, fee comparison, seller fee calculator"
   schemaJson={schemaJson}
 >
   <Nav />

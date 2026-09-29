@@ -19,11 +19,27 @@ export const GET: APIRoute = async () => {
     <!-- Subtle Border -->
     <rect width="196" height="28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" rx="6" />
     
-    <!-- Mini Logo Bars -->
-    <g transform="translate(10, 8)">
-      <rect x="0" y="6" width="2" height="6" rx="0.5" fill="#F59E0B" opacity="0.6"/>
-      <rect x="3.5" y="3.5" width="2" height="8.5" rx="0.5" fill="#F59E0B" opacity="0.85"/>
-      <rect x="7" y="1" width="2" height="11" rx="0.5" fill="#10B981"/>
+    <!-- Mini Calculator Emblem -->
+    <g transform="translate(8, 6)">
+      <radialGradient id="badge-emblem-rad" cx="35%" cy="32%" r="65%">
+        <stop offset="0%" stop-color="#10B981" />
+        <stop offset="55%" stop-color="#059669" />
+        <stop offset="85%" stop-color="#F59E0B" />
+        <stop offset="100%" stop-color="#D97706" />
+      </radialGradient>
+      <circle cx="8" cy="8" r="7.5" fill="url(#badge-emblem-rad)" />
+      <g transform="translate(2.5, 2.5) scale(0.45)" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="2" width="16" height="20" rx="2.5" fill="#FFFFFF" stroke="#0B0F17" stroke-width="2" />
+        <line x1="7.5" y1="6.5" x2="16.5" y2="6.5" stroke="#0B0F17" stroke-width="2.2" />
+        <line x1="16" y1="14" x2="16" y2="18" stroke="#F59E0B" stroke-width="2.2" />
+        <path d="M16 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+        <path d="M12 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+        <path d="M8 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+        <path d="M12 14.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+        <path d="M8 14.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+        <path d="M12 18.2h.01" stroke="#10B981" stroke-width="2.6" />
+        <path d="M8 18.2h.01" stroke="#10B981" stroke-width="2.6" />
+      </g>
     </g>
 
     <!-- Left Text -->

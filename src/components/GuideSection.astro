@@ -37,7 +37,7 @@
       line-height: 1.15;
     "
     >
-      Understanding digital platform fees: a guide for creators.
+      Understanding digital platform fees & calculator math: a creator's guide.
     </h2>
 
     <div
@@ -51,19 +51,16 @@
       <h3
         style="font-size: 20px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;"
       >
-        How platform fees actually work
+        How platform fee calculators model seller costs
       </h3>
       <p style="margin: 0 0 24px;">
-        Every platform that sells digital products, whether an ebook, template,
-        course, or SaaS subscription, charges some combination of a <strong
-          style="color: var(--text-ink);">platform percentage</strong
+        Every platform that sells digital products or services charges some combination of a <strong
+          style="color: var(--text-ink);">platform percentage cut</strong
         >, a <strong style="color: var(--text-ink);"
           >fixed transaction fee</strong
         >, and a <strong style="color: var(--text-ink);"
-          >payment processing fee</strong
-        >. These three layers compound differently depending on your price
-        point, which is why a platform that looks "cheaper" at $10 products can
-        be more expensive at $100 products.
+          >payment processing fee (like Stripe or PayPal Goods & Services)</strong
+        >. These layers compound differently depending on your price point and monthly unit volume, which is why a fee comparison tool is indispensable before launching.
       </p>
       <p style="margin: 0 0 24px;">
         Take Gumroad's Direct pricing: 10% of the sale price plus $0.50 per
@@ -243,22 +240,20 @@
       <h3
         style="font-size: 20px; font-weight: 600; color: var(--text-ink); margin: 0 0 12px; letter-spacing: -0.4px;"
       >
-        International card surcharges and PayPal
+        PayPal Goods & Services vs. Stripe vs. International Cards
       </h3>
       <p style="margin: 0 0 24px;">
-        When customers use non-US credit or debit cards, Stripe applies a 1.5%
-        international surcharge on top of the standard 2.9% rate. On platforms
+        When customers use non-US credit or debit cards, payment processors like Stripe apply a 1.5%
+        international cross-border surcharge on top of the domestic 2.9% + $0.30 rate. On platforms
         that pass card processing costs through (Gumroad Direct, Payhip, Whop),
-        this surcharge flows to you. Use the "International Cards" toggle in the
-        calculator above to model this scenario, particularly important if more
-        than 30% of your audience is outside the United States.
+        this surcharge directly affects your bottom line. Use the "International Cards" toggle in the
+        fee calculator above to simulate this impact if more than 20% of your audience purchases from abroad.
       </p>
       <p style="margin: 0 0 0;">
-        PayPal processing is an alternative to card processing on many
-        platforms. PayPal's standard rate (3.49% + $0.49 per transaction) is
-        typically more expensive than Stripe for small-ticket items but can be
-        preferable for buyers who distrust card-on-file payments. Toggle PayPal
-        in the calculator to compare the impact on your net margins.
+        PayPal Goods and Services is an essential alternative checkout option. While PayPal's standard merchant
+        rate (3.49% + $0.49 per domestic transaction) is slightly higher than Stripe, offering PayPal can lift
+        checkout completion rates by 15%–25% for buyers who hesitate to enter credit card numbers directly. Toggle
+        PayPal in our fee calculator above to see how payment gateway choice impacts your exact net take-home profit.
       </p>
     </div>
   </div>

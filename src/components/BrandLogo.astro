@@ -1,0 +1,107 @@
+---
+// src/components/BrandLogo.astro: Unified website brand logo mark with dark/light mode reactivity
+interface Props {
+  size?: number;
+  class?: string;
+  glow?: boolean;
+}
+
+const { size = 26, class: className = "", glow = false } = Astro.props;
+---
+
+<div
+  class={`brand-logo-wrap ${className}`}
+  style={`width: ${size}px; height: ${size}px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; ${glow ? "filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.35));" : ""}`}
+  aria-hidden="true"
+>
+  <!-- Dark Mode Brand Icon -->
+  <svg
+    class="brand-icon-dark"
+    width={size}
+    height={size}
+    viewBox="0 0 512 512"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <radialGradient id="brand-dark-rad" cx="35%" cy="32%" r="65%">
+        <stop offset="0%" stop-color="#10B981" />
+        <stop offset="55%" stop-color="#059669" />
+        <stop offset="85%" stop-color="#F59E0B" />
+        <stop offset="100%" stop-color="#D97706" />
+      </radialGradient>
+      <filter id="brand-dark-shadow" x="-10%" y="-10%" width="120%" height="125%" filterUnits="userSpaceOnUse">
+        <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.35" />
+      </filter>
+    </defs>
+    <circle cx="256" cy="256" r="236" fill="url(#brand-dark-rad)" filter="url(#brand-dark-shadow)" />
+    <g transform="translate(40, 40) scale(18)" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2.5" fill="#FFFFFF" stroke="#0B0F17" stroke-width="1.8" />
+      <line x1="7.5" y1="6.5" x2="16.5" y2="6.5" stroke="#0B0F17" stroke-width="2.2" />
+      <line x1="16" y1="14" x2="16" y2="18" stroke="#F59E0B" stroke-width="2.2" />
+      <path d="M16 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+      <path d="M12 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+      <path d="M8 10.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+      <path d="M12 14.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+      <path d="M8 14.2h.01" stroke="#0B0F17" stroke-width="2.6" />
+      <path d="M12 18.2h.01" stroke="#10B981" stroke-width="2.6" />
+      <path d="M8 18.2h.01" stroke="#10B981" stroke-width="2.6" />
+    </g>
+  </svg>
+
+  <!-- Light Mode Brand Icon -->
+  <svg
+    class="brand-icon-light"
+    width={size}
+    height={size}
+    viewBox="0 0 512 512"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <radialGradient id="brand-light-rad" cx="35%" cy="32%" r="65%">
+        <stop offset="0%" stop-color="#F59E0B" />
+        <stop offset="55%" stop-color="#D97706" />
+        <stop offset="85%" stop-color="#10B981" />
+        <stop offset="100%" stop-color="#059669" />
+      </radialGradient>
+      <filter id="brand-light-shadow" x="-10%" y="-10%" width="120%" height="125%" filterUnits="userSpaceOnUse">
+        <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.16" />
+      </filter>
+    </defs>
+    <circle cx="256" cy="256" r="236" fill="url(#brand-light-rad)" filter="url(#brand-light-shadow)" />
+    <g transform="translate(40, 40) scale(18)" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2.5" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8" />
+      <line x1="7.5" y1="6.5" x2="16.5" y2="6.5" stroke="#0F172A" stroke-width="2.2" />
+      <line x1="16" y1="14" x2="16" y2="18" stroke="#D97706" stroke-width="2.2" />
+      <path d="M16 10.2h.01" stroke="#0F172A" stroke-width="2.6" />
+      <path d="M12 10.2h.01" stroke="#0F172A" stroke-width="2.6" />
+      <path d="M8 10.2h.01" stroke="#0F172A" stroke-width="2.6" />
+      <path d="M12 14.2h.01" stroke="#0F172A" stroke-width="2.6" />
+      <path d="M8 14.2h.01" stroke="#0F172A" stroke-width="2.6" />
+      <path d="M12 18.2h.01" stroke="#059669" stroke-width="2.6" />
+      <path d="M8 18.2h.01" stroke="#059669" stroke-width="2.6" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .brand-icon-dark {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .brand-icon-light {
+    display: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Automatically switch icons when theme changes */
+  :global(html.light) .brand-icon-dark {
+    display: none !important;
+  }
+  :global(html.light) .brand-icon-light {
+    display: block !important;
+  }
+</style>

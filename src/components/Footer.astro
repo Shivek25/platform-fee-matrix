@@ -1,5 +1,6 @@
 ---
 // Footer.astro: Modern, comprehensive multi-page footer for SEO & AdSense compliance
+import BrandLogo from "./BrandLogo.astro";
 ---
 
 <footer
@@ -36,40 +37,7 @@
           text-decoration: none;
         "
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="2"
-              y="14"
-              width="4"
-              height="8"
-              rx="1"
-              fill="#F59E0B"
-              opacity="0.5"></rect>
-            <rect
-              x="8"
-              y="9"
-              width="4"
-              height="13"
-              rx="1"
-              fill="#F59E0B"
-              opacity="0.75"></rect>
-            <rect
-              x="14"
-              y="4"
-              width="4"
-              height="18"
-              rx="1"
-              fill="#10B981"
-              opacity="0.9"></rect>
-            <rect x="20" y="1" width="2" height="21" rx="1" fill="#F59E0B"
-            ></rect>
-          </svg>
+          <BrandLogo size={24} />
           <span
             style="font-size: 15px; font-weight: 700; color: var(--text-ink); letter-spacing: -0.2px;"
             >Platform Fee Matrix</span
@@ -139,8 +107,9 @@
             ))
           }
         </div>
-        <div style="margin-top: 16px; width: 100%; border-top: 1px solid var(--border-hairline); padding-top: 10px; text-align: left;">
+        <div class="footer-comparisons-row" style="margin-top: 16px; width: 100%; border-top: 1px solid var(--border-hairline); padding-top: 10px; text-align: center; display: flex; flex-direction: column; align-items: center;">
           <p
+            class="footer-comparisons-heading"
             style="
             font-family: var(--font-mono);
             font-size: 10.5px;
@@ -149,18 +118,20 @@
             letter-spacing: 0.08em;
             color: var(--text-mute);
             margin: 0 0 6px;
+            text-align: center;
           "
           >
             Top Comparisons
           </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px;">
-            <a href="/compare/gumroad-vs-lemon-squeezy" style="color: var(--text-body); text-decoration: none;">Gumroad vs Lemon Squeezy</a>
-            <span style="color: var(--border-hairline);">·</span>
-            <a href="/compare/stripe-vs-paddle" style="color: var(--text-body); text-decoration: none;">Stripe vs Paddle</a>
-            <span style="color: var(--border-hairline);">·</span>
-            <a href="/compare/fiverr-vs-upwork" style="color: var(--text-body); text-decoration: none;">Fiverr vs Upwork</a>
-            <span style="color: var(--border-hairline);">·</span>
-            <a href="/compare" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">All 12 Comparisons →</a>
+          <div class="footer-comparisons-links" style="display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; text-align: center; width: 100%;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 8px;">
+              <a href="/compare/gumroad-vs-lemon-squeezy" style="color: var(--text-body); text-decoration: none; transition: color 0.15s ease;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--text-body)'">Gumroad vs Lemon Squeezy</a>
+              <span style="color: var(--border-hairline);">·</span>
+              <a href="/compare/stripe-vs-paddle" style="color: var(--text-body); text-decoration: none; transition: color 0.15s ease;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--text-body)'">Stripe vs Paddle</a>
+              <span style="color: var(--border-hairline);">·</span>
+              <a href="/compare/fiverr-vs-upwork" style="color: var(--text-body); text-decoration: none; transition: color 0.15s ease;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--text-body)'">Fiverr vs Upwork</a>
+            </div>
+            <a href="/compare" style="color: var(--color-primary); text-decoration: none; font-weight: 600; font-size: 12px; transition: color 0.15s ease;" onmouseover="this.style.color='var(--color-primary-hover, #d97706)'" onmouseout="this.style.color='var(--color-primary)'">All 12 Comparisons →</a>
           </div>
         </div>
       </div>
@@ -280,6 +251,20 @@
     }
     .footer-platform-heading {
       text-align: left !important;
+    }
+    .footer-comparisons-row {
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+    .footer-comparisons-heading {
+      text-align: left !important;
+    }
+    .footer-comparisons-links {
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+    .footer-comparisons-links > div {
+      justify-content: flex-start !important;
     }
     .footer-resources-col {
       grid-area: resources;
